@@ -1,0 +1,14 @@
+{
+	"reportUnusedDisableDirectives": true,
+	"parser": "@typescript-eslint/parser",
+	"extends": ["plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
+	"rules": {
+		"@typescript-eslint/no-var-requires": "off"
+	},
+	"overrides": [
+		{
+			"files": ["*.md"],
+			"extends": "plugin:mdx/recommended"
+		}
+	]
+}

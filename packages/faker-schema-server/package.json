@@ -1,0 +1,54 @@
+{
+	"name": "faker-schema-server",
+	"version": "0.0.0",
+	"type": "module",
+	"license": "MIT",
+	"author": "Condor Hero",
+	"description": "A fake data generation server.",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.cts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"./dist/*",
+				"./dist/index.d.ts"
+			]
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"keywords": [
+		"faker-schema-server",
+		"faker-schema-server",
+		"faker-server"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/condorheroblog/vite-plugin-faker.git",
+		"directory": "packages/faker-schema-server"
+	},
+	"bugs": {
+		"url": "https://github.com/condorheroblog/vite-plugin-faker/issues"
+	},
+	"homepage": "https://github.com/condorheroblog/vite-plugin-faker/blob/main/README.md",
+	"scripts": {
+		"prepublishOnly": "nr build",
+		"test": "vitest",
+		"dev": "esno ./src/index.ts",
+		"build": "rimraf dist && rollup -c",
+		"build:watch": "rimraf dist && rollup -c -w",
+		"typecheck": "tsc --noEmit"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	}
+}

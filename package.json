@@ -1,0 +1,66 @@
+{
+	"name": "@condorhero/monorepo",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"license": "MIT",
+	"packageManager": "pnpm@8.8.0",
+	"author": "Condor Hero",
+	"description": "A fake plugin for Vite use faker.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/condorheroblog/vite-plugin-faker.git"
+	},
+	"bugs": {
+		"url": "https://github.com/condorheroblog/vite-plugin-faker/issues"
+	},
+	"homepage": "https://github.com/condorheroblog/vite-plugin-faker/blob/main/README.md",
+	"scripts": {
+		"postinstall": "simple-git-hooks",
+		"prepublishOnly": "nr build",
+		"dev:number-to-zh": "esno index.ts",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"test": "vitest",
+		"build": "nr -r build",
+		"build:watch": "nr -r build:watch",
+		"typecheck": "tsc --noEmit",
+		"release": "bumpp -r && pnpm -r publish --access public"
+	},
+	"simple-git-hooks": {
+		"pre-commit": "npx lint-staged"
+	},
+	"lint-staged": {
+		"*.{ts,js,mjs,cjs,json}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.md": [
+			"eslint --fix"
+		]
+	},
+	"devDependencies": {
+		"@rollup/plugin-json": "^6.0.0",
+		"@rollup/plugin-node-resolve": "^15.2.1",
+		"@types/node": "^20.7.0",
+		"@typescript-eslint/eslint-plugin": "^6.7.3",
+		"@typescript-eslint/parser": "^6.7.3",
+		"bumpp": "^9.2.0",
+		"esbuild": "^0.19.3",
+		"eslint": "^8.50.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-mdx": "^2.2.0",
+		"eslint-plugin-prettier": "^5.0.0",
+		"esno": "^0.17.0",
+		"lint-staged": "^14.0.1",
+		"prettier": "^3.0.3",
+		"rimraf": "^5.0.4",
+		"rollup": "^3.29.3",
+		"rollup-plugin-dts": "^6.0.2",
+		"rollup-plugin-esbuild": "^6.0.1",
+		"simple-git-hooks": "^2.9.0",
+		"typescript": "^5.2.2",
+		"vitest": "^0.34.5"
+	}
+}
