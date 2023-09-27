@@ -9,3 +9,5 @@ export function resolveOptions(options: FakerSchemaServerOptions = {}) {
 		logger: options.logger ?? true,
 	};
 }
+
+export type ResolveOptionsType = ReturnType<typeof resolveOptions>;
