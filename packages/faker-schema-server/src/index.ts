@@ -5,3 +5,4 @@ export * from "./getFakeConfig";
 export * from "./resolveModule";
 export * from "./createWatcher";
 export * from "./utils";
+export * from "./types";

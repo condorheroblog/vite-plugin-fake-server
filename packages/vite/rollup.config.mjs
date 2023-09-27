@@ -5,7 +5,7 @@ import { dts } from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
-const external = [...Object.keys(pkg.dependencies)];
+const external = [...Object.keys(pkg.devDependencies), ...Object.keys(pkg.dependencies)];
 
 const banner = `/**
  * ${pkg.name} ${pkg.version}

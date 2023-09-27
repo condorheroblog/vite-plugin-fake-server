@@ -1,10 +1,10 @@
 {
-	"name": "faker-schema-server",
+	"name": "@condorhero/vite-plugin-faker",
 	"version": "0.0.0",
 	"type": "module",
 	"license": "MIT",
 	"author": "Condor Hero",
-	"description": "A fake data generation server.",
+	"description": "A fake plugin for Vite use faker.",
 	"exports": {
 		".": {
 			"require": "./dist/index.cjs",
@@ -26,14 +26,15 @@
 		"dist"
 	],
 	"keywords": [
-		"mock-schema-server",
+		"vite-plugin-faker",
+		"vite-plugin-mock",
 		"faker-schema-server",
 		"faker-server"
 	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/condorheroblog/vite-plugin-faker.git",
-		"directory": "packages/faker-schema-server"
+		"directory": "packages/vite"
 	},
 	"bugs": {
 		"url": "https://github.com/condorheroblog/vite-plugin-faker/issues"
@@ -42,17 +43,16 @@
 	"scripts": {
 		"prepublishOnly": "nr build",
 		"test": "vitest",
-		"dev": "esno ./src/fakerSchemaServer.ts",
+		"dev": "esno ./src/index.ts",
 		"build": "rimraf dist && rollup -c",
 		"build:watch": "rimraf dist && rollup -c -w",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@faker-js/faker": "^8.1.0",
-		"bundle-require": "^4.0.2",
-		"chokidar": "^3.5.3",
-		"fast-glob": "^3.3.1",
-		"picocolors": "^1.0.0"
+		"faker-schema-server": "workspace:^"
+	},
+	"devDependencies": {
+		"vite": "^4.4.9"
 	},
 	"publishConfig": {
 		"access": "public",
