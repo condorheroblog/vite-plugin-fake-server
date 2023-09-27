@@ -42,10 +42,16 @@
 	"scripts": {
 		"prepublishOnly": "nr build",
 		"test": "vitest",
-		"dev": "esno ./src/index.ts",
+		"dev": "esno ./src/fakerSchemaServer.ts",
 		"build": "rimraf dist && rollup -c",
 		"build:watch": "rimraf dist && rollup -c -w",
 		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@faker-js/faker": "^8.1.0",
+		"bundle-require": "^4.0.2",
+		"fast-glob": "^3.3.1",
+		"picocolors": "^1.0.0"
 	},
 	"publishConfig": {
 		"access": "public",

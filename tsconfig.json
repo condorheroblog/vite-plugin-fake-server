@@ -12,13 +12,6 @@
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-
-		"paths": {
-			"number-to-zh": ["./packages/number-to-zh/src/index.ts"],
-			"number-to-zh-currency": ["./packages/number-to-zh-currency/src/index.ts"],
-			"zh-currency-to-number": ["./packages/zh-currency-to-number/src/index.ts"],
-			"zh-to-number": ["./packages/zh-to-number/src/index.ts"]
-		}
+		"noFallthroughCasesInSwitch": true
 	}
 }
