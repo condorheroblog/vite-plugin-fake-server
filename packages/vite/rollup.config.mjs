@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import esbuild from "rollup-plugin-esbuild";
 import { dts } from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
+import { nodeExternals } from "rollup-plugin-node-externals";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 const external = [...Object.keys(pkg.devDependencies), ...Object.keys(pkg.dependencies)];
@@ -22,7 +23,7 @@ const rollupConfig = [
 	{
 		input: "./src/index.ts",
 		external,
-		plugins: [json(), esbuild()],
+		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
 				file: "./dist/index.cjs",
@@ -39,7 +40,7 @@ const rollupConfig = [
 	{
 		input: "./src/index.ts",
 		external,
-		plugins: [json(), dts()],
+		plugins: [json(), dts(), nodeExternals()],
 		output: [{ file: "./dist/index.d.cts" }, { file: "./dist/index.d.mts" }],
 	},
 ];
