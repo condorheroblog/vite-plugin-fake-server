@@ -48,11 +48,14 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@faker-js/faker": "^8.1.0",
 		"bundle-require": "^4.0.2",
-		"chokidar": "^3.5.3",
 		"fast-glob": "^3.3.1",
 		"picocolors": "^1.0.0"
+	},
+	"devDependencies": {
+		"@faker-js/faker": "^8.1.0",
+		"@types/connect": "^3.4.36",
+		"connect": "^3.7.0"
 	},
 	"publishConfig": {
 		"access": "public",

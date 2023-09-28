@@ -1,5 +1,5 @@
 // import type { VitePluginFakerOptions } from "./types";
-import { Plugin, ResolvedConfig } from "vite";
+import type { Plugin, ResolvedConfig } from "vite";
 
 // export const vitePluginFaker = (opts: VitePluginFakerOptions): Plugin => {
 // 	let config: ResolvedConfig;

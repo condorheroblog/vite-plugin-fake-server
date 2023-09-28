@@ -9,3 +9,7 @@ export function logger(title: string, message: string, type: "info" | "error" = 
 		)}`,
 	);
 }
+
+export function isFunction(fn: unknown) {
+	return typeof fn === "function";
+}

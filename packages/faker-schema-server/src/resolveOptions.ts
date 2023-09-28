@@ -5,8 +5,6 @@ export function resolveOptions(options: FakerSchemaServerOptions = {}) {
 		basename: options.basename ?? "",
 		include: options.include ?? ["mock"],
 		exclude: options.exclude ?? [],
-		watch: options.watch ?? true,
-		logger: options.logger ?? true,
 	};
 }
 

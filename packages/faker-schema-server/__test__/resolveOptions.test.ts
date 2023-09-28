@@ -11,8 +11,6 @@ describe(resolveOptions.name, () => {
 			  "include": [
 			    "mock",
 			  ],
-			  "logger": true,
-			  "watch": true,
 			}
 		`);
 	});
