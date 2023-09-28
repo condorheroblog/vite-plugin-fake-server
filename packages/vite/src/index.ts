@@ -1,4 +1,6 @@
-export { version } from "../package.json";
 export * from "./types";
 export * from "./plugin";
-export * from "./resolveOptions";
+export * from "./utils";
+export * from "./resolvePluginOptions";
+export { defineFakeRoute } from "faker-schema-server";
+export { version } from "../package.json";

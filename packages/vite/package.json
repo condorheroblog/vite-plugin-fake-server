@@ -49,7 +49,8 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"faker-schema-server": "workspace:^"
+		"faker-schema-server": "workspace:^",
+		"path-to-regexp": "^6.2.1"
 	},
 	"devDependencies": {
 		"vite": "^4.4.9"

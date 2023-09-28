@@ -1,9 +1,11 @@
-import type { IncomingMessage as HttpIncomingMessage, ServerResponse } from "node:http";
+import type { IncomingMessage as HttpIncomingMessage, ServerResponse, IncomingHttpHeaders } from "node:http";
+import type { UrlWithParsedQuery } from "node:url";
 // import type { IncomingMessage } from "connect";
 
 export interface IncomingMessage extends HttpIncomingMessage {
 	originalUrl?: HttpIncomingMessage["url"];
 }
+export type { ServerResponse };
 
 export interface FakerSchemaServerOptions {
 	basename?: string;
@@ -30,7 +32,12 @@ export interface FakeRoute {
 	method?: HttpMethodType;
 	timeout?: number;
 	statusCode?: number;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	response?: (req: IncomingMessage, res: ServerResponse) => any;
+
+	response?: (
+		HTTPRequest: { url: string; body: string; query: UrlWithParsedQuery["query"]; headers: IncomingHttpHeaders },
+		req: IncomingMessage,
+		res: ServerResponse,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	) => any;
 	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
 }
