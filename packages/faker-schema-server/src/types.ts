@@ -1,5 +1,4 @@
 import type { IncomingMessage as HttpIncomingMessage, ServerResponse, IncomingHttpHeaders } from "node:http";
-import type { UrlWithParsedQuery } from "node:url";
 // import type { IncomingMessage } from "connect";
 
 export interface IncomingMessage extends HttpIncomingMessage {
@@ -27,6 +26,15 @@ type lowercase<T extends string> = T extends Uppercase<T> ? Lowercase<T> : T;
 export type LowercaseHttpMethod = lowercase<UppercaseHttpMethodType>;
 export type HttpMethodType = UppercaseHttpMethodType | LowercaseHttpMethod;
 
+export interface URLRequest {
+	url: string;
+	body: string;
+	query: Record<string, string | string[]>;
+	params: Record<string, string | string[]>;
+	hash: string;
+	headers: IncomingHttpHeaders;
+}
+
 export interface FakeRoute {
 	url: string;
 	method?: HttpMethodType;
@@ -34,10 +42,10 @@ export interface FakeRoute {
 	statusCode?: number;
 
 	response?: (
-		HTTPRequest: { url: string; body: string; query: UrlWithParsedQuery["query"]; headers: IncomingHttpHeaders },
+		HTTPRequest: URLRequest,
 		req: IncomingMessage,
 		res: ServerResponse,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	) => any;
-	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
+	rawResponse?: (HTTPRequest: URLRequest, req: IncomingMessage, res: ServerResponse) => void;
 }

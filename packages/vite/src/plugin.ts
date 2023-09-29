@@ -1,4 +1,5 @@
-import url from "node:url";
+import { URL } from "node:url";
+import querystring from "node:querystring";
 import type { Plugin, ResolvedConfig, Connect } from "vite";
 import type { FakeRoute } from "faker-schema-server";
 import { pathToRegexp, match } from "path-to-regexp";
@@ -34,44 +35,41 @@ export async function getFakeData(options: VitePluginFakerOptions) {
 }
 export const requestMiddleware: Connect.NextHandleFunction = async (req, res, next) => {
 	if (req.url) {
-		const queryParams = url.parse(req.url, true);
-		const reqUrl = queryParams.pathname;
+		const instanceURL = new URL(req.url, "http://localhost:5173/");
+
+		// https://nodejs.org/api/url.html#urlpathname
+		// Invalid URL characters included in the value assigned to the pathname property are percent-encoded
+		const pathname = instanceURL.pathname;
 
 		const matchRequest = fakeData.find((item) => {
-			if (!reqUrl || !item || !item.url) {
+			if (!pathname || !item || !item.url) {
 				return false;
 			}
-			if (item.method && item.method.toUpperCase() !== req.method) {
+			const method = item.method ?? "GET";
+			if (method.toUpperCase() !== req.method) {
 				return false;
 			}
-			return pathToRegexp(item.url).test(reqUrl);
+			return pathToRegexp(encodeURI(item.url)).test(pathname);
 		});
 
 		if (matchRequest) {
-			const isGet = req.method && req.method.toUpperCase() === "GET";
 			const { response, rawResponse, timeout, statusCode, url } = matchRequest;
 
 			if (timeout) {
 				await sleep(timeout);
 			}
 
-			const urlMatch = match(url, { decode: decodeURIComponent });
+			const urlMatch = match(url, { encode: encodeURI });
 
-			let query = queryParams.query;
+			const search = instanceURL.search;
+			const query = querystring.parse(search.replace(/^\?/, ""));
 
-			if (reqUrl) {
-				// TODO
-				if ((isGet && JSON.stringify(query) === "{}") || !isGet) {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					const params = urlMatch(reqUrl).params;
-					if (JSON.stringify(params) !== "{}") {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-expect-error
-						query = urlMatch(reqUrl).params || {};
-					} else {
-						query = queryParams.query || {};
-					}
+			let params: Record<string, string> = {};
+
+			if (pathname) {
+				const matchParams = urlMatch(pathname);
+				if (matchParams) {
+					params = matchParams.params as Record<string, string>;
 				}
 			}
 
@@ -82,7 +80,11 @@ export const requestMiddleware: Connect.NextHandleFunction = async (req, res, ne
 				const body = await getRequestData(req);
 				res.setHeader("Content-Type", "application/json");
 				res.statusCode = statusCode ?? 200;
-				const fakeResponse = response({ url: req.url, body, query, headers: req.headers }, req, res);
+				const fakeResponse = response(
+					{ url: req.url, body, query, params, headers: req.headers, hash: instanceURL.hash },
+					req,
+					res,
+				);
 				res.end(JSON.stringify(fakeResponse));
 			}
 
@@ -91,6 +93,5 @@ export const requestMiddleware: Connect.NextHandleFunction = async (req, res, ne
 		}
 	}
 
-	// console.log(fakeData);
 	next();
 };
