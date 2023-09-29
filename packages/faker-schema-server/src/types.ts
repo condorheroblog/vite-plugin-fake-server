@@ -47,5 +47,5 @@ export interface FakeRoute {
 		res: ServerResponse,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	) => any;
-	rawResponse?: (HTTPRequest: URLRequest, req: IncomingMessage, res: ServerResponse) => void;
+	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
 }

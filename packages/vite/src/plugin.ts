@@ -14,17 +14,26 @@ export const vitePluginFaker = (opts: VitePluginFakerOptions = {}): Plugin => {
 	let config: ResolvedConfig;
 
 	return {
-		name: "vite:faker",
+		name: "vite-plugin-faker",
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
 		},
-		async configureServer({ middlewares }) {
+		async configureServer({ middlewares, watcher }) {
 			// serve: plugin only invoked by dev server
 			if (config.command !== "serve") {
 				return;
 			}
 			fakeData = await getFakeData(opts);
 			middlewares.use(requestMiddleware);
+
+			// https://vitejs.dev/guide/api-javascript.html#vitedevserver
+			// const _watcher = watcher(watchDir, {
+			// 	ignoreInitial: true,
+			// });
+
+			watcher.on("all", async (event, file) => {
+				console.log(event, file);
+			});
 		},
 	};
 };
@@ -62,7 +71,7 @@ export const requestMiddleware: Connect.NextHandleFunction = async (req, res, ne
 			const urlMatch = match(url, { encode: encodeURI });
 
 			const search = instanceURL.search;
-			const query = querystring.parse(search.replace(/^\?/, ""));
+			const query = querystring.parse(search.replace(/^\?/, "")) as Record<string, string>;
 
 			let params: Record<string, string> = {};
 
