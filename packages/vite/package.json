@@ -49,6 +49,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"chokidar": "^3.5.3",
 		"faker-schema-server": "workspace:^",
 		"path-to-regexp": "^6.2.1"
 	},

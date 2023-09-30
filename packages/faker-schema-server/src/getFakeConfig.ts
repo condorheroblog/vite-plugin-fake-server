@@ -4,7 +4,7 @@ import fg from "fast-glob";
 
 import type { FakerSchemaServerOptions } from "./types";
 import { resolveModule } from "./resolveModule";
-import { logger } from "./utils";
+import { loggerOutput } from "./utils";
 
 export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 	const { include, exclude } = options;
@@ -50,7 +50,7 @@ export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 				ret.push(resolvedModule);
 			}
 		} catch (error) {
-			logger(`load module error`, error as string, "error");
+			loggerOutput(`load module error`, error as string, "error");
 		}
 	}
 

@@ -6,7 +6,9 @@ export function resolvePluginOptions(options: VitePluginFakerOptions = {}) {
 	return {
 		...fakerOptions,
 		enable: options.enable ?? true,
+		watch: options.watch ?? true,
+		logger: options.logger ?? true,
 	};
 }
 
-export type resolvePluginOptions = ReturnType<typeof resolvePluginOptions>;
+export type ResolvePluginOptionsType = ReturnType<typeof resolvePluginOptions>;
