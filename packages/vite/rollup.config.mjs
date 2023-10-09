@@ -4,9 +4,9 @@ import esbuild from "rollup-plugin-esbuild";
 import { dts } from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
 import { nodeExternals } from "rollup-plugin-node-externals";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
-const external = [...Object.keys(pkg.devDependencies), ...Object.keys(pkg.dependencies)];
 
 const banner = `/**
  * ${pkg.name} ${pkg.version}
@@ -22,7 +22,6 @@ const banner = `/**
 const rollupConfig = [
 	{
 		input: "./src/index.ts",
-		external,
 		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
@@ -39,9 +38,31 @@ const rollupConfig = [
 	},
 	{
 		input: "./src/index.ts",
-		external,
 		plugins: [json(), dts(), nodeExternals()],
 		output: [{ file: "./dist/index.d.cts" }, { file: "./dist/index.d.mts" }],
+	},
+
+	{
+		input: "./src/browser/index.ts",
+		plugins: [nodeResolve(), json(), esbuild(), nodeExternals({ exclude: "faker-schema-server/browser" })],
+		output: [
+			{
+				file: "./dist/browser.cjs",
+				format: "cjs",
+				banner,
+			},
+			{
+				file: "./dist/browser.mjs",
+				format: "esm",
+				banner,
+			},
+		],
+	},
+
+	{
+		input: "./src/browser/index.ts",
+		plugins: [json(), dts(), nodeExternals()],
+		output: [{ file: "./dist/browser.d.cts" }, { file: "./dist/browser.d.mts" }],
 	},
 ];
 

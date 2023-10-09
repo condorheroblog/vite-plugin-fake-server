@@ -9,6 +9,10 @@
 		".": {
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.mjs"
+		},
+		"./browser": {
+			"require": "./dist/browser.cjs",
+			"import": "./dist/browser.mjs"
 		}
 	},
 	"main": "dist/index.cjs",
@@ -51,10 +55,13 @@
 	"dependencies": {
 		"chokidar": "^3.5.3",
 		"faker-schema-server": "workspace:^",
-		"path-to-regexp": "^6.2.1"
+		"parse5": "^7.1.2",
+		"path-to-regexp": "^6.2.1",
+		"xhook": "^1.6.2"
 	},
 	"devDependencies": {
-		"vite": "^4.4.9"
+		"@types/xhook": "^1.5.0",
+		"vite": "^4.4.11"
 	},
 	"publishConfig": {
 		"access": "public",

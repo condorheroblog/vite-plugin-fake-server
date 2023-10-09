@@ -5,6 +5,7 @@ import fg from "fast-glob";
 import type { FakerSchemaServerOptions } from "./types";
 import { resolveModule } from "./resolveModule";
 import { loggerOutput } from "./utils";
+import { FAKE_FILE_EXTENSIONS } from "./constants";
 
 export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 	const { include, exclude } = options;
@@ -12,7 +13,6 @@ export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 		return [];
 	}
 
-	const extensions = ["ts", "js", "cjs", "mjs"];
 	const cwd = process.cwd();
 	const fastGlobOptions = {
 		cwd,
@@ -25,7 +25,7 @@ export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 			// file
 			const fileExtname = extname(absFilePath).slice(1);
 			if (fileExtname) {
-				if (extensions.includes(fileExtname)) {
+				if (FAKE_FILE_EXTENSIONS.includes(fileExtname)) {
 					const fakeFiles = fg.sync(filePath, fastGlobOptions);
 					return [...acc, ...fakeFiles];
 				}
@@ -34,7 +34,7 @@ export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 
 			// folder
 			const dir = join(filePath, "/");
-			const fakeFolderFiles = fg.sync(`${dir}**/*.{${extensions.join(",")}}`, fastGlobOptions);
+			const fakeFolderFiles = fg.sync(`${dir}**/*.{${FAKE_FILE_EXTENSIONS.join(",")}}`, fastGlobOptions);
 			return [...acc, ...fakeFolderFiles];
 		}
 		return acc;

@@ -6,7 +6,6 @@ import json from "@rollup/plugin-json";
 import { nodeExternals } from "rollup-plugin-node-externals";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
-const external = [...Object.keys(pkg.devDependencies), ...Object.keys(pkg.dependencies)];
 
 const banner = `/**
  * ${pkg.name} ${pkg.version}
@@ -22,7 +21,6 @@ const banner = `/**
 const rollupConfig = [
 	{
 		input: "./src/index.ts",
-		external,
 		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
@@ -35,13 +33,46 @@ const rollupConfig = [
 				format: "esm",
 				banner,
 			},
+			{
+				file: "./dist/browser/index.cjs",
+				format: "cjs",
+				banner,
+			},
+			{
+				file: "./dist/browser/index.mjs",
+				format: "esm",
+				banner,
+			},
 		],
 	},
+
 	{
 		input: "./src/index.ts",
-		external,
 		plugins: [json(), dts(), nodeExternals()],
 		output: [{ file: "./dist/index.d.cts" }, { file: "./dist/index.d.mts" }],
+	},
+
+	{
+		input: "./src/browser/index.ts",
+		plugins: [json(), esbuild(), nodeExternals()],
+		output: [
+			{
+				file: "./dist/browser.cjs",
+				format: "cjs",
+				banner,
+			},
+			{
+				file: "./dist/browser.mjs",
+				format: "esm",
+				banner,
+			},
+		],
+	},
+
+	{
+		input: "./src/browser/index.ts",
+		plugins: [json(), dts(), nodeExternals()],
+		output: [{ file: "./dist/browser.d.cts" }, { file: "./dist/browser.d.mts" }],
 	},
 ];
 
