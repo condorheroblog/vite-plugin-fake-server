@@ -33,11 +33,11 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 			}
 		},
 		async configureServer({ middlewares }) {
-			if (!isDevServer) {
+			const opts = resolvePluginOptions(options);
+			if (!isDevServer || !opts.enableDev) {
 				return;
 			}
 
-			const opts = resolvePluginOptions(options);
 			fakeData = await getFakeData(opts);
 			const middleware = await requestMiddleware(opts);
 			middlewares.use(middleware);
@@ -56,6 +56,12 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 		},
 
 		async transform(sourceCode, id) {
+			const opts = resolvePluginOptions(options);
+			if (isDevServer || !opts.enableProd) {
+				return {
+					code: sourceCode,
+				};
+			}
 			if (isIndexHTML) {
 				// https://github.com/vitejs/vite/blob/main/packages/vite/src/node/server/middlewares/indexHtml.ts#L222
 				await traverseHtml(sourceCode, id, (node) => {
@@ -84,12 +90,12 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 			if (mainPath.length > 0 && id.endsWith(mainPath)) {
 				const opts = resolvePluginOptions(options);
 				const include = opts.include[0];
-				const globPatterns = FAKE_FILE_EXTENSIONS.map((ext) =>
-					join(relative(dirname(id), config.root), include, `/**/*.${ext}`),
-				);
+				const relativePath = relative(dirname(id), config.root);
+				const globPatterns = FAKE_FILE_EXTENSIONS.map((ext) => join(relativePath, include, `/**/*.${ext}`));
+				const ignoreFiles = opts.exclude.map((file) => "!" + join(relativePath, file));
 
 				const fakeTemplate = `
-				const modules = import.meta.glob(${JSON.stringify(globPatterns, null, 2)}, { eager: true });
+				const modules = import.meta.glob(${JSON.stringify([...globPatterns, ...ignoreFiles], null, 2)}, { eager: true });
 				const fakeModuleList = Object.keys(modules).reduce((list, key) => {
 					const module = modules[key] ?? {};
 					for (const moduleKey of Object.keys(module)) {
@@ -112,11 +118,11 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 		},
 
 		async transformIndexHtml(htmlString) {
-			if (isDevServer) {
+			const opts = resolvePluginOptions(options);
+			if (isDevServer || !opts.enableProd) {
 				return htmlString;
 			}
 
-			const opts = resolvePluginOptions(options);
 			fakeData = await getFakeData(opts);
 
 			let newHtml = htmlString;
@@ -209,8 +215,11 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 								});
 							}
 							console.log("%c request invoke", "color: blue", req.url);
+							return;
 						}
 					}
+					console.log("%c TODO: ", "color: yellow", "add next():https://github.com/jpillora/xhook/issues/169");
+					__XHOOK__.disable();
 				});`,
 			);
 		},

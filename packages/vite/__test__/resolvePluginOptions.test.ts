@@ -7,11 +7,14 @@ describe(resolvePluginOptions.name, () => {
 		expect(options).toMatchInlineSnapshot(`
 			{
 			  "basename": "",
-			  "enable": true,
+			  "enableDev": true,
+			  "enableProd": false,
 			  "exclude": [],
 			  "include": [
 			    "mock",
 			  ],
+			  "logger": true,
+			  "watch": true,
 			}
 		`);
 	});

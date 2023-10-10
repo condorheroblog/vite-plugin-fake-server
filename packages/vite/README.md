@@ -1,4 +1,4 @@
-# vite-plugin-fake-server
+# Vite-plugin-fake-server
 
 [![NPM version](https://img.shields.io/npm/v/@condorhero/vite-plugin-fake-server)](https://www.npmjs.com/package/@condorhero/vite-plugin-fake-server)
 ![Downloads](https://img.shields.io/npm/dw/@condorhero/vite-plugin-fake-server)

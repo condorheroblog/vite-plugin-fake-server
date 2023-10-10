@@ -4,7 +4,7 @@
 	"type": "module",
 	"license": "MIT",
 	"author": "Condor Hero",
-	"description": "A fake plugin for Vite use faker.",
+	"description": "A fake server plugin for Vite.",
 	"exports": {
 		".": {
 			"require": "./dist/index.cjs",

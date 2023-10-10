@@ -5,6 +5,7 @@ function App() {
 	const [xhrText] = useState("");
 
 	const fetchData = () => {
+		// https://my-json-server.typicode.com/typicode/demo/posts
 		fetch("/mock/1/😄/18?name=tom&name=john&123", { method: "get" })
 			.then((response) => response.json())
 			.then((response) => console.log(typeof response, response));
