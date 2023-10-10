@@ -22,15 +22,18 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 	let mainPath = "";
 
 	let config: ResolvedConfig;
+	let isDevServer = false;
 
 	return {
 		name: "vite-plugin-faker",
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
+			if (resolvedConfig.command === "serve") {
+				isDevServer = true;
+			}
 		},
 		async configureServer({ middlewares }) {
-			// serve: plugin only invoked by dev server
-			if (config.command !== "serve") {
+			if (!isDevServer) {
 				return;
 			}
 
@@ -46,7 +49,6 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 				});
 
 				watcher.on("change", async (file) => {
-					console.log(opts.logger);
 					opts.logger && loggerOutput(`fake file change`, file);
 					fakeData = await getFakeData(opts);
 				});
@@ -86,20 +88,21 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 					join(relative(dirname(id), config.root), include, `/**/*.${ext}`),
 				);
 
-				const template = `
+				const fakeTemplate = `
 				const modules = import.meta.glob(${JSON.stringify(globPatterns, null, 2)}, { eager: true });
-				console.log(modules);
+				const fakeModuleList = Object.keys(modules).reduce((list, key) => {
+					const module = modules[key] ?? {};
+					for (const moduleKey of Object.keys(module)) {
+						const mod = modules[key][moduleKey] ?? [];
+						const modList = Array.isArray(mod) ? [...mod] : [mod];
+						return [...list, ...modList];
+					}
+				}, []);
+				window.fakeModuleList = fakeModuleList;
 				`;
 
-				console.log(template + "\n" + sourceCode);
-				// const routeModuleList = Object.keys(modules).reduce((list, key) => {
-				// 	console.log(modules[key])
-				// 	const mod = modules[key].default ?? {};
-				// 	const modList = Array.isArray(mod) ? [...mod] : [mod];
-				// 	return [...list, ...modList];
-				// }, []);
 				return {
-					code: template + "\n" + sourceCode,
+					code: fakeTemplate + "\n" + sourceCode,
 				};
 			}
 
@@ -109,7 +112,7 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 		},
 
 		async transformIndexHtml(htmlString) {
-			if (config.command === "serve") {
+			if (isDevServer) {
 				return htmlString;
 			}
 
@@ -132,25 +135,82 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 
 			return insertScriptInHead(
 				newHtml,
-				`const fakeData = ${JSON.stringify(
-					fakeData,
-					(_, value) => {
-						if (typeof value === "function") {
-							return value.toString(); // 将函数转换为字符串
-						}
-						return value;
-					},
-					2,
-				)};
-				__XHOOK__.before(function(request, callback) {
-					console.log(new URL(request.url, "http://localhost:4173/"));
-					callback({
-							status: 200,
-							text: '{ \"hello\": \"Hello\" }',
-							headers: {
-								Foo: 'Bar'
+				`const fakeModuleList = window.fakeModuleList;
+				export function sleep(time) {
+					return new Promise((resolve) => {
+						const timer = setTimeout(() => {
+							resolve(timer);
+							clearTimeout(timer);
+						}, time);
+					});
+				}
+				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
+				__XHOOK__.before(async function(req, callback) {
+					if (req.url) {
+						const instanceURL = new URL(req.url, "http://localhost:5173/");
+
+						// https://nodejs.org/api/url.html#urlpathname
+						// Invalid URL characters included in the value assigned to the pathname property are percent-encoded
+						const pathname = instanceURL.pathname;
+
+						const matchRequest = fakeModuleList.find((item) => {
+							if (!pathname || !item || !item.url) {
+								return false;
 							}
+							const method = item.method ?? "GET";
+							const reqMethod = req.method ?? "GET";
+							if (method.toUpperCase() !== reqMethod.toUpperCase()) {
+								return false;
+							}
+							return pathToRegexp(encodeURI(item.url)).test(pathname);
 						});
+						if (matchRequest) {
+							const { response, rawResponse, timeout, statusCode, url } = matchRequest;
+
+							if (timeout) {
+								await sleep(timeout);
+							}
+
+							const urlMatch = match(url, { encode: encodeURI });
+
+							const searchParams = instanceURL.searchParams;
+							const query = {};
+							for (const [key, value] of searchParams.entries()) {
+								if (query.hasOwnProperty(key)) {
+									const queryValue = query[key];
+									if (Array.isArray(queryValue)) {
+										queryValue.push(value);
+									} else {
+										query[key] = [queryValue, value];
+									}
+								} else {
+									query[key] = value;
+								}
+							}
+
+							let params = {};
+
+							if (pathname) {
+								const matchParams = urlMatch(pathname);
+								if (matchParams) {
+									params = matchParams.params;
+								}
+							}
+							if (response && typeof response === "function") {
+								const fakeResponse = response(
+									{ url: req.url, query, params, headers: req.headers, hash: instanceURL.hash },
+								);
+								callback({
+									status: statusCode ?? 200,
+									text: JSON.stringify(fakeResponse),
+									headers: {
+										"Content-Type": "application/json"
+									}
+								});
+							}
+							console.log("%c request invoke", "color: blue", req.url);
+						}
+					}
 				});`,
 			);
 		},
@@ -176,7 +236,8 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 					return false;
 				}
 				const method = item.method ?? "GET";
-				if (method.toUpperCase() !== req.method) {
+				const reqMethod = req.method ?? "GET";
+				if (method.toUpperCase() !== reqMethod.toUpperCase()) {
 					return false;
 				}
 				return pathToRegexp(encodeURI(item.url)).test(pathname);
@@ -217,8 +278,7 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 
 				if (rawResponse && isFunction(rawResponse)) {
 					rawResponse(req, res);
-				}
-				if (response && isFunction(response)) {
+				} else if (response && isFunction(response)) {
 					const body = await getRequestData(req);
 					res.setHeader("Content-Type", "application/json");
 					res.statusCode = statusCode ?? 200;
