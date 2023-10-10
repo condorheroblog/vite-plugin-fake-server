@@ -36,13 +36,13 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/condorheroblog/vite-plugin-faker.git",
+		"url": "git+https://github.com/condorheroblog/vite-plugin-fake-server.git",
 		"directory": "packages/faker-schema-server"
 	},
 	"bugs": {
-		"url": "https://github.com/condorheroblog/vite-plugin-faker/issues"
+		"url": "https://github.com/condorheroblog/vite-plugin-fake-server/issues"
 	},
-	"homepage": "https://github.com/condorheroblog/vite-plugin-faker/blob/main/README.md",
+	"homepage": "https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/README.md",
 	"scripts": {
 		"prepublishOnly": "nr build",
 		"test": "vitest",

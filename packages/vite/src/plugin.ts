@@ -25,7 +25,7 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 	let isDevServer = false;
 
 	return {
-		name: "vite-plugin-faker",
+		name: "vite-plugin-fake-server",
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
 			if (resolvedConfig.command === "serve") {

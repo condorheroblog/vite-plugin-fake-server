@@ -1,5 +1,5 @@
 {
-	"name": "@condorhero/vite-plugin-faker",
+	"name": "vite-plugin-fake-server",
 	"version": "0.0.0",
 	"type": "module",
 	"license": "MIT",
@@ -30,20 +30,22 @@
 		"dist"
 	],
 	"keywords": [
+		"vite-plugin-fake-server",
+		"vite-plugin-fake",
 		"vite-plugin-faker",
+		"vite-plugin-mock-server",
 		"vite-plugin-mock",
-		"faker-schema-server",
 		"faker-server"
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/condorheroblog/vite-plugin-faker.git",
+		"url": "git+https://github.com/condorheroblog/vite-plugin-fake-server.git",
 		"directory": "packages/vite"
 	},
 	"bugs": {
-		"url": "https://github.com/condorheroblog/vite-plugin-faker/issues"
+		"url": "https://github.com/condorheroblog/vite-plugin-fake-server/issues"
 	},
-	"homepage": "https://github.com/condorheroblog/vite-plugin-faker/blob/main/README.md",
+	"homepage": "https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/README.md",
 	"scripts": {
 		"prepublishOnly": "nr build",
 		"test": "vitest",

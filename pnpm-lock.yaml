@@ -106,9 +106,6 @@ importers:
         specifier: ^18.2.0
         version: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
     devDependencies:
-      '@condorhero/vite-plugin-faker':
-        specifier: workspace:^
-        version: link:../../vite
       '@types/react':
         specifier: ^18.2.25
         version: registry.npmmirror.com/@types/react@18.2.25
@@ -124,6 +121,9 @@ importers:
       vite:
         specifier: ^4.4.11
         version: registry.npmmirror.com/vite@4.4.11(@types/node@20.8.3)
+      vite-plugin-fake-server:
+        specifier: workspace:^
+        version: link:../../vite
 
   packages/vite:
     dependencies:
