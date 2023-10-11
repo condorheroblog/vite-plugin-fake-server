@@ -125,11 +125,18 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 
 			let newHtml = htmlString;
 
+			// warning message in production environment
+			newHtml = insertScriptInHead(
+				newHtml,
+				`console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");\n`,
+			);
+
 			// add xhook
 			const xhookPath = join(dirname(require.resolve("xhook")), "../dist/xhook.js");
 			const xhookContent = readFileSync(xhookPath, "utf-8");
 			newHtml = insertScriptInHead(newHtml, `${xhookContent}\n;window.__XHOOK__=xhook;\n`);
 
+			// add path-to-regexp
 			const pathToRegexpPath = join(dirname(require.resolve("path-to-regexp")), "../dist.es2015/index.js");
 			const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
 			newHtml = insertScriptInHead(
