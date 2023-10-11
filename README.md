@@ -73,14 +73,28 @@ Exclude files in the `include` directory.
 Type: `boolean`\
 Default: `true`
 
-Set whether to changes in `include` files.
+Set whether to listen to `include` files.
 
 ##### logger
 
 Type: `boolean`\
 Default: `true`
 
-Whether to display the request log on the console.
+Set Whether to display the request log on the console.
+
+##### timeout
+
+Type: `number`\
+Default: `undefined`
+
+Set the delay time for the request.
+
+##### basename
+
+Type: `string`\
+Default: `""`
+
+Set the root address of the request URL.
 
 ##### enableDev
 

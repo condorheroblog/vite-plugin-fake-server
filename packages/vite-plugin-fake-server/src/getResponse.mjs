@@ -1,3 +1,8 @@
+/**
+ * Sleeps for a specified amount of time.
+ * @param {number} time - The time to sleep in milliseconds.
+ * @returns {Promise<number>} - A Promise that resolves with the timer ID.
+ */
 export function sleep(time) {
 	return new Promise((resolve) => {
 		const timer = setTimeout(() => {
