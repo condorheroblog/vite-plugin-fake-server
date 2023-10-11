@@ -40,7 +40,7 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/condorheroblog/vite-plugin-fake-server.git",
-		"directory": "packages/vite"
+		"directory": "packages/vite-plugin-fake-server"
 	},
 	"bugs": {
 		"url": "https://github.com/condorheroblog/vite-plugin-fake-server/issues"
@@ -55,14 +55,19 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"bundle-require": "^4.0.2",
 		"chokidar": "^3.5.3",
-		"faker-schema-server": "workspace:^",
+		"fast-glob": "^3.3.1",
 		"parse5": "^7.1.2",
 		"path-to-regexp": "^6.2.1",
+		"picocolors": "^1.0.0",
 		"xhook": "^1.6.2"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^8.1.0",
+		"@types/connect": "^3.4.36",
 		"@types/xhook": "^1.5.0",
+		"connect": "^3.7.0",
 		"vite": "^4.4.11"
 	},
 	"publishConfig": {

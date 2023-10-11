@@ -1,6 +1,6 @@
-export type { FakeRoute, IncomingMessage, ServerResponse, HttpMethodType } from "faker-schema-server";
+export type { FakeRoute, IncomingMessage, ServerResponse, HttpMethodType } from "./node";
 
-import type { FakerSchemaServerOptions } from "faker-schema-server";
+import type { FakerSchemaServerOptions } from "./node";
 
 export interface VitePluginFakerOptions extends Omit<FakerSchemaServerOptions, "include"> {
 	include?: string;

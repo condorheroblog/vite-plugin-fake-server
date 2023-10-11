@@ -4,7 +4,6 @@ import esbuild from "rollup-plugin-esbuild";
 import { dts } from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
 import { nodeExternals } from "rollup-plugin-node-externals";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 
@@ -44,7 +43,7 @@ const rollupConfig = [
 
 	{
 		input: "./src/browser/index.ts",
-		plugins: [nodeResolve(), json(), esbuild(), nodeExternals({ exclude: "faker-schema-server/browser" })],
+		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
 				file: "./dist/browser.cjs",

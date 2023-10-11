@@ -1,5 +1,5 @@
 import colors from "picocolors";
-import { name } from "../package.json";
+import { name } from "../../package.json";
 
 export function loggerOutput(title: string, message: string, type: "info" | "error" = "info") {
 	const colorType = type === "info" ? colors.cyan : colors.red;

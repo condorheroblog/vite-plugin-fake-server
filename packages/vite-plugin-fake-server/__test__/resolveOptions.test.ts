@@ -1,5 +1,5 @@
 import { describe, test } from "vitest";
-import { resolveOptions } from "../src";
+import { resolveOptions } from "..";
 
 describe(resolveOptions.name, () => {
 	test(`${resolveOptions.name} options`, ({ expect }) => {

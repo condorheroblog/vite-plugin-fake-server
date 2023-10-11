@@ -2,9 +2,9 @@ import { readFileSync } from "node:fs";
 import { URL } from "node:url";
 import { join, dirname, relative } from "node:path";
 import type { Plugin, ResolvedConfig, Connect } from "vite";
-import type { FakeRoute } from "faker-schema-server";
+import type { FakeRoute } from "./node";
 import { pathToRegexp, match } from "path-to-regexp";
-import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "faker-schema-server";
+import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "./node";
 import chokidar from "chokidar";
 import { createRequire } from "node:module";
 

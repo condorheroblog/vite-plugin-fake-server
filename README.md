@@ -43,6 +43,8 @@ export default defineConfig({
 
 By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `cjs`, `mjs` files in the mock folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (`logger = true`).
 
+## Examples
+
 ## API
 
 ### vitePluginFaker(options?)
