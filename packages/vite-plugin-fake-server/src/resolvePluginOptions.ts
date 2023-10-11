@@ -1,5 +1,5 @@
-import type { VitePluginFakerOptions } from "./types";
 import { resolveOptions as fakerResolveOptions } from "./node";
+import type { VitePluginFakerOptions } from "./types";
 
 export function resolvePluginOptions(options: VitePluginFakerOptions = {}) {
 	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include ?? "mock"] });

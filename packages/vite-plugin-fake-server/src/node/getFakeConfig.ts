@@ -1,11 +1,10 @@
+import { FAKE_FILE_EXTENSIONS } from "./constants";
+import { resolveModule } from "./resolveModule";
+import type { FakerSchemaServerOptions } from "./types";
+import { loggerOutput } from "./utils";
+import fg from "fast-glob";
 import { existsSync } from "node:fs";
 import { join, extname } from "node:path";
-import fg from "fast-glob";
-
-import type { FakerSchemaServerOptions } from "./types";
-import { resolveModule } from "./resolveModule";
-import { loggerOutput } from "./utils";
-import { FAKE_FILE_EXTENSIONS } from "./constants";
 
 export async function getFakeConfig(options: FakerSchemaServerOptions = {}) {
 	const { include, exclude } = options;

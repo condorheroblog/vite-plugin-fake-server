@@ -1,8 +1,8 @@
 // rollup.config.mjs
-import { readFileSync } from "node:fs";
-import esbuild from "rollup-plugin-esbuild";
-import { dts } from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
+import { readFileSync } from "node:fs";
+import { dts } from "rollup-plugin-dts";
+import esbuild from "rollup-plugin-esbuild";
 import { nodeExternals } from "rollup-plugin-node-externals";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));

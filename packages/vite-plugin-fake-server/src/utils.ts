@@ -1,7 +1,6 @@
 import { IncomingMessage } from "node:http";
-import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
-
+import { fileURLToPath } from "node:url";
 import type { DefaultTreeAdapterMap, ParserError } from "parse5";
 
 /**

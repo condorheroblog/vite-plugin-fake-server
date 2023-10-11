@@ -1,5 +1,5 @@
-import { describe, test } from "vitest";
 import { resolveOptions } from "..";
+import { describe, test } from "vitest";
 
 describe(resolveOptions.name, () => {
 	test(`${resolveOptions.name} options`, ({ expect }) => {

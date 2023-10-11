@@ -1,6 +1,6 @@
-import type { FakerSchemaServerOptions } from "./types";
-import { resolveOptions } from "./resolveOptions";
 import { getFakeConfig } from "./getFakeConfig";
+import { resolveOptions } from "./resolveOptions";
+import type { FakerSchemaServerOptions } from "./types";
 
 export async function fakerSchemaServer(options: FakerSchemaServerOptions = {}) {
 	const opts = resolveOptions(options);

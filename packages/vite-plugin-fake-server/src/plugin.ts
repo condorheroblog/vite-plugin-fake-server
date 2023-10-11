@@ -1,17 +1,16 @@
-import { readFileSync } from "node:fs";
-import { URL } from "node:url";
-import { join, dirname, relative } from "node:path";
-import type { Plugin, ResolvedConfig, Connect } from "vite";
 import type { FakeRoute } from "./node";
-import { pathToRegexp, match } from "path-to-regexp";
 import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "./node";
-import chokidar from "chokidar";
-import { createRequire } from "node:module";
-
-import type { VitePluginFakerOptions } from "./types";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
+import type { VitePluginFakerOptions } from "./types";
 import { getRequestData, insertScriptInHead, sleep, traverseHtml, nodeIsElement } from "./utils";
+import chokidar from "chokidar";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { join, dirname, relative } from "node:path";
+import { URL } from "node:url";
+import { pathToRegexp, match } from "path-to-regexp";
+import type { Plugin, ResolvedConfig, Connect } from "vite";
 
 const require = createRequire(import.meta.url);
 

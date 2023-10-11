@@ -42,6 +42,7 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-json": "^6.0.1",
+		"@trivago/prettier-plugin-sort-imports": "^4.2.0",
 		"@types/node": "^20.8.4",
 		"@typescript-eslint/eslint-plugin": "^6.7.5",
 		"@typescript-eslint/parser": "^6.7.5",

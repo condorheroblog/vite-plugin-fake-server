@@ -11,6 +11,9 @@ importers:
       '@rollup/plugin-json':
         specifier: ^6.0.1
         version: registry.npmmirror.com/@rollup/plugin-json@6.0.1(rollup@4.0.2)
+      '@trivago/prettier-plugin-sort-imports':
+        specifier: ^4.2.0
+        version: registry.npmmirror.com/@trivago/prettier-plugin-sort-imports@4.2.0(prettier@3.0.3)
       '@types/node':
         specifier: ^20.8.4
         version: registry.npmmirror.com/@types/node@20.8.4
@@ -199,6 +202,17 @@ packages:
       semver: registry.npmmirror.com/semver@6.3.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  registry.npmmirror.com/@babel/generator@7.17.7:
+    resolution: {integrity: sha512-oLcVCTeIFadUoArDTwpluncplrYBmTCCZZgXCbgNGvOBBiSDDK3eWO4b/+eOTli5tKv1lg+a5/NAXg+nTcei1w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/generator/-/generator-7.17.7.tgz}
+    name: '@babel/generator'
+    version: 7.17.7
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/types': registry.npmmirror.com/@babel/types@7.23.0
+      jsesc: registry.npmmirror.com/jsesc@2.5.2
+      source-map: registry.npmmirror.com/source-map@0.5.7
     dev: true
 
   registry.npmmirror.com/@babel/generator@7.23.0:
@@ -397,6 +411,26 @@ packages:
       '@babel/types': registry.npmmirror.com/@babel/types@7.23.0
     dev: true
 
+  registry.npmmirror.com/@babel/traverse@7.17.3:
+    resolution: {integrity: sha512-5irClVky7TxRWIRtxlh2WPUUOLhcPN06AGgaQSB8AEwuyEBgJVuJ5imdHm5zxk8w0QS5T+tDfnDxAlhWjpb7cw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/traverse/-/traverse-7.17.3.tgz}
+    name: '@babel/traverse'
+    version: 7.17.3
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/code-frame': registry.npmmirror.com/@babel/code-frame@7.22.13
+      '@babel/generator': registry.npmmirror.com/@babel/generator@7.23.0
+      '@babel/helper-environment-visitor': registry.npmmirror.com/@babel/helper-environment-visitor@7.22.20
+      '@babel/helper-function-name': registry.npmmirror.com/@babel/helper-function-name@7.23.0
+      '@babel/helper-hoist-variables': registry.npmmirror.com/@babel/helper-hoist-variables@7.22.5
+      '@babel/helper-split-export-declaration': registry.npmmirror.com/@babel/helper-split-export-declaration@7.22.6
+      '@babel/parser': registry.npmmirror.com/@babel/parser@7.23.0
+      '@babel/types': registry.npmmirror.com/@babel/types@7.23.0
+      debug: registry.npmmirror.com/debug@4.3.4
+      globals: registry.npmmirror.com/globals@11.12.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   registry.npmmirror.com/@babel/traverse@7.23.0:
     resolution: {integrity: sha512-t/QaEvyIoIkwzpiZ7aoSKK8kObQYeF7T2v+dazAYCb8SXtp58zEVkWW7zAnju8FNKNdr4ScAOEDmMItbyOmEYw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/traverse/-/traverse-7.23.0.tgz}
     name: '@babel/traverse'
@@ -415,6 +449,16 @@ packages:
       globals: registry.npmmirror.com/globals@11.12.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  registry.npmmirror.com/@babel/types@7.17.0:
+    resolution: {integrity: sha512-TmKSNO4D5rzhL5bjWFcVHHLETzfQ/AmbKpKPOSjlP0WoHZ6L911fgoOKY4Alp/emzG4cHJdyN49zpgkbXFEHHw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/types/-/types-7.17.0.tgz}
+    name: '@babel/types'
+    version: 7.17.0
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/helper-validator-identifier': registry.npmmirror.com/@babel/helper-validator-identifier@7.22.20
+      to-fast-properties: registry.npmmirror.com/to-fast-properties@2.0.0
     dev: true
 
   registry.npmmirror.com/@babel/types@7.23.0:
@@ -1306,6 +1350,29 @@ packages:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@sinclair/typebox/-/typebox-0.27.8.tgz}
     name: '@sinclair/typebox'
     version: 0.27.8
+    dev: true
+
+  registry.npmmirror.com/@trivago/prettier-plugin-sort-imports@4.2.0(prettier@3.0.3):
+    resolution: {integrity: sha512-YBepjbt+ZNBVmN3ev1amQH3lWCmHyt5qTbLCp/syXJRu/Kw2koXh44qayB1gMRxcL/gV8egmjN5xWSrYyfUtyw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@trivago/prettier-plugin-sort-imports/-/prettier-plugin-sort-imports-4.2.0.tgz}
+    id: registry.npmmirror.com/@trivago/prettier-plugin-sort-imports/4.2.0
+    name: '@trivago/prettier-plugin-sort-imports'
+    version: 4.2.0
+    peerDependencies:
+      '@vue/compiler-sfc': 3.x
+      prettier: 2.x - 3.x
+    peerDependenciesMeta:
+      '@vue/compiler-sfc':
+        optional: true
+    dependencies:
+      '@babel/generator': registry.npmmirror.com/@babel/generator@7.17.7
+      '@babel/parser': registry.npmmirror.com/@babel/parser@7.23.0
+      '@babel/traverse': registry.npmmirror.com/@babel/traverse@7.17.3
+      '@babel/types': registry.npmmirror.com/@babel/types@7.17.0
+      javascript-natural-sort: registry.npmmirror.com/javascript-natural-sort@0.7.1
+      lodash: registry.npmmirror.com/lodash@4.17.21
+      prettier: registry.npmmirror.com/prettier@3.0.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/@types/acorn@4.0.6:
@@ -3433,6 +3500,12 @@ packages:
       '@pkgjs/parseargs': registry.npmmirror.com/@pkgjs/parseargs@0.11.0
     dev: true
 
+  registry.npmmirror.com/javascript-natural-sort@0.7.1:
+    resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/javascript-natural-sort/-/javascript-natural-sort-0.7.1.tgz}
+    name: javascript-natural-sort
+    version: 0.7.1
+    dev: true
+
   registry.npmmirror.com/jiti@1.20.0:
     resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/jiti/-/jiti-1.20.0.tgz}
     name: jiti
@@ -3631,6 +3704,12 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash.merge/-/lodash.merge-4.6.2.tgz}
     name: lodash.merge
     version: 4.6.2
+    dev: true
+
+  registry.npmmirror.com/lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz}
+    name: lodash
+    version: 4.17.21
     dev: true
 
   registry.npmmirror.com/log-update@5.0.1:
@@ -5084,6 +5163,13 @@ packages:
     dependencies:
       buffer-from: registry.npmmirror.com/buffer-from@1.1.2
       source-map: registry.npmmirror.com/source-map@0.6.1
+    dev: true
+
+  registry.npmmirror.com/source-map@0.5.7:
+    resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map/-/source-map-0.5.7.tgz}
+    name: source-map
+    version: 0.5.7
+    engines: {node: '>=0.10.0'}
     dev: true
 
   registry.npmmirror.com/source-map@0.6.1:
