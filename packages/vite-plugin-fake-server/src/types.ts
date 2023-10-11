@@ -9,4 +9,6 @@ export interface VitePluginFakerOptions extends Omit<FakerSchemaServerOptions, "
 	enableDev?: boolean;
 	watch?: boolean;
 	logger?: boolean;
+	timeout?: number;
+	basename?: string;
 }

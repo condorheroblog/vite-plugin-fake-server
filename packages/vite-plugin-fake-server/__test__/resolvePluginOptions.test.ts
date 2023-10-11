@@ -14,6 +14,7 @@ describe(resolvePluginOptions.name, () => {
 			    "mock",
 			  ],
 			  "logger": true,
+			  "timeout": undefined,
 			  "watch": true,
 			}
 		`);

@@ -6,7 +6,6 @@ describe(resolveOptions.name, () => {
 		const options = resolveOptions();
 		expect(options).toMatchInlineSnapshot(`
 			{
-			  "basename": "",
 			  "exclude": [],
 			  "include": [
 			    "mock",

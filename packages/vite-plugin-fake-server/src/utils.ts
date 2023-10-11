@@ -113,12 +113,3 @@ export function getIndentation(htmlString: string, index: number) {
 	}
 	return indentation;
 }
-
-export function sleep(time: number) {
-	return new Promise((resolve) => {
-		const timer = setTimeout(() => {
-			resolve(timer);
-			clearTimeout(timer);
-		}, time);
-	});
-}

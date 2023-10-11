@@ -1,9 +1,10 @@
+import { getResponse } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
 import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakerOptions } from "./types";
-import { getRequestData, insertScriptInHead, sleep, traverseHtml, nodeIsElement } from "./utils";
+import { getRequestData, insertScriptInHead, traverseHtml, nodeIsElement } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -122,8 +123,6 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 				return htmlString;
 			}
 
-			fakeData = await getFakeData(opts);
-
 			let newHtml = htmlString;
 
 			// add xhook
@@ -151,74 +150,32 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 				}
 				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
 				__XHOOK__.before(async function(req, callback) {
-					if (req.url) {
-						const instanceURL = new URL(req.url, "http://localhost:5173/");
-
-						// https://nodejs.org/api/url.html#urlpathname
-						// Invalid URL characters included in the value assigned to the pathname property are percent-encoded
-						const pathname = instanceURL.pathname;
-
-						const matchRequest = fakeModuleList.find((item) => {
-							if (!pathname || !item || !item.url) {
-								return false;
-							}
-							const method = item.method ?? "GET";
-							const reqMethod = req.method ?? "GET";
-							if (method.toUpperCase() !== reqMethod.toUpperCase()) {
-								return false;
-							}
-							return pathToRegexp(encodeURI(item.url)).test(pathname);
-						});
-						if (matchRequest) {
-							const { response, rawResponse, timeout, statusCode, url } = matchRequest;
-
-							if (timeout) {
-								await sleep(timeout);
-							}
-
-							const urlMatch = match(url, { encode: encodeURI });
-
-							const searchParams = instanceURL.searchParams;
-							const query = {};
-							for (const [key, value] of searchParams.entries()) {
-								if (query.hasOwnProperty(key)) {
-									const queryValue = query[key];
-									if (Array.isArray(queryValue)) {
-										queryValue.push(value);
-									} else {
-										query[key] = [queryValue, value];
-									}
-								} else {
-									query[key] = value;
-								}
-							}
-
-							let params = {};
-
-							if (pathname) {
-								const matchParams = urlMatch(pathname);
-								if (matchParams) {
-									params = matchParams.params;
-								}
-							}
-							if (response && typeof response === "function") {
-								const fakeResponse = response(
-									{ url: req.url, query, params, headers: req.headers, hash: instanceURL.hash },
-								);
-								callback({
-									status: statusCode ?? 200,
-									text: JSON.stringify(fakeResponse),
-									headers: {
-										"Content-Type": "application/json"
-									}
-								});
-							}
-							console.log("%c request invoke", "color: blue", req.url);
-							return;
+					${getResponse.toString()}
+					const responseResult = await getResponse({
+						URL,
+						req,
+						fakeModuleList,
+						pathToRegexp,
+						match,
+						basename: ${opts.basename.length ? opts.basename : '""'},
+						defaultTimeout: ${opts.timeout},
+					});
+					if (responseResult) {
+						const { response, statusCode, url, query, params, headers, hash } = responseResult ?? {};
+						if (response && typeof response === "function") {
+							const fakeResponse = response({ url, query, params, headers, hash });
+							callback({
+								status: statusCode,
+								text: JSON.stringify(fakeResponse),
+								headers: {
+									"Content-Type": "application/json",
+								},
+							});
 						}
+						console.log("%c request invoke", "color: blue", req.url);
+					} else {
+						console.log("%c TODO: ", "color: yellow", "add next():https://github.com/jpillora/xhook/issues/169");
 					}
-					console.log("%c TODO: ", "color: yellow", "add next():https://github.com/jpillora/xhook/issues/169");
-					__XHOOK__.disable();
 				});`,
 			);
 		},
@@ -230,80 +187,33 @@ export async function getFakeData(options: ResolvePluginOptionsType) {
 }
 
 export async function requestMiddleware(options: ResolvePluginOptionsType) {
-	const { logger } = options;
+	const { logger, basename, timeout: defaultTimeout } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
-		if (req.url) {
-			const instanceURL = new URL(req.url, "http://localhost:5173/");
-
-			// https://nodejs.org/api/url.html#urlpathname
-			// Invalid URL characters included in the value assigned to the pathname property are percent-encoded
-			const pathname = instanceURL.pathname;
-
-			const matchRequest = fakeData.find((item) => {
-				if (!pathname || !item || !item.url) {
-					return false;
-				}
-				const method = item.method ?? "GET";
-				const reqMethod = req.method ?? "GET";
-				if (method.toUpperCase() !== reqMethod.toUpperCase()) {
-					return false;
-				}
-				return pathToRegexp(encodeURI(item.url)).test(pathname);
-			});
-
-			if (matchRequest) {
-				const { response, rawResponse, timeout, statusCode, url } = matchRequest;
-
-				if (timeout) {
-					await sleep(timeout);
-				}
-
-				const urlMatch = match(url, { encode: encodeURI });
-
-				const searchParams = instanceURL.searchParams;
-				const query: Record<string, string | string[]> = {};
-				for (const [key, value] of searchParams.entries()) {
-					if (query.hasOwnProperty(key)) {
-						const queryValue = query[key];
-						if (Array.isArray(queryValue)) {
-							queryValue.push(value);
-						} else {
-							query[key] = [queryValue, value];
-						}
-					} else {
-						query[key] = value;
-					}
-				}
-
-				let params: Record<string, string> = {};
-
-				if (pathname) {
-					const matchParams = urlMatch(pathname);
-					if (matchParams) {
-						params = matchParams.params as Record<string, string>;
-					}
-				}
-
-				if (rawResponse && isFunction(rawResponse)) {
-					rawResponse(req, res);
-				} else if (response && isFunction(response)) {
-					const body = await getRequestData(req);
-					res.setHeader("Content-Type", "application/json");
-					res.statusCode = statusCode ?? 200;
-					const fakeResponse = response(
-						{ url: req.url, body, query, params, headers: req.headers, hash: instanceURL.hash },
-						req,
-						res,
-					);
-					res.end(JSON.stringify(fakeResponse));
-				}
-
-				logger && loggerOutput("request invoke", req.url!);
-				return;
+		const responseResult = await getResponse({
+			URL,
+			req,
+			fakeModuleList: fakeData,
+			pathToRegexp,
+			match,
+			basename,
+			defaultTimeout,
+		});
+		if (responseResult) {
+			const { rawResponse, response, statusCode, url, query, params, headers, hash } = responseResult ?? {};
+			if (isFunction(rawResponse)) {
+				rawResponse(req, res);
+			} else if (isFunction(response)) {
+				const body = await getRequestData(req);
+				res.setHeader("Content-Type", "application/json");
+				res.statusCode = statusCode;
+				const fakeResponse = response({ url, body, query, params, headers, hash }, req, res);
+				res.end(JSON.stringify(fakeResponse));
 			}
-		}
 
-		next();
+			logger && loggerOutput("request invoke", req.url!);
+		} else {
+			next();
+		}
 	};
 
 	return middleware;

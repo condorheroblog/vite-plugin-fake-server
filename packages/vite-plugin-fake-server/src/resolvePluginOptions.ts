@@ -9,6 +9,8 @@ export function resolvePluginOptions(options: VitePluginFakerOptions = {}) {
 		enableDev: options.enableDev ?? true,
 		watch: options.watch ?? true,
 		logger: options.logger ?? true,
+		timeout: options.timeout,
+		basename: options.basename ?? "",
 	};
 }
 
