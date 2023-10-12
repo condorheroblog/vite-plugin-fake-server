@@ -11,6 +11,7 @@ export function resolvePluginOptions(options: VitePluginFakerOptions = {}) {
 		logger: options.logger ?? true,
 		timeout: options.timeout,
 		basename: options.basename ?? "",
+		build: options.build ?? false,
 	};
 }
 

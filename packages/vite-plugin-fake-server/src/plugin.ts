@@ -1,3 +1,4 @@
+import { generateMockServer } from "./build";
 import { getResponse } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
 import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "./node";
@@ -24,6 +25,8 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 	let config: ResolvedConfig;
 	let isDevServer = false;
 
+	const opts = resolvePluginOptions(options);
+
 	return {
 		name: "vite-plugin-fake-server",
 		configResolved(resolvedConfig) {
@@ -33,7 +36,6 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 			}
 		},
 		async configureServer({ middlewares }) {
-			const opts = resolvePluginOptions(options);
 			if (!isDevServer || !opts.enableDev) {
 				return;
 			}
@@ -56,7 +58,6 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 		},
 
 		async transform(sourceCode, id) {
-			const opts = resolvePluginOptions(options);
 			if (isDevServer || !opts.enableProd) {
 				return {
 					code: sourceCode,
@@ -88,7 +89,6 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 			}
 
 			if (mainPath.length > 0 && id.endsWith(mainPath)) {
-				const opts = resolvePluginOptions(options);
 				const include = opts.include[0];
 				const relativePath = relative(dirname(id), config.root);
 				const globPatterns = FAKE_FILE_EXTENSIONS.map((ext) => join(relativePath, include, `/**/*.${ext}`));
@@ -118,7 +118,6 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 		},
 
 		async transformIndexHtml(htmlString) {
-			const opts = resolvePluginOptions(options);
 			if (isDevServer || !opts.enableProd) {
 				return htmlString;
 			}
@@ -186,6 +185,15 @@ export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Pro
 				});`,
 			);
 		},
+
+		async closeBundle() {
+			/**
+			 * Build a independently deployable mock service
+			 */
+			if (!isDevServer && opts.build) {
+				await generateMockServer(opts);
+			}
+		},
 	};
 };
 
@@ -199,7 +207,9 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 		const responseResult = await getResponse({
 			URL,
 			req,
-			fakeModuleList: fakeData,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			fakeModuleList: options?.fakeData ?? fakeData,
 			pathToRegexp,
 			match,
 			basename,

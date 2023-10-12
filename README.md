@@ -80,7 +80,7 @@ Set whether to listen to `include` files.
 Type: `boolean`\
 Default: `true`
 
-Set Whether to display the request log on the console.
+Set whether to display the request log on the console.
 
 ##### timeout
 
@@ -115,6 +115,29 @@ Set up the service simulator in the production environment.
 Powered by [XHook](https://github.com/jpillora/xhook) technology.
 
 > ⚠️ The node module cannot be used in the mock file, otherwise the production environment will fail.
+
+##### build
+
+Type: `boolean | ServerBuildOptions`\
+Default: `false`
+
+Set whether to export a independently deployable fake service(only valid in [build](https://vitejs.dev/guide/cli.html#build) mode).
+
+```ts
+interface ServerBuildOptions {
+	/**
+	 * @description Server port
+	 * @default 8888
+	 */
+	port?: number;
+	/**
+	 * Directory relative from `root` where build output will be placed. If the
+	 * directory exists, it will be removed before the build.
+	 * @default "mockServer"
+	 */
+	outDir?: string;
+}
+```
 
 ## Inspire
 

@@ -2,6 +2,20 @@ import type { FakerSchemaServerOptions } from "./node";
 
 export type { FakeRoute, IncomingMessage, ServerResponse, HttpMethodType } from "./node";
 
+export interface ServerBuildOptions {
+	/**
+	 * @description Server port
+	 * @default 8888
+	 */
+	port?: number;
+	/**
+	 * Directory relative from `root` where build output will be placed. If the
+	 * directory exists, it will be removed before the build.
+	 * @default "mockServer"
+	 */
+	outDir?: string;
+}
+
 export interface VitePluginFakerOptions extends Omit<FakerSchemaServerOptions, "include"> {
 	/**
 	 * @description Set the folder where the mock/fake `ts`, `js`, `cjs`, `mjs` files is stored.
@@ -34,7 +48,7 @@ export interface VitePluginFakerOptions extends Omit<FakerSchemaServerOptions, "
 	watch?: boolean;
 
 	/**
-	 * @description Set Whether to display the request log on the console.
+	 * @description Set whether to display the request log on the console.
 	 * @default true
 	 */
 	logger?: boolean;
@@ -50,4 +64,10 @@ export interface VitePluginFakerOptions extends Omit<FakerSchemaServerOptions, "
 	 * @default ""
 	 */
 	basename?: string;
+
+	/**
+	 * @description Set whether to export a independently deployable fake service(only valid in build mode).
+	 * @default false
+	 */
+	build?: boolean | ServerBuildOptions;
 }

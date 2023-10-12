@@ -7,6 +7,7 @@ describe(resolvePluginOptions.name, () => {
 		expect(options).toMatchInlineSnapshot(`
 			{
 			  "basename": "",
+			  "build": false,
 			  "enableDev": true,
 			  "enableProd": false,
 			  "exclude": [],
