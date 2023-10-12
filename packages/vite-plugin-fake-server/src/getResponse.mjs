@@ -72,6 +72,12 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				}
 			}
 
+			const headers = new Headers(req.headers);
+
+			if (!headers.get("Content-Type")) {
+				headers.set("Content-Type", "application/json");
+			}
+
 			return {
 				response,
 				rawResponse,
@@ -80,7 +86,7 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				url: req.url,
 				query,
 				params,
-				headers: { "Content-Type": "application/json", ...req.headers },
+				headers,
 				hash: instanceURL.hash,
 			};
 		}

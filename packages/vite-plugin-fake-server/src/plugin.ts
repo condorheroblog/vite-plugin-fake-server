@@ -174,7 +174,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 								status: statusCode,
 								text: JSON.stringify(fakeResponse),
 								headers: {
-									"Content-Type": headers["Content-Type"],
+									"Content-Type": headers.get("Content-Type"),
 								},
 							});
 						}
@@ -223,7 +223,8 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 				rawResponse(req, res);
 			} else if (isFunction(response)) {
 				const body = await getRequestData(req);
-				res.setHeader("Content-Type", headers["Content-Type"]);
+
+				res.setHeader("Content-Type", headers.get("Content-Type")!);
 				res.statusCode = statusCode;
 				const fakeResponse = response({ url, body, query, params, headers, hash }, req, res);
 				res.end(JSON.stringify(fakeResponse));
