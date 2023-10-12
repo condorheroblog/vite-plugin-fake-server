@@ -1,9 +1,10 @@
 import { version, name } from "../package.json";
+import { FAKE_FILE_EXTENSIONS } from "./node";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { ServerBuildOptions } from "./types";
 import { existsSync } from "node:fs";
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { mkdir, writeFile, readdir, copyFile, stat } from "node:fs/promises";
+import { join, extname } from "node:path";
 import pc from "picocolors";
 
 export const PORT = 8888;
@@ -30,6 +31,9 @@ export async function generateMockServer(options: ResolvePluginOptionsType) {
 	if (!existsSync(outputDir)) {
 		await mkdir(outputDir, { recursive: true });
 	}
+
+	// copy mock directory
+	await copyMockFiles(join(cwd, options.include[0]), join(outputDir, options.include[0]));
 	for (const { filename, source } of outputList) {
 		await writeFile(filename, source, "utf-8");
 	}
@@ -77,4 +81,33 @@ async function main() {
 
 main();
 `;
+}
+
+export async function copyMockFiles(sourceDir: string, targetDir: string) {
+	try {
+		if (!existsSync(targetDir)) {
+			await mkdir(targetDir, { recursive: true });
+		}
+
+		const files = await readdir(sourceDir);
+
+		for (const file of files) {
+			const sourcePath = join(sourceDir, file);
+			const targetPath = join(targetDir, file);
+
+			const fileStatus = await stat(sourcePath);
+			if (fileStatus.isDirectory()) {
+				await copyMockFiles(sourcePath, targetPath);
+			} else {
+				const ext = extname(file).toLowerCase().slice(1);
+				if (FAKE_FILE_EXTENSIONS.includes(ext)) {
+					await copyFile(sourcePath, targetPath);
+				}
+			}
+		}
+
+		// console.log(`Mock files copied from ${sourceDir} to ${targetDir}`);
+	} catch (error) {
+		console.error(`Error copying mock files: ${error}`);
+	}
 }

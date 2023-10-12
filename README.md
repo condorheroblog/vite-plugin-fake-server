@@ -12,6 +12,7 @@ A fake server plugin for Vite.
 - No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
 - Support `ts`, `js`, `cjs`, `mjs` files.
 - Support development and production environments.
+- Support exporting independent deployment services - [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 - Friendly type prompt —— defineFakeRoute.
 - Intercept XHR and Fetch request - [XHook](https://github.com/jpillora/xhook).
 
@@ -114,7 +115,7 @@ Set up the service simulator in the production environment.
 
 Powered by [XHook](https://github.com/jpillora/xhook) technology.
 
-> ⚠️ The node module cannot be used in the mock file, otherwise the production environment will fail.
+> ⚠️ The node module cannot be used in the mock file, otherwise the production environment will fail.As an alternative to keep consistent with the development environment, you can build a standalone deployment server, see [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 
 ##### build
 

@@ -1,8 +1,18 @@
 import { resolveOptions as fakerResolveOptions } from "./node";
 import type { VitePluginFakeServerOptions } from "./types";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}) {
-	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include ?? "mock"] });
+	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include || "mock"] });
+
+	for (const filePath of fakerOptions.include) {
+		const absolutePath = join(process.cwd(), filePath);
+		if (!existsSync(absolutePath)) {
+			throw new Error(`${filePath} does not exist`);
+		}
+	}
+
 	return {
 		...fakerOptions,
 		enableProd: options.enableProd ?? false,
