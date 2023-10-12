@@ -12,7 +12,7 @@ A fake server plugin for Vite.
 - No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
 - Support `ts`, `js`, `cjs`, `mjs` files.
 - Support development and production environments.
-- Support exporting independent deployment services - [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
+- Support exporting independent deployment services —— [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 - Friendly type prompt —— defineFakeRoute.
 - Intercept XHR and Fetch request - [XHook](https://github.com/jpillora/xhook).
 

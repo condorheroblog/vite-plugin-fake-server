@@ -5,4 +5,13 @@ import { vitePluginFakeServer } from "vite-plugin-fake-server";
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [react(), vitePluginFakeServer({ enableProd: true, build: true })],
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					faker: ["@faker-js/faker"],
+				},
+			},
+		},
+	},
 });

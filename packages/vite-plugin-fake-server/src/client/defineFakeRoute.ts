@@ -1,5 +1,7 @@
 import type { FakeRoute } from "../node/types";
 
-export function defineFakeRoute(config: FakeRoute[] | FakeRoute) {
+export type FakeRouteConfig = FakeRoute[] | FakeRoute;
+
+export function defineFakeRoute(config: FakeRouteConfig) {
 	return config;
 }

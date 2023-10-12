@@ -1,0 +1,12 @@
+body {
+	margin: 0;
+}
+#root {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+}
+
+.container {
+	align-items: center;
+}

@@ -18,7 +18,7 @@
 	"scripts": {
 		"postinstall": "simple-git-hooks",
 		"prepublishOnly": "nr build",
-		"dev:number-to-zh": "esno index.ts",
+		"dev": "esno index.ts",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",
