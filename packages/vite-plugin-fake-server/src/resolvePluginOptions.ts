@@ -1,7 +1,7 @@
 import { resolveOptions as fakerResolveOptions } from "./node";
-import type { VitePluginFakerOptions } from "./types";
+import type { VitePluginFakeServerOptions } from "./types";
 
-export function resolvePluginOptions(options: VitePluginFakerOptions = {}) {
+export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}) {
 	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include ?? "mock"] });
 	return {
 		...fakerOptions,

@@ -29,14 +29,14 @@ Configure plugins in the configuration file of [Vite](https://vitejs.dev/config/
 // vite.config.ts
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { vitePluginFaker } from "vite-plugin-fake-server";
+import { vitePluginFakeServer } from "vite-plugin-fake-server";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		react(),
 		// here
-		vitePluginFaker(),
+		vitePluginFakeServer(),
 	],
 });
 ```
@@ -47,7 +47,7 @@ By default, it is only valid in the development environment (`enableDev = true`)
 
 ## API
 
-### vitePluginFaker(options?)
+### vitePluginFakeServer(options?)
 
 #### options
 

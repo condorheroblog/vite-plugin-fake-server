@@ -4,7 +4,7 @@ import type { FakeRoute } from "./node";
 import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
-import type { VitePluginFakerOptions } from "./types";
+import type { VitePluginFakeServerOptions } from "./types";
 import { getRequestData, insertScriptInHead, traverseHtml, nodeIsElement } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
@@ -17,7 +17,7 @@ import type { Plugin, ResolvedConfig, Connect } from "vite";
 const require = createRequire(import.meta.url);
 
 let fakeData: FakeRoute[] = [];
-export const vitePluginFaker = async (options: VitePluginFakerOptions = {}): Promise<Plugin> => {
+export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions = {}): Promise<Plugin> => {
 	// transform
 	let isIndexHTML = true;
 	let mainPath = "";

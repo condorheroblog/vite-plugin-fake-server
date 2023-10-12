@@ -16,7 +16,7 @@ export interface ServerBuildOptions {
 	outDir?: string;
 }
 
-export interface VitePluginFakerOptions extends Omit<FakerSchemaServerOptions, "include"> {
+export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptions, "include"> {
 	/**
 	 * @description Set the folder where the mock/fake `ts`, `js`, `cjs`, `mjs` files is stored.
 	 * @default mock
