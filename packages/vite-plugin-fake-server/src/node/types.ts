@@ -1,7 +1,5 @@
 import type { IncomingMessage as HttpIncomingMessage, ServerResponse, IncomingHttpHeaders } from "node:http";
 
-// import type { IncomingMessage } from "connect";
-
 export interface IncomingMessage extends HttpIncomingMessage {
 	originalUrl?: HttpIncomingMessage["url"];
 }

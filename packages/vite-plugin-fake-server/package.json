@@ -64,10 +64,7 @@
 		"xhook": "^1.6.2"
 	},
 	"devDependencies": {
-		"@faker-js/faker": "^8.1.0",
-		"@types/connect": "^3.4.36",
 		"@types/xhook": "^1.5.0",
-		"connect": "^3.7.0",
 		"vite": "^4.4.11"
 	},
 	"publishConfig": {
