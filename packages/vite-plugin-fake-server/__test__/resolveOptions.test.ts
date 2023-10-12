@@ -1,4 +1,4 @@
-import { resolveOptions } from "..";
+import { resolveOptions } from "../src";
 import { describe, test } from "vitest";
 
 describe(resolveOptions.name, () => {

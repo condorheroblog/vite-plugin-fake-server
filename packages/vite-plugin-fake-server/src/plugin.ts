@@ -45,7 +45,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			middlewares.use(middleware);
 
 			if (opts.include && opts.include.length && opts.watch) {
-				const watchDir = join(process.cwd(), opts.include[0]);
+				const watchDir = join(process.cwd(), opts.include);
 				const watcher = chokidar.watch(watchDir, {
 					ignoreInitial: true,
 				});
@@ -89,7 +89,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			}
 
 			if (mainPath.length > 0 && id.endsWith(mainPath)) {
-				const include = opts.include[0];
+				const include = opts.include;
 				const relativePath = relative(dirname(id), config.root);
 				const globPatterns = FAKE_FILE_EXTENSIONS.map((ext) => join(relativePath, include, `/**/*.${ext}`));
 				const ignoreFiles = opts.exclude.map((file) => "!" + join(relativePath, file));
@@ -146,14 +146,6 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			return insertScriptInHead(
 				newHtml,
 				`const fakeModuleList = window.fakeModuleList;
-				export function sleep(time) {
-					return new Promise((resolve) => {
-						const timer = setTimeout(() => {
-							resolve(timer);
-							clearTimeout(timer);
-						}, time);
-					});
-				}
 				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
 				__XHOOK__.before(async function(req, callback) {
 					${getResponse.toString()}
@@ -198,7 +190,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 };
 
 export async function getFakeData(options: ResolvePluginOptionsType) {
-	return await fakerSchemaServer(options);
+	return await fakerSchemaServer({ ...options, include: [options.include] });
 }
 
 export async function requestMiddleware(options: ResolvePluginOptionsType) {

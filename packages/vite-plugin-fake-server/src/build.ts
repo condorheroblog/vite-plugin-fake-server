@@ -33,7 +33,7 @@ export async function generateMockServer(options: ResolvePluginOptionsType) {
 	}
 
 	// copy mock directory
-	await copyMockFiles(join(cwd, options.include[0]), join(outputDir, options.include[0]));
+	await copyMockFiles(join(cwd, options.include), join(outputDir, options.include));
 	for (const { filename, source } of outputList) {
 		await writeFile(filename, source, "utf-8");
 	}

@@ -15,6 +15,7 @@ export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}) 
 
 	return {
 		...fakerOptions,
+		include: fakerOptions.include[0],
 		enableProd: options.enableProd ?? false,
 		enableDev: options.enableDev ?? true,
 		watch: options.watch ?? true,
