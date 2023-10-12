@@ -10,9 +10,9 @@
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.mjs"
 		},
-		"./browser": {
-			"require": "./dist/browser.cjs",
-			"import": "./dist/browser.mjs"
+		"./client": {
+			"require": "./dist/client.cjs",
+			"import": "./dist/client.mjs"
 		}
 	},
 	"main": "dist/index.cjs",

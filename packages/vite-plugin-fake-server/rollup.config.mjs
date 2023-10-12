@@ -8,11 +8,11 @@ import { nodeExternals } from "rollup-plugin-node-externals";
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 
 const banner = `/**
- * ${pkg.name} ${pkg.version}
- * Author ${pkg.author}
- * License ${pkg.license}
- * ©️ 2023
- * Homepage ${pkg.homepage}
+ * Name: ${pkg.name}
+ * Version: ${pkg.version}
+ * Author: ${pkg.author}
+ * Homepage: ${pkg.homepage}
+ * License ${pkg.license} © 2023-Present
  */\n`;
 
 /**
@@ -42,16 +42,16 @@ const rollupConfig = [
 	},
 
 	{
-		input: "./src/browser/index.ts",
+		input: "./src/client/index.ts",
 		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
-				file: "./dist/browser.cjs",
+				file: "./dist/client.cjs",
 				format: "cjs",
 				banner,
 			},
 			{
-				file: "./dist/browser.mjs",
+				file: "./dist/client.mjs",
 				format: "esm",
 				banner,
 			},
@@ -59,9 +59,9 @@ const rollupConfig = [
 	},
 
 	{
-		input: "./src/browser/index.ts",
+		input: "./src/client/index.ts",
 		plugins: [json(), dts(), nodeExternals()],
-		output: [{ file: "./dist/browser.d.cts" }, { file: "./dist/browser.d.mts" }],
+		output: [{ file: "./dist/client.d.cts" }, { file: "./dist/client.d.mts" }],
 	},
 ];
 
