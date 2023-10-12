@@ -87,19 +87,6 @@ export function getRequestData(req: IncomingMessage): Promise<string> {
 	});
 }
 
-export function insertScriptInHead(htmlString: string, scriptContent: string, scriptIndent = " ".repeat(4)) {
-	const headRegex = /<\/head>/i;
-	const scriptTag = `<script type="module">${scriptContent}</script>\n`;
-	const insertIndex = htmlString.search(headRegex);
-	const indent = getIndentation(htmlString, insertIndex);
-	const modifiedHtmlString =
-		htmlString.slice(0, insertIndex - indent.length) +
-		scriptIndent +
-		scriptTag +
-		htmlString.slice(insertIndex - indent.length);
-	return modifiedHtmlString;
-}
-
 export function getIndentation(htmlString: string, index: number) {
 	let indentation = "";
 	let i = index - 1;

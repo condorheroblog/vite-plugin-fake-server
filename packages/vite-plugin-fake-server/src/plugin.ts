@@ -5,14 +5,14 @@ import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } fro
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import { getRequestData, insertScriptInHead, traverseHtml, nodeIsElement } from "./utils";
+import { getRequestData, traverseHtml, nodeIsElement } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join, dirname, relative } from "node:path";
 import { URL } from "node:url";
 import { pathToRegexp, match } from "path-to-regexp";
-import type { Plugin, ResolvedConfig, Connect } from "vite";
+import type { Plugin, ResolvedConfig, Connect, HtmlTagDescriptor } from "vite";
 
 const require = createRequire(import.meta.url);
 
@@ -122,30 +122,34 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				return htmlString;
 			}
 
-			let newHtml = htmlString;
+			const scriptTagOptions: HtmlTagDescriptor = { tag: "script", attrs: { type: "module" }, injectTo: "head" };
+			const scriptTagList: HtmlTagDescriptor[] = [];
 
 			// warning message in production environment
-			newHtml = insertScriptInHead(
-				newHtml,
-				`console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");\n`,
-			);
+			scriptTagList.push({
+				...scriptTagOptions,
+				children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");\n`,
+			});
 
 			// add xhook
 			const xhookPath = join(dirname(require.resolve("xhook")), "../dist/xhook.js");
 			const xhookContent = readFileSync(xhookPath, "utf-8");
-			newHtml = insertScriptInHead(newHtml, `${xhookContent}\n;window.__XHOOK__=xhook;\n`);
+			scriptTagList.push({
+				...scriptTagOptions,
+				children: `${xhookContent}\n;window.__XHOOK__=xhook;\n`,
+			});
 
 			// add path-to-regexp
 			const pathToRegexpPath = join(dirname(require.resolve("path-to-regexp")), "../dist.es2015/index.js");
 			const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
-			newHtml = insertScriptInHead(
-				newHtml,
-				`${pathToRegexpContent}\n;window.__PATH_TO_REGEXP__={pathToRegexp, match};\n`,
-			);
+			scriptTagList.push({
+				...scriptTagOptions,
+				children: `${pathToRegexpContent}\n;window.__PATH_TO_REGEXP__={pathToRegexp, match};\n`,
+			});
 
-			return insertScriptInHead(
-				newHtml,
-				`const fakeModuleList = window.fakeModuleList;
+			scriptTagList.push({
+				...scriptTagOptions,
+				children: `const fakeModuleList = window.fakeModuleList;
 				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
 				__XHOOK__.before(async function(req, callback) {
 					${getResponse.toString()}
@@ -175,7 +179,9 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						console.log("%c TODO: ", "color: yellow", "add next():https://github.com/jpillora/xhook/issues/169");
 					}
 				});`,
-			);
+			});
+
+			return scriptTagList;
 		},
 
 		async closeBundle() {
