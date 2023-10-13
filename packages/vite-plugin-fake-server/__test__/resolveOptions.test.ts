@@ -7,6 +7,11 @@ describe(resolveOptions.name, () => {
 		expect(options).toMatchInlineSnapshot(`
 			{
 			  "exclude": [],
+			  "extensions": [
+			    "ts",
+			    "js",
+			    "mjs",
+			  ],
 			  "include": [
 			    "mock",
 			  ],

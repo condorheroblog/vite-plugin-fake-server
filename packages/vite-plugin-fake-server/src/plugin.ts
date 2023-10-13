@@ -1,7 +1,7 @@
 import { generateMockServer } from "./build";
 import { getResponse } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
-import { fakerSchemaServer, isFunction, loggerOutput, FAKE_FILE_EXTENSIONS } from "./node";
+import { fakerSchemaServer, isFunction, loggerOutput } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
@@ -91,7 +91,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			if (mainPath.length > 0 && id.endsWith(mainPath)) {
 				const include = opts.include;
 				const relativePath = relative(dirname(id), config.root);
-				const globPatterns = FAKE_FILE_EXTENSIONS.map((ext) => join(relativePath, include, `/**/*.${ext}`));
+				const globPatterns = opts.extensions.map((ext) => join(relativePath, include, `/**/*.${ext}`));
 				const ignoreFiles = opts.exclude.map((file) => "!" + join(relativePath, file));
 
 				const fakeTemplate = `

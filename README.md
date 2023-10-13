@@ -10,7 +10,8 @@ A fake server plugin for Vite.
 ## Features
 
 - No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
-- Support `ts`, `js`, `cjs`, `mjs` files.
+- Support `ts`, `js`, `mjs` files.
+- ESM first.
 - Support development and production environments.
 - Support exporting independent deployment services —— [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 - Friendly type prompt —— defineFakeRoute.
@@ -42,7 +43,7 @@ export default defineConfig({
 });
 ```
 
-By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `cjs`, `mjs` files in the mock folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (`logger = true`).
+By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `mjs` files in the mock folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (`logger = true`).
 
 ## Examples
 
@@ -57,7 +58,7 @@ By default, it is only valid in the development environment (`enableDev = true`)
 Type: `string`\
 Default: `"mock"`
 
-Set the folder where the mock/fake `ts`, `js`, `cjs`, `mjs` files is stored.
+Set the folder where the mock/fake `ts`, `js`, `mjs` files is stored.
 
 ##### exclude
 
@@ -82,6 +83,13 @@ Type: `boolean`\
 Default: `true`
 
 Set whether to display the request log on the console.
+
+##### extensions
+
+Type: `string[]`\
+Default: `["ts", "js", "mjs"]`
+
+Set the mock files extensions.
 
 ##### timeout
 

@@ -1,1 +1,1 @@
-export const FAKE_FILE_EXTENSIONS = ["ts", "js", "cjs", "mjs"];
+export const FAKE_FILE_EXTENSIONS = ["ts", "js", "mjs"];

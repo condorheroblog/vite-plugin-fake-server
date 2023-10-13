@@ -6,9 +6,9 @@ export interface IncomingMessage extends HttpIncomingMessage {
 export type { ServerResponse };
 
 export interface FakerSchemaServerOptions {
-	basename?: string;
 	include?: string[];
 	exclude?: string[];
+	extensions?: string[];
 }
 
 export type UppercaseHttpMethodType =

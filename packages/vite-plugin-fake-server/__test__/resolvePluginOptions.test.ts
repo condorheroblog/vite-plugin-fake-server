@@ -11,9 +11,12 @@ describe(resolvePluginOptions.name, () => {
 			  "enableDev": true,
 			  "enableProd": false,
 			  "exclude": [],
-			  "include": [
-			    "mock",
+			  "extensions": [
+			    "ts",
+			    "js",
+			    "mjs",
 			  ],
+			  "include": "mock",
 			  "logger": true,
 			  "timeout": undefined,
 			  "watch": true,
