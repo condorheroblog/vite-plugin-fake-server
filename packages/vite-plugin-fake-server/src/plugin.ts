@@ -169,14 +169,32 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					if (responseResult) {
 						const { response, statusCode, url, query, params, headers, hash } = responseResult ?? {};
 						if (response && typeof response === "function") {
-							const fakeResponse = response({ url, query, params, headers, hash });
-							callback({
-								status: statusCode,
-								text: JSON.stringify(fakeResponse),
-								headers: {
-									"Content-Type": headers.get("Content-Type"),
-								},
-							});
+							const fakeResponse = response({ url, body: req.body, query, params, headers, hash });
+							if(!req.type || req.type.toLowerCase() === "text") {
+								callback({
+									status: statusCode,
+									text: fakeResponse,
+									headers: {
+										"Content-Type": headers.get("Content-Type"),
+									},
+								});
+							} else if (req.type.toLowerCase() === "json") {
+								callback({
+									status: statusCode,
+									data: fakeResponse,
+									headers: {
+										"Content-Type": headers.get("Content-Type"),
+									},
+								});
+							} else if (req.type.toLowerCase() === "xml") {
+								callback({
+									status: statusCode,
+									xml: fakeResponse,
+									headers: {
+										"Content-Type": headers.get("Content-Type"),
+									},
+								});
+							}
 						}
 						console.log("%c request invoke", "color: blue", req.url);
 					} else {

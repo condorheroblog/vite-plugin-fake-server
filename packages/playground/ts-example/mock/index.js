@@ -12,4 +12,11 @@ export default [
 			return req.headers["content-type"];
 		},
 	},
+	{
+		url: "/mock/post",
+		method: "POST",
+		response: ({ body }) => {
+			return body;
+		},
+	},
 ];
