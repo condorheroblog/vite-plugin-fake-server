@@ -2,7 +2,7 @@ import { resolveModule } from "./resolveModule";
 import type { ResolveOptionsType } from "./resolveOptions";
 import { loggerOutput } from "./utils";
 import fg from "fast-glob";
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
 export async function getFakeConfig(options: ResolveOptionsType) {
@@ -22,7 +22,8 @@ export async function getFakeConfig(options: ResolveOptionsType) {
 		if (existsSync(absFilePath)) {
 			// file
 			const fileExtname = extname(absFilePath).slice(1);
-			if (fileExtname) {
+			const fileStatus = statSync(absFilePath);
+			if (!fileStatus.isDirectory() && fileExtname) {
 				if (extensions.includes(fileExtname)) {
 					const fakeFiles = fg.sync(filePath, fastGlobOptions);
 					return [...acc, ...fakeFiles];
@@ -32,13 +33,18 @@ export async function getFakeConfig(options: ResolveOptionsType) {
 
 			// folder
 			const dir = join(filePath, "/");
-			const fakeFolderFiles = fg.sync(`${dir}**/*.{${extensions.join(",")}}`, fastGlobOptions);
+			const fakeFolderFiles = fg.sync(
+				extensions.map((ext) => `${dir}**/*.${ext}`),
+				fastGlobOptions,
+			);
+
 			return [...acc, ...fakeFolderFiles];
 		}
 		return acc;
 	}, []);
 
 	const ret = [];
+
 	for (const absoluteFilePath of getFakeFilePath) {
 		try {
 			const resolvedModule = await resolveModule(absoluteFilePath);
