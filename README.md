@@ -47,6 +47,82 @@ By default, it is only valid in the development environment (`enableDev = true`)
 
 ## Examples
 
+For case details, please click this link to view [packages/playground/ts-example/src](https://github.com/condorheroblog/vite-plugin-fake-server/tree/main/packages/playground/ts-example/src)
+
+### TypeScript file
+
+The most recommended way to write, you can use type hints for a better experience.
+
+> It should be noted that this way of introduction will cause `vite build` to fail.
+> `import { defineFakeRoute } from "vite-plugin-fake-server";`
+
+```ts
+import { faker } from "@faker-js/faker";
+import Mock from "mockjs";
+import { defineFakeRoute } from "vite-plugin-fake-server/client";
+
+const adminUserTemplate = {
+	id: "@guid",
+	username: "@first",
+	email: "@email",
+	avatar: '@image("200x200")',
+	role: "admin",
+};
+
+const adminUserInfo = Mock.mock(adminUserTemplate);
+
+export default defineFakeRoute([
+	{
+		url: "/mock/get-user-info",
+		response: () => {
+			return adminUserInfo;
+		},
+	},
+	{
+		url: "/fake/get-user-info",
+		response: () => {
+			return {
+				id: faker.string.uuid(),
+				avatar: faker.image.avatar(),
+				birthday: faker.date.birthdate(),
+				email: faker.internet.email(),
+				firstName: faker.person.firstName(),
+				lastName: faker.person.lastName(),
+				sex: faker.person.sexType(),
+				role: "admin",
+			};
+		},
+	},
+]);
+```
+
+### JavaScript file
+
+```javascript
+/** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
+export default [
+	{
+		url: "/mock/esm",
+		response: ({ query }) => {
+			return { format: "ESM", query };
+		},
+	},
+	{
+		url: "/mock/response-text",
+		response: (_, req) => {
+			return req.headers["content-type"];
+		},
+	},
+	{
+		url: "/mock/post",
+		method: "POST",
+		response: ({ body }) => {
+			return { ...JSON.parse(body), timestamp: Date.now() };
+		},
+	},
+];
+```
+
 ## API
 
 ### vitePluginFakeServer(options?)
