@@ -16,7 +16,7 @@ export default [
 		url: "/mock/post",
 		method: "POST",
 		response: ({ body }) => {
-			return body;
+			return { ...JSON.parse(body), timestamp: Date.now() };
 		},
 	},
 ];
