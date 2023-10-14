@@ -170,30 +170,42 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						const { response, statusCode, url, query, params, headers, hash } = responseResult ?? {};
 						if (response && typeof response === "function") {
 							const fakeResponse = response({ url, body: req.body, query, params, headers, hash });
-							if(!req.type || req.type.toLowerCase() === "text") {
-								callback({
-									status: statusCode,
-									text: fakeResponse,
-									headers: {
-										"Content-Type": headers.get("Content-Type"),
-									},
-								});
-							} else if (req.type.toLowerCase() === "json") {
-								callback({
-									status: statusCode,
-									data: fakeResponse,
-									headers: {
-										"Content-Type": headers.get("Content-Type"),
-									},
-								});
-							} else if (req.type.toLowerCase() === "xml") {
-								callback({
-									status: statusCode,
-									xml: fakeResponse,
-									headers: {
-										"Content-Type": headers.get("Content-Type"),
-									},
-								});
+							if(req.isFetch){
+								callback(new Response(
+									JSON.stringify(fakeResponse, null, 2),
+									{
+										status: statusCode,
+										headers: {
+											"Content-Type": "application/json",
+										},
+									}
+								));
+							} else {
+								if(!req.type || req.type.toLowerCase() === "text") {
+									callback({
+										status: statusCode,
+										text: fakeResponse,
+										headers: {
+											"Content-Type": "text/plain",
+										},
+									});
+								} else if (req.type.toLowerCase() === "json") {
+									callback({
+										status: statusCode,
+										data: fakeResponse,
+										headers: {
+											"Content-Type": "application/json",
+										},
+									});
+								} else if (req.type.toLowerCase() === "xml") {
+									callback({
+										status: statusCode,
+										xml: fakeResponse,
+										headers: {
+											"Content-Type": "application/xml",
+										},
+									});
+								}
 							}
 						}
 						console.log("%c request invoke", "color: blue", req.url);
