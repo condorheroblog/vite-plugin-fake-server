@@ -198,7 +198,8 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						}
 						console.log("%c request invoke", "color: blue", req.url);
 					} else {
-						console.log("%c TODO: ", "color: yellow", "add next():https://github.com/jpillora/xhook/issues/169");
+						// next external URL
+						callback();
 					}
 				});`,
 			});
