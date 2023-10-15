@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/npm/l/vite-plugin-fake-server)](https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/condorheroblog/vite-plugin-fake-server)](https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/packages/vite-plugin-fake-server)
 
-A fake server plugin for Vite.
+A fake server plugin for Vite. [Live Demo](https://condorheroblog.github.io/vite-plugin-fake-server/)
 
 ## Features
 
