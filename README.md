@@ -201,6 +201,18 @@ Powered by [XHook](https://github.com/jpillora/xhook) technology.
 
 > ⚠️ The node module cannot be used in the mock file, otherwise the production environment will fail.As an alternative to keep consistent with the development environment, you can build a standalone deployment server, see [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 
+Compared with the development environment, the API interface defined in the production environment does not have a `rawResponse` function. The response function does not have the second parameter `request` and the third parameter `response`.
+
+```ts
+export interface FakeRoute {
+	url: string;
+	method?: HttpMethodType;
+	timeout?: number;
+	statusCode?: number;
+	response?: (HTTPRequest: URLRequest) => any;
+}
+```
+
 ##### build
 
 Type: `boolean | ServerBuildOptions`\
@@ -227,6 +239,40 @@ interface ServerBuildOptions {
 ## Inspire
 
 - [vite-plugin-mock](https://github.com/vbenjs/vite-plugin-mock)
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: git checkout -b my-new-feature
+
+### Debugging
+
+#### In development environment
+
+```
+# packages/vite-plugin-fake-server
+npm run build:watch
+
+
+# packages/playground/ts-example
+npm run dev
+```
+
+#### In production environment
+
+```
+# packages/vite-plugin-fake-server
+npm run build:watch
+
+
+# packages/playground/ts-example
+npm run build
+npm run preview
+```
+
+3. Commit your changes: git commit -am "Add some feature"
+4. Push to the branch: git push origin my-new-feature
+5. Submit a pull request :D
 
 ## License
 
