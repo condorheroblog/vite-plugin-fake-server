@@ -25,6 +25,7 @@ jobs:
       - name: Install and Build 🔧
         run: |
           pnpm i
+          pnpm --filter vite-plugin-fake-server run build
           pnpm --filter ts-example run build
 
       - name: Deploy 🚀

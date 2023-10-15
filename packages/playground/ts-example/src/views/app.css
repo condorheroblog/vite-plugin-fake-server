@@ -7,11 +7,17 @@ body {
 }
 
 .container {
-	display: flex,
-	width: 900px,
-	height: 400px,
-	border: 1px solid #555,
-	borderRadius: 5px
+	display: flex;
+	gap: 3em;
+}
+
+.code-textarea {
+	font-family: Fira Code VF,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
+	width: 50%;
+	flex-shrink: 0;
+	background-color: #f1f1f1;
+	border: 1px solid #555555;
+	border-radius: 0.5em;
 }
 
 .select-wrapper {
@@ -37,7 +43,7 @@ body {
 }
 
 code {
-	font-family: monospace;
+	font-family: Fira Code VF,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
 	font-size: 14px;
 	display: block;
 	min-height: 10em;
