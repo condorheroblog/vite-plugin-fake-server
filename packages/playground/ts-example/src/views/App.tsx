@@ -2,20 +2,23 @@ import "./app.css";
 import { CodePreview } from "./code-preview";
 import FetchCommonJS from "./fetch-commonJS";
 import FetchExternal from "./fetch-external";
-import FetchPost from "./fetch-post";
+import FetchMethodPost from "./fetch-method-post";
 import FetchQuery from "./fetch-query";
 import FetchResponseText from "./fetch-response-text";
 import XHRGetNest from "./xhr-get-nest";
-import XHRPost from "./xhr-post";
-import { useState } from "react";
+import XHRMethodPost from "./xhr-method-post";
+import XHRResponseDocument from "./xhr-response-document";
+import XHRResponseText from "./xhr-response-text";
+import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const options = [
 	{
-		label: "XHRPost",
-		value: "XHRPost",
-		code: XHRPost.code,
-		element: XHRPost.element,
+		label: "XHRMethodPost",
+		value: "XHRMethodPost",
+		code: XHRMethodPost.code,
+		element: XHRMethodPost.element,
 	},
 	{
 		label: "XHRGetNest",
@@ -30,10 +33,10 @@ const options = [
 		element: FetchExternal.element,
 	},
 	{
-		label: "FetchPost",
-		value: "FetchPost",
-		code: FetchPost.code,
-		element: FetchPost.element,
+		label: "FetchMethodPost",
+		value: "FetchMethodPost",
+		code: FetchMethodPost.code,
+		element: FetchMethodPost.element,
 	},
 	{
 		label: "FetchQuery",
@@ -53,21 +56,43 @@ const options = [
 		code: FetchCommonJS.code,
 		element: FetchCommonJS.element,
 	},
+	{
+		label: "XHRResponseDocument",
+		value: "XHRResponseDocument",
+		code: XHRResponseDocument.code,
+		element: XHRResponseDocument.element,
+	},
+	{
+		label: "XHRResponseText",
+		value: "XHRResponseText",
+		code: XHRResponseText.code,
+		element: XHRResponseText.element,
+	},
 ];
 function App() {
+	const navigate = useNavigate();
+	const location = useLocation();
 	const [selectedValue, setSelectedValue] = useState(options[0].value);
 
 	const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
 		setSelectedValue(event.target.value);
-		setSelectedValue(event.target.value);
+		navigate(`#${event.target.value}`);
 	};
+
+	useEffect(() => {
+		const hash = location.hash.slice(1);
+		if (hash.length > 0) {
+			setSelectedValue(hash);
+		} else {
+			setSelectedValue(options[0].value);
+		}
+	}, [location]);
 
 	const component = options.find((option) => option.value === selectedValue);
 	return (
 		<main>
 			<div className="select-wrapper">
 				<select className="select" value={selectedValue} onChange={handleChange}>
-					<option value="">please select a component</option>
 					{options.map(({ label, value }) => {
 						return (
 							<option key={value} value={value}>

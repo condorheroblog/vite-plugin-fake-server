@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function XHRPost() {
+export function XHRMethodPost() {
 	const [text, setText] = useState({});
 
 	const xhrData = () => {
@@ -13,7 +13,7 @@ export function XHRPost() {
 		xhr.open("POST", "/mock/post", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
 
-		xhr.addEventListener("readystatechange", function () {
+		xhr.addEventListener("load", function () {
 			setText(xhr.response);
 		});
 
@@ -39,11 +39,11 @@ xhr.responseType = "json";
 xhr.open("POST", "/mock/post", true);
 xhr.setRequestHeader("Content-Type", "application/json");
 
-xhr.addEventListener("readystatechange", function () {
+xhr.addEventListener("load", function () {
 	console.log(typeof xhr.response);
 	setText(xhr.response);
 });
 
 xhr.send(JSON.stringify(data));`,
-	element: <XHRPost />,
+	element: <XHRMethodPost />,
 };

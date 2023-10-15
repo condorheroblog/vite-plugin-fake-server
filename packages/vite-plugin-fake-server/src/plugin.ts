@@ -197,7 +197,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 											"Content-Type": "application/json",
 										},
 									});
-								} else if (req.type.toLowerCase() === "xml") {
+								} else if (req.type.toLowerCase() === "document") {
 									callback({
 										status: statusCode,
 										xml: fakeResponse,
@@ -258,7 +258,12 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 				res.setHeader("Content-Type", headers.get("Content-Type")!);
 				res.statusCode = statusCode;
 				const fakeResponse = response({ url, body, query, params, headers, hash }, req, res);
-				res.end(JSON.stringify(fakeResponse));
+				if (typeof fakeResponse === "string") {
+					// XML
+					res.end(fakeResponse);
+				} else {
+					res.end(JSON.stringify(fakeResponse, null, 2));
+				}
 			}
 
 			logger && loggerOutput("request invoke", req.url!);

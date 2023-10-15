@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function FetchPost() {
+export function FetchMethodPost() {
 	const [text, setText] = useState("---");
 
 	const fetchData = () => {
@@ -26,5 +26,5 @@ fetch("/mock/mjs", { method: "POST" })
 .then((response) => {
 	setText(response.format);
 });`,
-	element: <FetchPost />,
+	element: <FetchMethodPost />,
 };
