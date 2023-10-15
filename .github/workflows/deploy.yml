@@ -1,0 +1,33 @@
+name: Build and Deploy
+
+permissions:
+  contents: write
+
+on:
+  push:
+    paths:
+      - 'packages/playground/ts-example/src/**'
+
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install and Build 🔧
+        run: |
+          pnpm i
+          pnpm --filter ts-example run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: packages/playground/ts-example/dist
