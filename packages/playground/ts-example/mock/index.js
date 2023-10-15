@@ -8,8 +8,8 @@ export default [
 	},
 	{
 		url: "/mock/response-text",
-		response: (_, req) => {
-			return req.headers["content-type"];
+		response: () => {
+			return "I am a paragraph of text";
 		},
 	},
 	{

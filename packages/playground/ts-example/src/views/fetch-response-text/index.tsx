@@ -6,11 +6,10 @@ export function FetchResponseText() {
 	const fetchData = () => {
 		fetch(`/mock/response-text`, { method: "get", headers: { "Content-Type": "text/plain" } })
 			.then((response) => {
-				setText(response.headers.get("Content-Type")!);
 				return response.text();
 			})
 			.then((response) => {
-				console.log(response);
+				setText(response);
 			});
 	};
 	return (
@@ -26,11 +25,10 @@ export default {
 	code: `
 fetch("/mock/response-text", { method: "get", headers: { "Content-Type": "text/plain" } })
 .then((response) => {
-	setText(response.headers.get("Content-Type")!);
 	return response.text();
 })
 .then((response) => {
-	console.log(response);
+	setText(response);
 });`,
 	element: <FetchResponseText />,
 };

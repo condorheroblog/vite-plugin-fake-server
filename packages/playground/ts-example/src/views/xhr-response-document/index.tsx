@@ -17,6 +17,7 @@ export function XHRResponseDocument() {
 	return (
 		<div>
 			<code>Check in the console</code>
+			<br />
 			<button onClick={xhrData}>get XML</button>
 		</div>
 	);

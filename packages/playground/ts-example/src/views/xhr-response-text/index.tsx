@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export function XHRResponseText() {
-	const [text, setText] = useState({});
+	const [text, setText] = useState("");
 
 	const xhrData = () => {
 		const xhr = new XMLHttpRequest();
@@ -22,7 +22,7 @@ export function XHRResponseText() {
 	};
 	return (
 		<div>
-			<code>{JSON.stringify(text, null, 2)}</code>
+			<code>{text}</code>
 			<br />
 			<button onClick={xhrData}>send XHR</button>
 		</div>
@@ -36,12 +36,12 @@ const data = {
 	username: "admin",
 	password: "123456",
 };
-xhr.responseType = "json";
-xhr.open("POST", "/mock/post", true);
+xhr.responseType = "text";
+xhr.open("GET", "/mock/response-text");
 xhr.setRequestHeader("Content-Type", "application/json");
 
 xhr.addEventListener("load", function () {
-	console.log(typeof xhr.response);
+	console.log(xhr.responseText);
 	setText(xhr.response);
 });
 
