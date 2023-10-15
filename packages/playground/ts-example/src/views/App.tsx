@@ -15,58 +15,58 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const options = [
 	{
-		label: "XHRMethodPost",
-		value: "XHRMethodPost",
+		label: "xhr-method-post",
+		value: "xhr-method-post",
 		code: XHRMethodPost.code,
 		element: XHRMethodPost.element,
 	},
 	{
-		label: "XHRGetNest",
-		value: "XHRGetNest",
+		label: "xhr-get-nest",
+		value: "xhr-get-nest",
 		code: XHRGetNest.code,
 		element: XHRGetNest.element,
 	},
 	{
-		label: "FetchExternal",
-		value: "FetchExternal",
-		code: FetchExternal.code,
-		element: FetchExternal.element,
-	},
-	{
-		label: "FetchMethodPost",
-		value: "FetchMethodPost",
-		code: FetchMethodPost.code,
-		element: FetchMethodPost.element,
-	},
-	{
-		label: "FetchQuery",
-		value: "FetchQuery",
-		code: FetchQuery.code,
-		element: FetchQuery.element,
-	},
-	{
-		label: "FetchResponseText",
-		value: "FetchResponseText",
-		code: FetchResponseText.code,
-		element: FetchResponseText.element,
-	},
-	{
-		label: "FetchCommonJS",
-		value: "FetchCommonJS",
-		code: FetchCommonJS.code,
-		element: FetchCommonJS.element,
-	},
-	{
-		label: "XHRResponseDocument",
-		value: "XHRResponseDocument",
+		label: "xhr-response-document",
+		value: "xhr-response-document",
 		code: XHRResponseDocument.code,
 		element: XHRResponseDocument.element,
 	},
 	{
-		label: "XHRResponseText",
-		value: "XHRResponseText",
+		label: "xhr-response-text",
+		value: "xhr-response-text",
 		code: XHRResponseText.code,
 		element: XHRResponseText.element,
+	},
+	{
+		label: "fetch-external",
+		value: "fetch-external",
+		code: FetchExternal.code,
+		element: FetchExternal.element,
+	},
+	{
+		label: "fetch-method-post",
+		value: "fetch-method-post",
+		code: FetchMethodPost.code,
+		element: FetchMethodPost.element,
+	},
+	{
+		label: "fetch-query",
+		value: "fetch-query",
+		code: FetchQuery.code,
+		element: FetchQuery.element,
+	},
+	{
+		label: "fetch-response-text",
+		value: "fetch-response-text",
+		code: FetchResponseText.code,
+		element: FetchResponseText.element,
+	},
+	{
+		label: "fetch-commonJS",
+		value: "fetch-commonJS",
+		code: FetchCommonJS.code,
+		element: FetchCommonJS.element,
 	},
 ];
 function App() {
@@ -102,7 +102,7 @@ function App() {
 					})}
 				</select>
 			</div>
-			<p>selected component: {selectedValue}</p>
+			<p>Selected: {selectedValue}</p>
 			<div className="container">
 				{component ? <CodePreview code={component.code} element={component.element} /> : null}
 			</div>
