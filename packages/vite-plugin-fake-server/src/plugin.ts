@@ -178,7 +178,9 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					if (responseResult) {
 						const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
 						if (response && typeof response === "function") {
-							const fakeResponse = response({ url, body: req.body, query, params, headers: req.headers, hash });
+							const fakeResponse = await Promise.resolve(
+								response({ url, body: req.body, query, params, headers: req.headers, hash })
+							);
 							if(req.isFetch){
 								if (typeof fakeResponse === "string") {
 									if (!responseHeaders.get("Content-Type")) {
@@ -296,7 +298,7 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders, hash } =
 				responseResult ?? {};
 			if (isFunction(rawResponse)) {
-				rawResponse(req, res);
+				await Promise.resolve(rawResponse(req, res));
 			} else if (isFunction(response)) {
 				const body = await getRequestData(req);
 
@@ -312,7 +314,9 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 				if (statusText) {
 					res.statusMessage = statusText;
 				}
-				const fakeResponse = response({ url, body, query, params, headers: req.headers, hash }, req, res);
+				const fakeResponse = await Promise.resolve(
+					response({ url, body, query, params, headers: req.headers, hash }, req, res),
+				);
 				if (typeof fakeResponse === "string") {
 					// XML
 					res.end(fakeResponse);

@@ -82,6 +82,7 @@ export interface FakeRoute {
 	headers?: OutgoingHttpHeaders;
 
 	/**
+	 * Supports both synchronous and asynchronous
 	 * A callback function that handles the response generation based on the received HTTP request, the incoming message, and the server response.
 	 * @param HTTPRequest - The URLRequest object representing the processed HTTP request parameters.
 	 * @param req - The IncomingMessage object representing the incoming HTTP message.
@@ -96,6 +97,7 @@ export interface FakeRoute {
 	) => any;
 
 	/**
+	 * Supports both synchronous and asynchronous
 	 * A callback function that handles the custom response.
 	 * @param req - The IncomingMessage object representing the incoming HTTP message.
 	 * @param res - The ServerResponse object representing the server's response.

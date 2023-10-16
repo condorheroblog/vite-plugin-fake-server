@@ -31,19 +31,18 @@ export function XHRWithCredentials() {
 export default {
 	code: `
 const xhr = new XMLHttpRequest();
-const data = {
-	username: "admin",
-	password: "123456",
-};
 xhr.responseType = "json";
-xhr.open("POST", "/mock/post", true);
+xhr.open("POST", "/mock/with-credentials", true);
 xhr.setRequestHeader("Content-Type", "application/json");
+xhr.setRequestHeader("authorization", "token");
 
+xhr.withCredentials = true;
 xhr.addEventListener("load", function () {
-	console.log(typeof xhr.response);
+	console.log(xhr.getAllResponseHeaders());
+	console.log(xhr.response);
 	setText(xhr.response);
 });
 
-xhr.send(JSON.stringify(data));`,
+xhr.send();`,
 	element: <XHRWithCredentials />,
 };

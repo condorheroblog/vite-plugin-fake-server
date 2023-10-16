@@ -45,4 +45,11 @@ export default defineFakeRoute([
 			return { message: "with-credentials" };
 		},
 	},
+	{
+		url: "/mock/async-response",
+		method: "POST",
+		response: () => {
+			return { message: "async-response" };
+		},
+	},
 ]);

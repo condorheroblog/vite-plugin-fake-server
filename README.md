@@ -10,8 +10,10 @@ A fake server plugin for Vite. [Live Demo](https://condorheroblog.github.io/vite
 ## Features
 
 - No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
-- Support `ts`, `js`, `mjs` files.
 - ESM first.
+- Support `ts`, `js`, `mjs` files.
+- Support multiple response methods —— [responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType).
+- Support custom response headers.
 - Support development and production environments.
 - Support exporting independent deployment services —— [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 - Friendly type prompt —— defineFakeRoute.

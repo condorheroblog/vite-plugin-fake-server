@@ -1,5 +1,6 @@
 import "./app.css";
 import { CodePreview } from "./code-preview";
+import FetchAsyncResponse from "./fetch-async-response";
 import FetchCommonJS from "./fetch-commonJS";
 import FetchExternal from "./fetch-external";
 import FetchMethodPost from "./fetch-method-post";
@@ -82,6 +83,12 @@ const options = [
 		value: "fetch-response-text",
 		code: FetchResponseText.code,
 		element: FetchResponseText.element,
+	},
+	{
+		label: "fetch-async-response",
+		value: "fetch-async-response",
+		code: FetchAsyncResponse.code,
+		element: FetchAsyncResponse.element,
 	},
 	{
 		label: "fetch-commonJS",
