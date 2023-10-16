@@ -11,6 +11,7 @@ import XHRResponseBoolean from "./xhr-response-boolean";
 import XHRResponseDocument from "./xhr-response-document";
 import XHRResponseNumber from "./xhr-response-number";
 import XHRResponseText from "./xhr-response-text";
+import XHRWithCredentials from "./xhr-with-credentials";
 import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -51,6 +52,12 @@ const options = [
 		value: "xhr-response-boolean",
 		code: XHRResponseBoolean.code,
 		element: XHRResponseBoolean.element,
+	},
+	{
+		label: "xhr-with-credentials",
+		value: "xhr-with-credentials",
+		code: XHRWithCredentials.code,
+		element: XHRWithCredentials.element,
 	},
 	{
 		label: "fetch-external",

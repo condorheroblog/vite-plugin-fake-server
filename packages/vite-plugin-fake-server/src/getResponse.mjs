@@ -40,7 +40,14 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 			return pathToRegexp(realURL).test(pathname);
 		});
 		if (matchRequest) {
-			const { response, rawResponse, timeout = defaultTimeout, statusCode, url } = matchRequest;
+			const {
+				response,
+				rawResponse,
+				timeout = defaultTimeout,
+				statusCode,
+				url,
+				headers: responseHeaders = {},
+			} = matchRequest;
 
 			if (timeout) {
 				await sleep(timeout);
@@ -72,12 +79,6 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				}
 			}
 
-			const headers = new Headers(req.headers);
-
-			if (!headers.get("Content-Type")) {
-				headers.set("Content-Type", "application/json");
-			}
-
 			return {
 				response,
 				rawResponse,
@@ -86,7 +87,7 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				url: req.url,
 				query,
 				params,
-				headers,
+				responseHeaders: new Headers(responseHeaders),
 				hash: instanceURL.hash,
 			};
 		}

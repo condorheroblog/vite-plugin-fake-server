@@ -1,4 +1,9 @@
-import type { IncomingMessage as HttpIncomingMessage, ServerResponse, IncomingHttpHeaders } from "node:http";
+import type {
+	IncomingMessage as HttpIncomingMessage,
+	ServerResponse,
+	IncomingHttpHeaders,
+	OutgoingHttpHeaders,
+} from "node:http";
 
 export interface IncomingMessage extends HttpIncomingMessage {
 	originalUrl?: HttpIncomingMessage["url"];
@@ -39,6 +44,7 @@ export interface FakeRoute {
 	method?: HttpMethodType;
 	timeout?: number;
 	statusCode?: number;
+	headers?: OutgoingHttpHeaders;
 
 	response?: (
 		HTTPRequest: URLRequest,

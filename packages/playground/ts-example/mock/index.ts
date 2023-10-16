@@ -34,4 +34,15 @@ export default defineFakeRoute([
 			};
 		},
 	},
+	{
+		url: "/mock/with-credentials",
+		method: "POST",
+		headers: {
+			"access-control-allow-credentials": "true",
+			"access-control-allow-origin": "https://developer.mozilla.org/",
+		},
+		response: () => {
+			return { message: "with-credentials" };
+		},
+	},
 ]);

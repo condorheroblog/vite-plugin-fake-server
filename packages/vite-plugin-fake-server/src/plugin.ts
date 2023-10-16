@@ -104,7 +104,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						return [...list, ...modList];
 					}
 				}, []);
-				window.fakeModuleList = fakeModuleList;
+				window.__FAKE__MODULE__LIST__ = fakeModuleList;
 				`;
 
 				return {
@@ -153,10 +153,19 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 
 			scriptTagList.push({
 				...scriptTagOptions,
-				children: `const fakeModuleList = window.fakeModuleList;
+				children: `const fakeModuleList = window.__FAKE__MODULE__LIST__;
 				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
 				__XHOOK__.before(async function(req, callback) {
 					${getResponse.toString()}
+
+					function headersToObject(headers) {
+						const headersObject = {};
+						for (const [name, value] of headers.entries()) {
+							headersObject[name] = value;
+						}
+						return headersObject;
+					}
+
 					const responseResult = await getResponse({
 						URL,
 						req,
@@ -167,59 +176,64 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						defaultTimeout: ${opts.timeout},
 					});
 					if (responseResult) {
-						const { response, statusCode, url, query, params, headers, hash } = responseResult ?? {};
+						const { response, statusCode, url, query, params, responseHeaders, hash } = responseResult ?? {};
 						if (response && typeof response === "function") {
-							const fakeResponse = response({ url, body: req.body, query, params, headers, hash });
+							const fakeResponse = response({ url, body: req.body, query, params, headers: req.headers, hash });
 							if(req.isFetch){
 								if (typeof fakeResponse === "string") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "text/plain");
+									}
 									callback(new Response(
 										fakeResponse,
 										{
 											status: statusCode,
-											headers: {
-												"Content-Type": "text/plain",
-											},
+											headers: headersToObject(responseHeaders),
 										}
 									));
 								} else {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "application/json");
+									}
 									callback(new Response(
 										JSON.stringify(fakeResponse, null, 2),
 										{
 											status: statusCode,
-											headers: {
-												"Content-Type": "application/json",
-											},
+											headers: headersToObject(responseHeaders),
 										}
 									));
 								}
 							} else {
 								if(!req.type || req.type.toLowerCase() === "text") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "text/plain");
+									}
 									callback({
 										status: statusCode,
 										text: fakeResponse,
 										data: fakeResponse,
-										headers: {
-											"Content-Type": "text/plain",
-										},
+										headers: headersToObject(responseHeaders),
 									});
 								} else if (req.type.toLowerCase() === "json") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "application/json");
+									}
 									callback({
 										status: statusCode,
 										data: fakeResponse,
-										headers: {
-											"Content-Type": "application/json",
-										},
+										headers: headersToObject(responseHeaders),
 									});
 								} else if (req.type.toLowerCase() === "document") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "application/xml");
+									}
 									const parser = new DOMParser();
 									const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
 									callback({
 										status: statusCode,
 										xml: xmlDoc,
 										data: xmlDoc,
-										headers: {
-											"Content-Type": "application/xml",
-										},
+										headers: headersToObject(responseHeaders),
 									});
 								}
 							}
@@ -265,15 +279,22 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 			defaultTimeout,
 		});
 		if (responseResult) {
-			const { rawResponse, response, statusCode, url, query, params, headers, hash } = responseResult ?? {};
+			const { rawResponse, response, statusCode, url, query, params, responseHeaders, hash } = responseResult ?? {};
 			if (isFunction(rawResponse)) {
 				rawResponse(req, res);
 			} else if (isFunction(response)) {
 				const body = await getRequestData(req);
 
-				res.setHeader("Content-Type", headers.get("Content-Type")!);
+				for (const key of responseHeaders.keys()) {
+					res.setHeader(key, responseHeaders.get(key)!);
+				}
+
+				if (!res.getHeader("Content-Type")) {
+					res.setHeader("Content-Type", "application/json");
+				}
+
 				res.statusCode = statusCode;
-				const fakeResponse = response({ url, body, query, params, headers, hash }, req, res);
+				const fakeResponse = response({ url, body, query, params, headers: req.headers, hash }, req, res);
 				if (typeof fakeResponse === "string") {
 					// XML
 					res.end(fakeResponse);
