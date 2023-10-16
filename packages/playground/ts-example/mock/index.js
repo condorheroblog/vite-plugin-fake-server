@@ -13,6 +13,18 @@ export default [
 		},
 	},
 	{
+		url: "/mock/response-number",
+		response: () => {
+			return Math.random();
+		},
+	},
+	{
+		url: "/mock/response-boolean",
+		response: () => {
+			return Math.random() > 0.5 ? true : false;
+		},
+	},
+	{
 		url: "/mock/post",
 		method: "POST",
 		response: ({ body }) => {

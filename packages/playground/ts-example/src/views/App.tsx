@@ -7,7 +7,9 @@ import FetchQuery from "./fetch-query";
 import FetchResponseText from "./fetch-response-text";
 import XHRGetNest from "./xhr-get-nest";
 import XHRMethodPost from "./xhr-method-post";
+import XHRResponseBoolean from "./xhr-response-boolean";
 import XHRResponseDocument from "./xhr-response-document";
+import XHRResponseNumber from "./xhr-response-number";
 import XHRResponseText from "./xhr-response-text";
 import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
@@ -39,6 +41,18 @@ const options = [
 		element: XHRResponseText.element,
 	},
 	{
+		label: "xhr-response-number",
+		value: "xhr-response-number",
+		code: XHRResponseNumber.code,
+		element: XHRResponseNumber.element,
+	},
+	{
+		label: "xhr-response-boolean",
+		value: "xhr-response-boolean",
+		code: XHRResponseBoolean.code,
+		element: XHRResponseBoolean.element,
+	},
+	{
 		label: "fetch-external",
 		value: "fetch-external",
 		code: FetchExternal.code,
@@ -67,6 +81,7 @@ const options = [
 		value: "fetch-commonJS",
 		code: FetchCommonJS.code,
 		element: FetchCommonJS.element,
+		disabled: true,
 	},
 ];
 function App() {
@@ -93,9 +108,9 @@ function App() {
 		<main>
 			<div className="select-wrapper">
 				<select className="select" value={selectedValue} onChange={handleChange}>
-					{options.map(({ label, value }) => {
+					{options.map(({ label, value, disabled }) => {
 						return (
-							<option key={value} value={value}>
+							<option key={value} value={value} disabled={disabled}>
 								{label}
 							</option>
 						);
