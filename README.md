@@ -51,12 +51,32 @@ By default, it is only valid in the development environment (`enableDev = true`)
 
 For case details, please click this link to view [packages/playground/ts-example/src](https://github.com/condorheroblog/vite-plugin-fake-server/tree/main/packages/playground/ts-example/src)
 
-### TypeScript file
+The most recommended way is to use a TypeScript file so you can use the `defineFakeRoute` function to get good code hints.
 
-The most recommended way to write, you can use type hints for a better experience.
+The defineFakeRoute function parameters require the user to enter the route type as follows:
+
+```ts
+export interface FakeRoute {
+	url: string;
+	method?: HttpMethodType;
+	timeout?: number;
+	statusCode?: number;
+	statusText?: string;
+	headers?: OutgoingHttpHeaders;
+	response?: (HTTPRequest: URLRequest, req: IncomingMessage, res: ServerResponse) => any;
+	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
+}
+export type FakeRouteConfig = FakeRoute[] | FakeRoute;
+
+export function defineFakeRoute(config: FakeRouteConfig) {
+	return config;
+}
+```
 
 > It should be noted that this way of introduction will cause `vite build` to fail.
 > `import { defineFakeRoute } from "vite-plugin-fake-server";`
+
+### In TypeScript file
 
 ```ts
 import { faker } from "@faker-js/faker";
@@ -98,7 +118,7 @@ export default defineFakeRoute([
 ]);
 ```
 
-### JavaScript file
+### In JavaScript file
 
 ```javascript
 /** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
@@ -123,6 +143,20 @@ export default [
 		},
 	},
 ];
+```
+
+### In `mjs` file
+
+```javascript
+export default {
+	url: "/mock/mjs",
+	method: "POST",
+	statusCode: 200,
+	statusText: "OK",
+	response: () => {
+		return { format: "ESM" };
+	},
+};
 ```
 
 ## API
@@ -245,9 +279,15 @@ interface ServerBuildOptions {
 }
 ```
 
-## Inspire
+## Principle
+
+![vite-plugin-fake-server](https://github.com/condorheroblog/vite-plugin-fake-server/assets/47056890/141278b0-8b72-4eb5-8b33-2dd68497e1c0)
+
+## Appreciation
 
 - [vite-plugin-mock](https://github.com/vbenjs/vite-plugin-mock)
+- [XHook](https://github.com/jpillora/xhook)
+- [connect](https://github.com/senchalabs/connect#readme)
 
 ## Contributing
 
