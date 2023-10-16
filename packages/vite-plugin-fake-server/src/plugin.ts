@@ -176,7 +176,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						defaultTimeout: ${opts.timeout},
 					});
 					if (responseResult) {
-						const { response, statusCode, url, query, params, responseHeaders, hash } = responseResult ?? {};
+						const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
 						if (response && typeof response === "function") {
 							const fakeResponse = response({ url, body: req.body, query, params, headers: req.headers, hash });
 							if(req.isFetch){
@@ -187,6 +187,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 									callback(new Response(
 										fakeResponse,
 										{
+											statusText,
 											status: statusCode,
 											headers: headersToObject(responseHeaders),
 										}
@@ -198,6 +199,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 									callback(new Response(
 										JSON.stringify(fakeResponse, null, 2),
 										{
+											statusText,
 											status: statusCode,
 											headers: headersToObject(responseHeaders),
 										}
@@ -209,6 +211,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 										responseHeaders.set("Content-Type", "text/plain");
 									}
 									callback({
+										statusText,
 										status: statusCode,
 										text: fakeResponse,
 										data: fakeResponse,
@@ -219,6 +222,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 										responseHeaders.set("Content-Type", "application/json");
 									}
 									callback({
+										statusText,
 										status: statusCode,
 										data: fakeResponse,
 										headers: headersToObject(responseHeaders),
@@ -230,9 +234,19 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 									const parser = new DOMParser();
 									const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
 									callback({
+										statusText,
 										status: statusCode,
 										xml: xmlDoc,
 										data: xmlDoc,
+										headers: headersToObject(responseHeaders),
+									});
+								} else {
+									// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
+									// "arraybuffer" | "blob"
+									callback({
+										statusText,
+										status: statusCode,
+										data: fakeResponse,
 										headers: headersToObject(responseHeaders),
 									});
 								}
@@ -279,7 +293,8 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 			defaultTimeout,
 		});
 		if (responseResult) {
-			const { rawResponse, response, statusCode, url, query, params, responseHeaders, hash } = responseResult ?? {};
+			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders, hash } =
+				responseResult ?? {};
 			if (isFunction(rawResponse)) {
 				rawResponse(req, res);
 			} else if (isFunction(response)) {
@@ -294,6 +309,9 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 				}
 
 				res.statusCode = statusCode;
+				if (statusText) {
+					res.statusMessage = statusText;
+				}
 				const fakeResponse = response({ url, body, query, params, headers: req.headers, hash }, req, res);
 				if (typeof fakeResponse === "string") {
 					// XML

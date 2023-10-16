@@ -45,6 +45,7 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				rawResponse,
 				timeout = defaultTimeout,
 				statusCode,
+				statusText,
 				url,
 				headers: responseHeaders = {},
 			} = matchRequest;
@@ -84,6 +85,7 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				rawResponse,
 				timeout,
 				statusCode: statusCode ?? 200,
+				statusText,
 				url: req.url,
 				query,
 				params,
