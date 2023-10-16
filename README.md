@@ -174,7 +174,7 @@ Set the mock files extensions.
 Type: `number`\
 Default: `undefined`
 
-Set the delay time for the request.
+Set default response delay time.
 
 ##### basename
 
@@ -182,6 +182,13 @@ Type: `string`\
 Default: `""`
 
 Set the root address of the request URL.
+
+##### headers
+
+Type: `OutgoingHttpHeaders`\
+Default: `{}`
+
+Set default headers for responses.
 
 ##### enableDev
 

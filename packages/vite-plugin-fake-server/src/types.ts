@@ -1,4 +1,5 @@
 import type { FakerSchemaServerOptions } from "./node";
+import type { OutgoingHttpHeaders } from "node:http";
 
 export type { FakeRoute, IncomingMessage, ServerResponse, HttpMethodType } from "./node";
 
@@ -60,7 +61,7 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	extensions?: string[];
 
 	/**
-	 * @description Set the delay time for the request.
+	 * @description Set default response delay time.
 	 * @default undefined
 	 */
 	timeout?: number;
@@ -70,6 +71,12 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	 * @default ""
 	 */
 	basename?: string;
+
+	/**
+	 * @description Set default headers for responses.
+	 * @default {}
+	 */
+	headers?: OutgoingHttpHeaders;
 
 	/**
 	 * @description Set whether to export a independently deployable fake service(only valid in build mode).

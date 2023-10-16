@@ -12,7 +12,16 @@ export function sleep(time) {
 	});
 }
 
-export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, match, basename, defaultTimeout }) {
+export async function getResponse({
+	URL,
+	req,
+	fakeModuleList,
+	pathToRegexp,
+	match,
+	basename,
+	defaultTimeout,
+	globalResponseHeaders,
+}) {
 	if (req.url) {
 		const instanceURL = new URL(req.url, "http://localhost:5173/");
 
@@ -89,7 +98,7 @@ export async function getResponse({ URL, req, fakeModuleList, pathToRegexp, matc
 				url: req.url,
 				query,
 				params,
-				responseHeaders: new Headers(responseHeaders),
+				responseHeaders: new Headers({ ...globalResponseHeaders, ...responseHeaders }),
 				hash: instanceURL.hash,
 			};
 		}

@@ -174,6 +174,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						match,
 						basename: ${opts.basename.length ? opts.basename : '""'},
 						defaultTimeout: ${opts.timeout},
+						globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
 					});
 					if (responseResult) {
 						const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
@@ -281,7 +282,7 @@ export async function getFakeData(options: ResolvePluginOptionsType) {
 }
 
 export async function requestMiddleware(options: ResolvePluginOptionsType) {
-	const { logger, basename, timeout: defaultTimeout } = options;
+	const { logger, basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
 		const responseResult = await getResponse({
 			URL,
@@ -293,6 +294,7 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 			match,
 			basename,
 			defaultTimeout,
+			globalResponseHeaders,
 		});
 		if (responseResult) {
 			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders, hash } =

@@ -22,6 +22,7 @@ export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}) 
 		logger: options.logger ?? true,
 		timeout: options.timeout,
 		basename: options.basename ?? "",
+		headers: options.headers ?? {},
 		build: options.build ?? false,
 	};
 }
