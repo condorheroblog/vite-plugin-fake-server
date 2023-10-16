@@ -7,7 +7,7 @@ export function XHRResponseDocument() {
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		// Force the response to be parsed as XML
-		xhr.overrideMimeType("text/xml");
+		xhr.overrideMimeType("application/xml");
 		xhr.addEventListener("load", function () {
 			console.log(xhr.response, xhr.responseXML);
 		});

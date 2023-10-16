@@ -171,20 +171,33 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						if (response && typeof response === "function") {
 							const fakeResponse = response({ url, body: req.body, query, params, headers, hash });
 							if(req.isFetch){
-								callback(new Response(
-									JSON.stringify(fakeResponse, null, 2),
-									{
-										status: statusCode,
-										headers: {
-											"Content-Type": "application/json",
-										},
-									}
-								));
+								if (typeof fakeResponse === "string") {
+									callback(new Response(
+										fakeResponse,
+										{
+											status: statusCode,
+											headers: {
+												"Content-Type": "text/plain",
+											},
+										}
+									));
+								} else {
+									callback(new Response(
+										JSON.stringify(fakeResponse, null, 2),
+										{
+											status: statusCode,
+											headers: {
+												"Content-Type": "application/json",
+											},
+										}
+									));
+								}
 							} else {
 								if(!req.type || req.type.toLowerCase() === "text") {
 									callback({
 										status: statusCode,
 										text: fakeResponse,
+										data: fakeResponse,
 										headers: {
 											"Content-Type": "text/plain",
 										},
@@ -198,9 +211,12 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 										},
 									});
 								} else if (req.type.toLowerCase() === "document") {
+									const parser = new DOMParser();
+									const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
 									callback({
 										status: statusCode,
-										xml: fakeResponse,
+										xml: xmlDoc,
+										data: xmlDoc,
 										headers: {
 											"Content-Type": "application/xml",
 										},
