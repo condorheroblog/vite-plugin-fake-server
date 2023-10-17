@@ -1,9 +1,12 @@
+import { Button } from "#src/components";
 import { useState } from "react";
 
 export function XHRResponseNumber() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [num, setNum] = useState({ number: 0, type: "number" });
 
 	const xhrData = () => {
+		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
 		xhr.open("GET", "/mock/response-number");
@@ -16,6 +19,10 @@ export function XHRResponseNumber() {
 			});
 		});
 
+		xhr.addEventListener("loadend", function () {
+			setIsLoading(false);
+		});
+
 		xhr.send();
 	};
 	return (
@@ -24,7 +31,9 @@ export function XHRResponseNumber() {
 				number: {num.number} type: {num.type}
 			</code>
 			<br />
-			<button onClick={xhrData}>send XHR</button>
+			<Button disabled={isLoading} onClick={xhrData}>
+				send XHR
+			</Button>
 		</div>
 	);
 }

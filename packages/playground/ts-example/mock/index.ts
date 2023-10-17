@@ -52,4 +52,21 @@ export default defineFakeRoute([
 			return { message: "async-response" };
 		},
 	},
+	{
+		url: "/mock/404",
+		method: "POST",
+		statusCode: 404,
+		statusText: "Not Found",
+		response: () => {
+			return { code: 404, message: "Not Found" };
+		},
+	},
+	{
+		url: "/mock/timeout",
+		timeout: 1000 * 5,
+		method: "PUT",
+		response: () => {
+			return { code: 200, message: "test timeout", timestamp: Date.now() };
+		},
+	},
 ]);

@@ -1,9 +1,12 @@
+import { Button } from "#src/components";
 import { useState } from "react";
 
 export function XHRResponseBoolean() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [boolean, setBoolean] = useState({ boolean: true, type: "boolean" });
 
 	const xhrData = () => {
+		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
 		xhr.open("GET", "/mock/response-boolean");
@@ -16,6 +19,10 @@ export function XHRResponseBoolean() {
 			});
 		});
 
+		xhr.addEventListener("loadend", function () {
+			setIsLoading(false);
+		});
+
 		xhr.send();
 	};
 	return (
@@ -24,7 +31,9 @@ export function XHRResponseBoolean() {
 				boolean: {JSON.stringify(boolean.boolean)} type: {boolean.type}
 			</code>
 			<br />
-			<button onClick={xhrData}>send XHR</button>
+			<Button disabled={isLoading} onClick={xhrData}>
+				send XHR
+			</Button>
 		</div>
 	);
 }

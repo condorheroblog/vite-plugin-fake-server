@@ -1,9 +1,12 @@
+import { Button } from "#src/components";
 import { useState } from "react";
 
 export function XHRWithCredentials() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [text, setText] = useState({});
 
 	const xhrData = () => {
+		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
 		xhr.open("POST", "/mock/with-credentials", true);
@@ -17,13 +20,19 @@ export function XHRWithCredentials() {
 			setText(xhr.response);
 		});
 
+		xhr.addEventListener("loadend", function () {
+			setIsLoading(false);
+		});
+
 		xhr.send();
 	};
 	return (
 		<div>
 			<code>{JSON.stringify(text, null, 2)}</code>
 			<br />
-			<button onClick={xhrData}>send XHR</button>
+			<Button disabled={isLoading} onClick={xhrData}>
+				send XHR
+			</Button>
 		</div>
 	);
 }

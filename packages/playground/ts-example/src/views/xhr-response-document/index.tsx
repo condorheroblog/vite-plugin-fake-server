@@ -1,5 +1,11 @@
+import { Button } from "#src/components";
+import { useState } from "react";
+
 export function XHRResponseDocument() {
+	const [isLoading, setIsLoading] = useState(false);
+
 	const xhrData = () => {
+		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		const data = "Hello, XML";
 		xhr.responseType = "document";
@@ -12,13 +18,19 @@ export function XHRResponseDocument() {
 			console.log(xhr.response, xhr.responseXML);
 		});
 
+		xhr.addEventListener("loadend", function () {
+			setIsLoading(false);
+		});
+
 		xhr.send(data);
 	};
 	return (
 		<div>
 			<code>Check in the console</code>
 			<br />
-			<button onClick={xhrData}>get XML</button>
+			<Button disabled={isLoading} onClick={xhrData}>
+				get XML
+			</Button>
 		</div>
 	);
 }

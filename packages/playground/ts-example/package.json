@@ -1,6 +1,9 @@
 {
 	"name": "ts-example",
 	"private": true,
+	"imports": {
+		"#*": "./*"
+	},
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {

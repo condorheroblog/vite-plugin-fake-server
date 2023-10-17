@@ -43,14 +43,65 @@ body {
 	cursor: pointer;
 }
 
+button .prefix-button-icon {
+	height: 1em;
+	width: 1em;
+	line-height: 1em;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	fill: currentColor;
+}
+
+@keyframes loading-rotate {
+	to {
+		transform: rotate(360deg)
+	}
+}
+
+@keyframes loading-dash {
+	0% {
+		stroke-dasharray: 1,200;
+		stroke-dashoffset: 0
+	}
+
+	50% {
+		stroke-dasharray: 90,150;
+		stroke-dashoffset: -40px
+	}
+
+	to {
+		stroke-dasharray: 90,150;
+		stroke-dashoffset: -120px
+	}
+}
+
+
+button .path {
+	animation: loading-dash 1.5s ease-in-out infinite;
+	stroke-dasharray: 90,150;
+	stroke-dashoffset: 0;
+	stroke-width: 2;
+	stroke: #409eff;
+	stroke-linecap: round;
+}
+
+button .circle {
+	display: inline;
+	animation: loading-rotate 2s linear infinite;
+}
+
+
 button {
-	display: inline-block;
+	display: flex;
+	gap: 0.5em;
 	padding: 8px 16px;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 500;
 	text-align: center;
 	border: 1px solid #d9d9d9;
-	border-radius: 2px;
+	border-radius: 0.4em;
 	background-color: #f7f7f7;
 	color: #333;
 	cursor: pointer;
@@ -62,6 +113,12 @@ button:hover {
 
 button:active {
 	background-color: #d4d4d4;
+}
+
+button:disabled {
+	cursor: not-allowed;
+	color: #cbb7b7;
+	cursor: not-allowed;
 }
 
 code {

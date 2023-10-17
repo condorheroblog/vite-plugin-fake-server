@@ -1,9 +1,12 @@
+import { Button } from "#src/components";
 import { useState } from "react";
 
 export function XHRMethodPost() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [text, setText] = useState({});
 
 	const xhrData = () => {
+		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		const data = {
 			username: "admin",
@@ -17,13 +20,19 @@ export function XHRMethodPost() {
 			setText(xhr.response);
 		});
 
+		xhr.addEventListener("loadend", function () {
+			setIsLoading(false);
+		});
+
 		xhr.send(JSON.stringify(data));
 	};
 	return (
 		<div>
 			<code>{JSON.stringify(text, null, 2)}</code>
 			<br />
-			<button onClick={xhrData}>send XHR</button>
+			<Button disabled={isLoading} onClick={xhrData}>
+				send XHR
+			</Button>
 		</div>
 	);
 }

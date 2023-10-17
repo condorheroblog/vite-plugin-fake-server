@@ -1,18 +1,19 @@
 import { Button } from "#src/components";
 import { useState } from "react";
 
-export function FetchAsyncResponse() {
+export function FetchResponse404() {
 	const [isLoading, setIsLoading] = useState(false);
-	const [text, setText] = useState("---");
+	const [text, setText] = useState({});
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch("/mock/async-response", { method: "POST" })
+		fetch("/mock/404", { method: "POST" })
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
-				setText(response.message);
+				console.log(response);
+				setText(response);
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -20,10 +21,10 @@ export function FetchAsyncResponse() {
 	};
 	return (
 		<div>
-			<code>{text}</code>
+			<code>{JSON.stringify(text, null, 2)}</code>
 			<br />
 			<Button disabled={isLoading} onClick={fetchData}>
-				fetch async response
+				fetch response 404
 			</Button>
 		</div>
 	);
@@ -31,13 +32,13 @@ export function FetchAsyncResponse() {
 
 export default {
 	code: `
-fetch("/mock/async-response", { method: "POST" })
-	.then((response) => {
-		return response.json();
-	})
-	.then((response) => {
-		setText(response.message);
-	});
+fetch("/mock/404", { method: "POST" })
+.then((response) => {
+	return response.json();
+})
+.then((response) => {
+	setText(response);
+});
 };`,
-	element: <FetchAsyncResponse />,
+	element: <FetchResponse404 />,
 };

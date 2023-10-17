@@ -1,22 +1,30 @@
+import { Button } from "#src/components";
 import { useState } from "react";
 
 export function FetchExternal() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [text, setText] = useState({});
 
 	const fetchData = () => {
+		setIsLoading(true);
 		fetch(`https://my-json-server.typicode.com/typicode/demo/posts`)
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
 				setText(response);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	};
 	return (
 		<div>
 			<code>{JSON.stringify(text, null, 2)}</code>
 			<br />
-			<button onClick={fetchData}>fetch external URL</button>
+			<Button disabled={isLoading} onClick={fetchData}>
+				fetch external URL
+			</Button>
 		</div>
 	);
 }
