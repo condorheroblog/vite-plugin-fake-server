@@ -1,6 +1,4 @@
 import { IncomingMessage } from "node:http";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { DefaultTreeAdapterMap, ParserError } from "parse5";
 
 /**
@@ -61,14 +59,6 @@ export async function traverseHtml(
  * @link https://github.com/vitejs/vite/blob/main/packages/vite/src/node/plugins/html.ts#L148C1-L152C2
  */
 
-export function getFilename(metaURL: string) {
-	return fileURLToPath(metaURL);
-}
-
-export function getDirname(metaURL: string) {
-	return dirname(getFilename(metaURL));
-}
-
 export function getRequestData(req: IncomingMessage): Promise<string> {
 	return new Promise((resolve, reject) => {
 		let body = "";
@@ -85,18 +75,4 @@ export function getRequestData(req: IncomingMessage): Promise<string> {
 			reject(error);
 		});
 	});
-}
-
-export function getIndentation(htmlString: string, index: number) {
-	let indentation = "";
-	let i = index - 1;
-	while (i >= 0 && htmlString[i] !== "\n") {
-		if (htmlString[i] === " " || htmlString[i] === "\t") {
-			indentation = htmlString[i] + indentation;
-		} else {
-			break;
-		}
-		i--;
-	}
-	return indentation;
 }

@@ -9,6 +9,7 @@ A fake server plugin for Vite. [Live Demo](https://condorheroblog.github.io/vite
 
 ## Features
 
+- Simple to use, configuration file driven.
 - No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
 - ESM first.
 - Support `ts`, `js`, `mjs` files.
@@ -76,7 +77,7 @@ export function defineFakeRoute(config: FakeRouteConfig) {
 > It should be noted that this way of introduction will cause `vite build` to fail.
 > `import { defineFakeRoute } from "vite-plugin-fake-server";`
 
-### In TypeScript file
+### In `.ts` file
 
 ```ts
 import { faker } from "@faker-js/faker";
@@ -118,7 +119,7 @@ export default defineFakeRoute([
 ]);
 ```
 
-### In JavaScript file
+### In `.js` file
 
 ```javascript
 /** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
@@ -145,7 +146,7 @@ export default [
 ];
 ```
 
-### In `mjs` file
+### In `.mjs` file
 
 ```javascript
 export default {
