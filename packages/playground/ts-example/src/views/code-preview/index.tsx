@@ -8,8 +8,8 @@ interface CodePreviewProps {
 export function CodePreview({ code, element }: CodePreviewProps) {
 	return (
 		<>
-			<textarea className="code-textarea" value={code} readOnly rows={30} cols={50} />
-			<div>{element}</div>
+			<textarea className="code-textarea flex-item" value={code} readOnly rows={30} cols={50} />
+			<div className="flex-item">{element}</div>
 		</>
 	);
 }

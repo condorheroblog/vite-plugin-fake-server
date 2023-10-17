@@ -57,12 +57,16 @@ describe("vite-plugin-fake-server response schema", async () => {
 			method: "POST",
 			statusText: "OK",
 			headers: { e: "eyes" },
-			response: () => {
-				return { message: "async-response" };
+			response: (_) => {
+				return _;
 			},
 		},
 	]);
-	const req = { url: "/mock/1?age=18&weight=50#chapter-10", method: "POST" };
+	const req = {
+		url: "/mock/1?age=18&weight=50#chapter-10",
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+	};
 	const getResponseOptions = {
 		req,
 		URL,
@@ -119,6 +123,30 @@ describe("vite-plugin-fake-server response schema", async () => {
 		test(`request hash`, async ({ expect }) => {
 			const hash = responseResult.hash;
 			expect(hash).toMatchInlineSnapshot('"#chapter-10"');
+		});
+
+		test(`get serialize url in response`, async ({ expect }) => {
+			const { response, url, query, params, hash } = responseResult;
+			const fakeResponse = await Promise.resolve(
+				response({ url, body: "x", query, params, headers: req.headers, hash }),
+			);
+			expect(fakeResponse).toMatchInlineSnapshot(`
+				{
+				  "body": "x",
+				  "hash": "#chapter-10",
+				  "headers": {
+				    "Content-Type": "application/json",
+				  },
+				  "params": {
+				    "id": "1",
+				  },
+				  "query": {
+				    "age": "18",
+				    "weight": "50",
+				  },
+				  "url": "/mock/1?age=18&weight=50#chapter-10",
+				}
+			`);
 		});
 	}
 });

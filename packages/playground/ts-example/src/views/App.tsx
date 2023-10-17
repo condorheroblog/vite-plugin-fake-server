@@ -139,34 +139,44 @@ function App() {
 
 	const component = options.find((option) => option.value === selectedValue);
 	return (
-		<main>
-			<div className="select-wrapper">
-				<select className="select" value={selectedValue} onChange={handleChange}>
-					<optgroup label="XMLHttpRequest">
-						{xhrGroupOptions.map(({ label, value }) => {
-							return (
-								<option key={value} value={value}>
-									{label}
-								</option>
-							);
-						})}
-					</optgroup>
-					<optgroup label="Fetch">
-						{fetchGroupOptions.map(({ label, value, disabled }) => {
-							return (
-								<option key={value} value={value} disabled={disabled}>
-									{label}
-								</option>
-							);
-						})}
-					</optgroup>
-				</select>
-			</div>
-			<p>Selected: {selectedValue}</p>
-			<div className="container">
-				{component ? <CodePreview code={component.code} element={component.element} /> : null}
-			</div>
-		</main>
+		<section className="site-root">
+			<header>
+				<h1>Vite Plugin Fake Server Examples</h1>
+			</header>
+			<main>
+				<div className="select-wrapper">
+					<select className="select" value={selectedValue} onChange={handleChange}>
+						<optgroup label="XMLHttpRequest">
+							{xhrGroupOptions.map(({ label, value }) => {
+								return (
+									<option key={value} value={value}>
+										{label}
+									</option>
+								);
+							})}
+						</optgroup>
+						<optgroup label="Fetch">
+							{fetchGroupOptions.map(({ label, value, disabled }) => {
+								return (
+									<option key={value} value={value} disabled={disabled}>
+										{label}
+									</option>
+								);
+							})}
+						</optgroup>
+					</select>
+				</div>
+				<p>Selected: {selectedValue}</p>
+				<div className="container">
+					{component ? <CodePreview code={component.code} element={component.element} /> : null}
+				</div>
+			</main>
+			<footer>
+				<a href="https://github.com/condorheroblog/vite-plugin-fake-server">
+					<img src="https://img.shields.io/badge/GitHub:Repository-:green?logo=github" alt="GitHub" />
+				</a>
+			</footer>
+		</section>
 	);
 }
 
