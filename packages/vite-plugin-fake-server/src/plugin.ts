@@ -1,5 +1,5 @@
 import { generateMockServer } from "./build";
-import { getResponse } from "./getResponse.mjs";
+import { getResponse, sleep } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
 import { fakerSchemaServer, isFunction, loggerOutput } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
@@ -156,6 +156,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				children: `const fakeModuleList = window.__FAKE__MODULE__LIST__;
 				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
 				__XHOOK__.before(async function(req, callback) {
+					${sleep.toString()}
 					${getResponse.toString()}
 
 					function headersToObject(headers) {
