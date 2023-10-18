@@ -180,8 +180,7 @@ Default: `[]`
 
 Exclude files in the `include` directory.
 
-1. development: https://github.com/mrmlnc/fast-glob#ignore
-2. production: https://vitejs.dev/guide/features.html#negative-patterns
+document: https://github.com/mrmlnc/fast-glob#ignore
 
 ##### watch
 
@@ -253,6 +252,8 @@ export interface FakeRoute {
 	method?: HttpMethodType;
 	timeout?: number;
 	statusCode?: number;
+	statusText?: string;
+	headers?: OutgoingHttpHeaders;
 	response?: (HTTPRequest: URLRequest) => any;
 }
 ```

@@ -1,11 +1,11 @@
 import { generateMockServer } from "./build";
 import { getResponse, sleep } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
-import { fakerSchemaServer, isFunction, loggerOutput } from "./node";
+import { fakerSchemaServer, isFunction, loggerOutput, getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import { getRequestData, traverseHtml, nodeIsElement } from "./utils";
+import { getRequestData } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -18,10 +18,6 @@ const require = createRequire(import.meta.url);
 
 let fakeData: FakeRoute[] = [];
 export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions = {}): Promise<Plugin> => {
-	// transform
-	let isIndexHTML = true;
-	let mainPath = "";
-
 	let config: ResolvedConfig;
 	let isDevServer = false;
 
@@ -45,7 +41,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			middlewares.use(middleware);
 
 			if (opts.include && opts.include.length && opts.watch) {
-				const watchDir = join(process.cwd(), opts.include);
+				const watchDir = join(config.root, opts.include);
 				const watcher = chokidar.watch(watchDir, {
 					ignoreInitial: true,
 				});
@@ -57,214 +53,184 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			}
 		},
 
-		async transform(sourceCode, id) {
-			if (isDevServer || !opts.enableProd) {
-				return {
-					code: sourceCode,
-				};
-			}
-			if (isIndexHTML) {
-				// https://github.com/vitejs/vite/blob/main/packages/vite/src/node/server/middlewares/indexHtml.ts#L222
-				await traverseHtml(sourceCode, id, (node) => {
-					if (!nodeIsElement(node)) {
-						return;
-					}
-					// script tags
-					if (node.nodeName === "script") {
-						let isModule = false;
-						let scriptSrcPath = "";
-						for (const p of node.attrs) {
-							if (p.name === "src" && p.value) {
-								scriptSrcPath = p.value;
-							} else if (p.name === "type" && p.value && p.value === "module") {
-								isModule = true;
-							}
-						}
-						if (isModule && scriptSrcPath.length > 0) {
-							mainPath = scriptSrcPath;
-						}
-					}
-				});
-				isIndexHTML = false;
-			}
+		transformIndexHtml: {
+			order: "pre",
+			handler: async (htmlString) => {
+				if (isDevServer || !opts.enableProd) {
+					return htmlString;
+				}
 
-			if (mainPath.length > 0 && id.endsWith(mainPath)) {
-				const include = opts.include;
-				const relativePath = relative(dirname(id), config.root);
-				const globPatterns = opts.extensions.map((ext) => join(relativePath, include, `/**/*.${ext}`));
-				const ignoreFiles = opts.exclude.map((file) => "!" + join(relativePath, file));
+				const scriptTagOptions: Omit<HtmlTagDescriptor, "children"> = {
+					tag: "script",
+					attrs: { type: "module" },
+					injectTo: "head",
+				};
+				const scriptTagList: HtmlTagDescriptor[] = [];
+
+				// warning message in production environment
+				scriptTagList.push({
+					...scriptTagOptions,
+					children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");`,
+				});
+
+				const fakeFilePath = getFakeFilePath({
+					include: opts.include.length ? [opts.include] : [],
+					exclude: opts.exclude,
+					extensions: opts.extensions,
+				});
+
+				const relativeFakeFilePath = fakeFilePath.map((filePath) => join("/", relative(config.root, filePath)));
 
 				const fakeTemplate = `
-				const modules = import.meta.glob(${JSON.stringify([...globPatterns, ...ignoreFiles], null, 2)}, { eager: true });
-				const fakeModuleList = Object.keys(modules).reduce((list, key) => {
-					const module = modules[key] ?? {};
-					for (const moduleKey of Object.keys(module)) {
-						const mod = modules[key][moduleKey] ?? [];
-						const modList = Array.isArray(mod) ? [...mod] : [mod];
-						return [...list, ...modList];
-					}
-				}, []);
-				window.__FAKE__MODULE__LIST__ = fakeModuleList;
+					const modules = import.meta.glob(${JSON.stringify(relativeFakeFilePath, null, 2)}, { eager: true });
+					const fakeModuleList = Object.keys(modules).reduce((list, key) => {
+						const module = modules[key] ?? {};
+						for (const moduleKey of Object.keys(module)) {
+							const mod = modules[key][moduleKey] ?? [];
+							const modList = Array.isArray(mod) ? [...mod] : [mod];
+							return [...list, ...modList];
+						}
+					}, []);
+					window.__FAKE__MODULE__LIST__ = fakeModuleList;
 				`;
 
-				return {
-					code: fakeTemplate + "\n" + sourceCode,
-				};
-			}
+				// import.meta.glob
+				scriptTagList.push({
+					...scriptTagOptions,
+					children: fakeTemplate,
+				});
 
-			return {
-				code: sourceCode,
-			};
-		},
+				// add xhook
+				const xhookPath = join(dirname(require.resolve("xhook")), "../dist/xhook.js");
+				const xhookContent = readFileSync(xhookPath, "utf-8");
+				scriptTagList.push({
+					...scriptTagOptions,
+					children: `${xhookContent}\n;window.__XHOOK__=xhook;`,
+				});
 
-		async transformIndexHtml(htmlString) {
-			if (isDevServer || !opts.enableProd) {
-				return htmlString;
-			}
+				// add path-to-regexp
+				const pathToRegexpPath = join(dirname(require.resolve("path-to-regexp")), "../dist.es2015/index.js");
+				const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
+				scriptTagList.push({
+					...scriptTagOptions,
+					children: `${pathToRegexpContent}\n;window.__PATH_TO_REGEXP__={pathToRegexp, match};`,
+				});
 
-			const scriptTagOptions: Omit<HtmlTagDescriptor, "children"> = {
-				tag: "script",
-				attrs: { type: "module" },
-				injectTo: "head",
-			};
-			const scriptTagList: HtmlTagDescriptor[] = [];
+				scriptTagList.push({
+					...scriptTagOptions,
+					children: `const fakeModuleList = window.__FAKE__MODULE__LIST__;
+					const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
+					__XHOOK__.before(async function(req, callback) {
+						${sleep.toString()}
+						${getResponse.toString()}
 
-			// warning message in production environment
-			scriptTagList.push({
-				...scriptTagOptions,
-				children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");\n`,
-			});
-
-			// add xhook
-			const xhookPath = join(dirname(require.resolve("xhook")), "../dist/xhook.js");
-			const xhookContent = readFileSync(xhookPath, "utf-8");
-			scriptTagList.push({
-				...scriptTagOptions,
-				children: `${xhookContent}\n;window.__XHOOK__=xhook;\n`,
-			});
-
-			// add path-to-regexp
-			const pathToRegexpPath = join(dirname(require.resolve("path-to-regexp")), "../dist.es2015/index.js");
-			const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
-			scriptTagList.push({
-				...scriptTagOptions,
-				children: `${pathToRegexpContent}\n;window.__PATH_TO_REGEXP__={pathToRegexp, match};\n`,
-			});
-
-			scriptTagList.push({
-				...scriptTagOptions,
-				children: `const fakeModuleList = window.__FAKE__MODULE__LIST__;
-				const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
-				__XHOOK__.before(async function(req, callback) {
-					${sleep.toString()}
-					${getResponse.toString()}
-
-					function headersToObject(headers) {
-						const headersObject = {};
-						for (const [name, value] of headers.entries()) {
-							headersObject[name] = value;
+						function headersToObject(headers) {
+							const headersObject = {};
+							for (const [name, value] of headers.entries()) {
+								headersObject[name] = value;
+							}
+							return headersObject;
 						}
-						return headersObject;
-					}
 
-					const responseResult = await getResponse({
-						URL,
-						req,
-						fakeModuleList,
-						pathToRegexp,
-						match,
-						basename: ${opts.basename.length ? opts.basename : '""'},
-						defaultTimeout: ${opts.timeout},
-						globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
-					});
-					if (responseResult) {
-						const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
-						if (response && typeof response === "function") {
-							const fakeResponse = await Promise.resolve(
-								response({ url, body: req.body, query, params, headers: req.headers, hash })
-							);
-							if(req.isFetch){
-								if (typeof fakeResponse === "string") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "text/plain");
+						const responseResult = await getResponse({
+							URL,
+							req,
+							fakeModuleList,
+							pathToRegexp,
+							match,
+							basename: ${opts.basename.length ? opts.basename : '""'},
+							defaultTimeout: ${opts.timeout},
+							globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
+						});
+						if (responseResult) {
+							const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
+							if (response && typeof response === "function") {
+								const fakeResponse = await Promise.resolve(
+									response({ url, body: req.body, query, params, headers: req.headers, hash })
+								);
+								if(req.isFetch){
+									if (typeof fakeResponse === "string") {
+										if (!responseHeaders.get("Content-Type")) {
+											responseHeaders.set("Content-Type", "text/plain");
+										}
+										callback(new Response(
+											fakeResponse,
+											{
+												statusText,
+												status: statusCode,
+												headers: headersToObject(responseHeaders),
+											}
+										));
+									} else {
+										if (!responseHeaders.get("Content-Type")) {
+											responseHeaders.set("Content-Type", "application/json");
+										}
+										callback(new Response(
+											JSON.stringify(fakeResponse, null, 2),
+											{
+												statusText,
+												status: statusCode,
+												headers: headersToObject(responseHeaders),
+											}
+										));
 									}
-									callback(new Response(
-										fakeResponse,
-										{
+								} else {
+									if(!req.type || req.type.toLowerCase() === "text") {
+										if (!responseHeaders.get("Content-Type")) {
+											responseHeaders.set("Content-Type", "text/plain");
+										}
+										callback({
 											statusText,
 											status: statusCode,
+											text: fakeResponse,
+											data: fakeResponse,
 											headers: headersToObject(responseHeaders),
+										});
+									} else if (req.type.toLowerCase() === "json") {
+										if (!responseHeaders.get("Content-Type")) {
+											responseHeaders.set("Content-Type", "application/json");
 										}
-									));
-								} else {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "application/json");
-									}
-									callback(new Response(
-										JSON.stringify(fakeResponse, null, 2),
-										{
+										callback({
 											statusText,
 											status: statusCode,
+											data: fakeResponse,
 											headers: headersToObject(responseHeaders),
+										});
+									} else if (req.type.toLowerCase() === "document") {
+										if (!responseHeaders.get("Content-Type")) {
+											responseHeaders.set("Content-Type", "application/xml");
 										}
-									));
-								}
-							} else {
-								if(!req.type || req.type.toLowerCase() === "text") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "text/plain");
+										const parser = new DOMParser();
+										const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
+										callback({
+											statusText,
+											status: statusCode,
+											xml: xmlDoc,
+											data: xmlDoc,
+											headers: headersToObject(responseHeaders),
+										});
+									} else {
+										// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
+										// "arraybuffer" | "blob"
+										callback({
+											statusText,
+											status: statusCode,
+											data: fakeResponse,
+											headers: headersToObject(responseHeaders),
+										});
 									}
-									callback({
-										statusText,
-										status: statusCode,
-										text: fakeResponse,
-										data: fakeResponse,
-										headers: headersToObject(responseHeaders),
-									});
-								} else if (req.type.toLowerCase() === "json") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "application/json");
-									}
-									callback({
-										statusText,
-										status: statusCode,
-										data: fakeResponse,
-										headers: headersToObject(responseHeaders),
-									});
-								} else if (req.type.toLowerCase() === "document") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "application/xml");
-									}
-									const parser = new DOMParser();
-									const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
-									callback({
-										statusText,
-										status: statusCode,
-										xml: xmlDoc,
-										data: xmlDoc,
-										headers: headersToObject(responseHeaders),
-									});
-								} else {
-									// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
-									// "arraybuffer" | "blob"
-									callback({
-										statusText,
-										status: statusCode,
-										data: fakeResponse,
-										headers: headersToObject(responseHeaders),
-									});
 								}
 							}
+							console.log("%c request invoke", "color: blue", req.url);
+						} else {
+							// next external URL
+							callback();
 						}
-						console.log("%c request invoke", "color: blue", req.url);
-					} else {
-						// next external URL
-						callback();
-					}
-				});`,
-			});
+					});`,
+				});
 
-			return scriptTagList;
+				return scriptTagList;
+			},
 		},
 
 		async closeBundle() {

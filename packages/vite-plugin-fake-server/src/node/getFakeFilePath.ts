@@ -1,23 +1,20 @@
-import { resolveModule } from "./resolveModule";
 import type { ResolveOptionsType } from "./resolveOptions";
-import { loggerOutput } from "./utils";
 import fg from "fast-glob";
 import { existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
-export async function getFakeConfig(options: ResolveOptionsType) {
+export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()) {
 	const { include, exclude, extensions } = options;
 	if (!Array.isArray(include) || include.length === 0) {
 		return [];
 	}
 
-	const cwd = process.cwd();
 	const fastGlobOptions = {
 		cwd,
-		ignore: exclude,
+		ignore: exclude.map((filepath) => join(cwd, filepath)),
 	};
 
-	const getFakeFilePath = include.reduce<string[]>((acc, filePath) => {
+	const fakeFilePath = include.reduce<string[]>((acc, filePath) => {
 		const absFilePath = join(cwd, filePath);
 		if (existsSync(absFilePath)) {
 			// file
@@ -25,14 +22,14 @@ export async function getFakeConfig(options: ResolveOptionsType) {
 			const fileStatus = statSync(absFilePath);
 			if (!fileStatus.isDirectory() && fileExtname) {
 				if (extensions.includes(fileExtname)) {
-					const fakeFiles = fg.sync(filePath, fastGlobOptions);
+					const fakeFiles = fg.sync(absFilePath, fastGlobOptions);
 					return [...acc, ...fakeFiles];
 				}
 				return acc;
 			}
 
 			// folder
-			const dir = join(filePath, "/");
+			const dir = join(absFilePath, "/");
 			const fakeFolderFiles = fg.sync(
 				extensions.map((ext) => `${dir}**/*.${ext}`),
 				fastGlobOptions,
@@ -43,20 +40,5 @@ export async function getFakeConfig(options: ResolveOptionsType) {
 		return acc;
 	}, []);
 
-	const ret = [];
-
-	for (const absoluteFilePath of getFakeFilePath) {
-		try {
-			const resolvedModule = await resolveModule(absoluteFilePath);
-			if (Array.isArray(resolvedModule)) {
-				ret.push(...resolvedModule);
-			} else {
-				ret.push(resolvedModule);
-			}
-		} catch (error) {
-			loggerOutput(`load module error`, error as string, "error");
-		}
-	}
-
-	return ret;
+	return fakeFilePath;
 }
