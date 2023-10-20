@@ -140,7 +140,7 @@ export default [
 		url: "/mock/post",
 		method: "POST",
 		response: ({ body }) => {
-			return { ...JSON.parse(body), timestamp: Date.now() };
+			return { ...body, timestamp: Date.now() };
 		},
 	},
 ];
