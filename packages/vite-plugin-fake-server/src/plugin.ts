@@ -1,5 +1,5 @@
 import { generateMockServer } from "./build";
-import { getResponse, sleep } from "./getResponse.mjs";
+import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
 import { fakerSchemaServer, isFunction, loggerOutput, getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
@@ -122,6 +122,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
 					__XHOOK__.before(async function(req, callback) {
 						${sleep.toString()}
+						${tryToJSON.toString()}
 						${getResponse.toString()}
 
 						function headersToObject(headers) {
@@ -146,7 +147,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
 							if (response && typeof response === "function") {
 								const fakeResponse = await Promise.resolve(
-									response({ url, body: req.body, query, params, headers: req.headers, hash })
+									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers, hash })
 								);
 								if(req.isFetch){
 									if (typeof fakeResponse === "string") {
@@ -284,7 +285,7 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 					res.statusMessage = statusText;
 				}
 				const fakeResponse = await Promise.resolve(
-					response({ url, body, query, params, headers: req.headers, hash }, req, res),
+					response({ url, body: tryToJSON(body), rawBody: body, query, params, headers: req.headers, hash }, req, res),
 				);
 				if (typeof fakeResponse === "string") {
 					// XML

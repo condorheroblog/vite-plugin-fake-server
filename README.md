@@ -64,7 +64,7 @@ export interface FakeRoute {
 	statusCode?: number;
 	statusText?: string;
 	headers?: OutgoingHttpHeaders;
-	response?: (HTTPRequest: URLRequest, req: IncomingMessage, res: ServerResponse) => any;
+	response?: (processedRequest: ProcessedRequest, req: IncomingMessage, res: ServerResponse) => any;
 	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
 }
 export type FakeRouteConfig = FakeRoute[] | FakeRoute;
@@ -254,7 +254,7 @@ export interface FakeRoute {
 	statusCode?: number;
 	statusText?: string;
 	headers?: OutgoingHttpHeaders;
-	response?: (HTTPRequest: URLRequest) => any;
+	response?: (processedRequest: ProcessedRequest) => any;
 }
 ```
 

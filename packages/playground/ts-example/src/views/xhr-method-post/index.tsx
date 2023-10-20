@@ -10,7 +10,7 @@ export function XHRMethodPost() {
 		const xhr = new XMLHttpRequest();
 		const data = {
 			username: "admin",
-			password: "123456",
+			password: Math.random(),
 		};
 		xhr.responseType = "json";
 		xhr.open("POST", "/mock/post", true);

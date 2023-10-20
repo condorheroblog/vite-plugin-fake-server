@@ -30,12 +30,38 @@ type lowercase<T extends string> = T extends Uppercase<T> ? Lowercase<T> : T;
 export type LowercaseHttpMethod = lowercase<UppercaseHttpMethodType>;
 export type HttpMethodType = UppercaseHttpMethodType | LowercaseHttpMethod;
 
-export interface URLRequest {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Recordable<T = any> = Record<string, T>;
+
+export interface ProcessedRequest {
+	/**
+	 * The URL of the request.
+	 */
 	url: string;
-	body: string;
+	/**
+	 * The raw body of the request.
+	 */
+	rawBody: string;
+	/**
+	 * The parsed body of the request, try using `JSON.parse` to get a JSON.
+	 * May return boolean, number, array, object etc. For convenience, the type is forced to be Record<string, any>.
+	 */
+	body: Recordable;
+	/**
+	 * The query parameters of the request, represented as a key-value object.
+	 */
 	query: Record<string, string | string[]>;
+	/**
+	 * The route parameters of the request, represented as a key-value object.
+	 */
 	params: Record<string, string | string[]>;
+	/**
+	 * The hash portion of the request URL.
+	 */
 	hash: string;
+	/**
+	 * The headers of the request.
+	 */
 	headers: IncomingHttpHeaders;
 }
 
@@ -84,13 +110,13 @@ export interface FakeRoute {
 	/**
 	 * Supports both synchronous and asynchronous
 	 * A callback function that handles the response generation based on the received HTTP request, the incoming message, and the server response.
-	 * @param HTTPRequest - The URLRequest object representing the processed HTTP request parameters.
+	 * @param processedRequest - The ProcessedRequest object representing the processed HTTP request parameters.
 	 * @param req - The IncomingMessage object representing the incoming HTTP message.
 	 * @param res - The ServerResponse object representing the server's response.
 	 * @returns The response data.
 	 */
 	response?: (
-		HTTPRequest: URLRequest,
+		processedRequest: ProcessedRequest,
 		req: IncomingMessage,
 		res: ServerResponse,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

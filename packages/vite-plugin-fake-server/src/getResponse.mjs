@@ -12,6 +12,21 @@ export function sleep(time) {
 	});
 }
 
+/**
+ * Parses a string into a JSON object.
+ * @param {string} str - The string to be parsed.
+ * @returns {object} - The parsed to JSON. If parsing fails, a input string is returned.
+ */
+export function tryToJSON(str) {
+	let result = "";
+	try {
+		result = JSON.parse(str);
+	} catch (err) {
+		result = str;
+	}
+	return result;
+}
+
 export async function getResponse({
 	URL,
 	req,

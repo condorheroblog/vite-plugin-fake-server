@@ -3,11 +3,15 @@ import { useState } from "react";
 
 export function XHRResponseDocument() {
 	const [isLoading, setIsLoading] = useState(false);
+	const [content, setContent] = useState({
+		body: "---",
+		rawBody: "---",
+	});
 
 	const xhrData = () => {
 		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
-		const data = "Hello, XML";
+		const data = `Hello, ${Date.now().toString().slice(-6)}!`;
 		xhr.responseType = "document";
 		xhr.open("POST", "/mock/xml", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
@@ -16,6 +20,15 @@ export function XHRResponseDocument() {
 		xhr.overrideMimeType("application/xml");
 		xhr.addEventListener("load", function () {
 			console.log(xhr.response, xhr.responseXML);
+			const xmlDoc = xhr.responseXML;
+			if (xmlDoc) {
+				const bodyContent = xmlDoc.querySelector("body")!.textContent!;
+				const rawBodyContent = xmlDoc.querySelector("rawBody")!.textContent!;
+				setContent({
+					body: bodyContent,
+					rawBody: rawBodyContent,
+				});
+			}
 		});
 
 		xhr.addEventListener("loadend", function () {
@@ -26,7 +39,7 @@ export function XHRResponseDocument() {
 	};
 	return (
 		<div>
-			<code>Check in the console</code>
+			<code>{JSON.stringify(content, null, 2)}</code>
 			<br />
 			<Button disabled={isLoading} onClick={xhrData}>
 				get XML

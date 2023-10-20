@@ -2,8 +2,9 @@
 export default {
 	url: "/mock/xml",
 	method: "POST",
-	response: ({ body }) => {
-		const xmlResponse = `<?xml version="1.0" encoding="UTF-8"?><message>${body}</message>`;
+	response: ({ body, rawBody }) => {
+		console.log(body, rawBody);
+		const xmlResponse = `<?xml version="1.0" encoding="UTF-8"?><root><body>${body}</body><rawBody>${rawBody}</rawBody></root>`;
 		return xmlResponse;
 	},
 };
