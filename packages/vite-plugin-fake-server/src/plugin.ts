@@ -1,17 +1,18 @@
 import { generateMockServer } from "./build";
 import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
-import { fakerSchemaServer, isFunction, loggerOutput, getFakeFilePath } from "./node";
+import { fakerSchemaServer, getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import { getRequestData } from "./utils";
+import { getRequestData, isFunction, loggerOutput } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join, dirname, relative } from "node:path";
 import { URL } from "node:url";
 import { pathToRegexp, match } from "path-to-regexp";
+import colors from "picocolors";
 import type { Plugin, ResolvedConfig, Connect, HtmlTagDescriptor } from "vite";
 
 const require = createRequire(import.meta.url);
@@ -47,7 +48,11 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				});
 
 				watcher.on("change", async (file) => {
-					opts.logger && loggerOutput(`fake file change`, file);
+					opts.logger &&
+						loggerOutput.info(colors.green(`fake file changed ` + colors.dim(relative(config.root, file))), {
+							timestamp: true,
+							clear: true,
+						});
 					fakeData = await getFakeData(opts);
 				});
 			}
@@ -222,7 +227,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 									}
 								}
 							}
-							console.log("%c request invoke", "color: blue", req.url);
+							${opts.logger} && console.log("%c request invoke", "color: blue", req.url);
 						} else {
 							// next external URL
 							callback();
@@ -295,7 +300,10 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 				}
 			}
 
-			logger && loggerOutput("request invoke", req.url!);
+			logger &&
+				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
+					timestamp: true,
+				});
 		} else {
 			next();
 		}

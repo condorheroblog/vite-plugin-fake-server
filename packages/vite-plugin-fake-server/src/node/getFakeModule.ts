@@ -1,5 +1,6 @@
+import { loggerOutput } from "../utils";
 import { resolveModule } from "./resolveModule";
-import { loggerOutput } from "./utils";
+import colors from "picocolors";
 
 export async function getFakeModule(filePaths: string[]) {
 	const ret = [];
@@ -13,7 +14,10 @@ export async function getFakeModule(filePaths: string[]) {
 				ret.push(resolvedModule);
 			}
 		} catch (error) {
-			loggerOutput(`load module error`, error as string, "error");
+			loggerOutput.error(colors.red(`failed to load module from ${absoluteFilePath}`), {
+				error: error as Error,
+				timestamp: true,
+			});
 		}
 	}
 
