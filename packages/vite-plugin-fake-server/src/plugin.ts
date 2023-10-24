@@ -56,11 +56,10 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				});
 
 				watcher.on("change", async (file) => {
-					opts.logger &&
-						loggerOutput.info(colors.green(`fake file changed ` + colors.dim(relative(config.root, file))), {
-							timestamp: true,
-							clear: true,
-						});
+					loggerOutput.info(colors.green(`fake file changed ` + colors.dim(relative(config.root, file))), {
+						timestamp: true,
+						clear: true,
+					});
 					fakeData = await getFakeData(opts, loggerOutput);
 				});
 			}
@@ -235,7 +234,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 									}
 								}
 							}
-							${opts.logger} && console.log("%c request invoke", "color: blue", req.url);
+							console.log("%c request invoke", "color: blue", req.url);
 						} else {
 							// next external URL
 							callback();
@@ -263,7 +262,7 @@ export async function getFakeData(options: ResolvePluginOptionsType, loggerOutpu
 }
 
 export async function requestMiddleware(options: ResolvePluginOptionsType, loggerOutput: Logger) {
-	const { logger, basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
+	const { basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
 		const responseResult = await getResponse({
 			URL,
@@ -308,11 +307,10 @@ export async function requestMiddleware(options: ResolvePluginOptionsType, logge
 				}
 			}
 
-			logger &&
-				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
-					timestamp: true,
-					clear: true,
-				});
+			loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
+				timestamp: true,
+				clear: true,
+			});
 		} else {
 			next();
 		}

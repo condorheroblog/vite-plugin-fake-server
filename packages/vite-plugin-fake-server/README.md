@@ -46,7 +46,7 @@ export default defineConfig({
 });
 ```
 
-By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `mjs` files in the mock folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (`logger = true`).
+By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `mjs` files in the mock folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
 
 ## Examples
 
@@ -189,13 +189,6 @@ Default: `true`
 
 Set whether to listen to `include` files.
 
-##### logger
-
-Type: `boolean`\
-Default: `true`
-
-Set whether to display the request log on the console.
-
 ##### extensions
 
 Type: `string[]`\
@@ -280,6 +273,18 @@ interface ServerBuildOptions {
 	outDir?: string;
 }
 ```
+
+#### Shared Options
+
+In order to maintain logs and screen clearing strategies consistent with Vite style on the terminal, the vite-plugin-fake-server plugin will automatically read the following three parameters in the Vite configuration file or in the Vite command line.
+
+- [loglevel](https://vitejs.dev/config/shared-options.html#loglevel)
+- [customlogger](https://vitejs.dev/config/shared-options.html#customlogger)
+- [clearScreen](https://vitejs.dev/config/shared-options.html#clearScreen)
+
+A preview image:
+
+![shapes at 23-10-24 15 23 18](https://github.com/condorheroblog/vite-plugin-fake-server/assets/47056890/a6b11fcb-ee30-40a5-9beb-b1d9a0a51b39)
 
 ## Principle
 

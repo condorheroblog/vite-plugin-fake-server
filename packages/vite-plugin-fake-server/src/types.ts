@@ -49,12 +49,6 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	watch?: boolean;
 
 	/**
-	 * @description Set whether to display the request log on the console.
-	 * @default true
-	 */
-	logger?: boolean;
-
-	/**
 	 * @description Set the mock files extensions.
 	 * @default ["ts", "js", "mjs"]
 	 */
