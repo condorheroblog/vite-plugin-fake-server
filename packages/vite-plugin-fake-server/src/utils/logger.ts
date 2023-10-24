@@ -140,5 +140,3 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 
 	return logger;
 }
-
-export const loggerOutput = createLogger();

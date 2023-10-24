@@ -6,11 +6,12 @@ import { existsSync } from "node:fs";
 import { mkdir, writeFile, readdir, copyFile, stat } from "node:fs/promises";
 import { join, extname } from "node:path";
 import pc from "picocolors";
+import type { ResolvedConfig } from "vite";
 
 export const PORT = 8888;
 export const OUTPUT_DIR = "mockServer";
 
-export async function generateMockServer(options: ResolvePluginOptionsType) {
+export async function generateMockServer(options: ResolvePluginOptionsType, config: ResolvedConfig) {
 	const buildOptions = options.build === true ? { port: PORT, outDir: OUTPUT_DIR } : options.build;
 
 	const { port = PORT, outDir = OUTPUT_DIR } = buildOptions as Required<ServerBuildOptions>;
@@ -20,7 +21,7 @@ export async function generateMockServer(options: ResolvePluginOptionsType) {
 	const outputList = [
 		{
 			filename: join(outputDir, "index.js"),
-			source: generatorServerEntryCode(port, options),
+			source: generatorServerEntryCode(port, options, config),
 		},
 		{
 			filename: join(outputDir, "package.json"),
@@ -64,13 +65,18 @@ function generatePackageJson() {
 	return JSON.stringify(mockPkg, null, 2);
 }
 
-function generatorServerEntryCode(port: number, options: ResolvePluginOptionsType) {
+function generatorServerEntryCode(port: number, options: ResolvePluginOptionsType, config: ResolvedConfig) {
 	return `import connect from "connect";
-import { getFakeData, requestMiddleware } from "${name}";
+import { getFakeData, requestMiddleware, createLogger } from "${name}";
+
+const loggerOutput = createLogger(${JSON.stringify(config.logLevel)}, {
+	allowClearScreen: ${config.clearScreen},
+	// customLogger: ${config.customLogger},
+});
 
 async function main() {
-	const fakeData = await getFakeData(${JSON.stringify(options, null, 2)});
-	const middleware = await requestMiddleware({...${JSON.stringify(options, null, 2)}, fakeData});
+	const fakeData = await getFakeData(${JSON.stringify(options, null, 2)}, loggerOutput);
+	const middleware = await requestMiddleware({...${JSON.stringify(options, null, 2)}, fakeData}, loggerOutput);
 
 	const app = connect();
 	app.use(middleware);

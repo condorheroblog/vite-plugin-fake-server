@@ -5,7 +5,8 @@ import { fakerSchemaServer, getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import { getRequestData, isFunction, loggerOutput } from "./utils";
+import type { Logger } from "./utils";
+import { getRequestData, isFunction, createLogger } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -21,6 +22,7 @@ let fakeData: FakeRoute[] = [];
 export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions = {}): Promise<Plugin> => {
 	let config: ResolvedConfig;
 	let isDevServer = false;
+	let loggerOutput: Logger;
 
 	const opts = resolvePluginOptions(options);
 
@@ -31,14 +33,20 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			if (resolvedConfig.command === "serve") {
 				isDevServer = true;
 			}
+
+			// Define logger
+			loggerOutput = createLogger(config.logLevel, {
+				allowClearScreen: config.clearScreen,
+				customLogger: config.customLogger,
+			});
 		},
 		async configureServer({ middlewares }) {
 			if (!isDevServer || !opts.enableDev) {
 				return;
 			}
 
-			fakeData = await getFakeData(opts);
-			const middleware = await requestMiddleware(opts);
+			fakeData = await getFakeData(opts, loggerOutput);
+			const middleware = await requestMiddleware(opts, loggerOutput);
 			middlewares.use(middleware);
 
 			if (opts.include && opts.include.length && opts.watch) {
@@ -53,7 +61,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							timestamp: true,
 							clear: true,
 						});
-					fakeData = await getFakeData(opts);
+					fakeData = await getFakeData(opts, loggerOutput);
 				});
 			}
 		},
@@ -244,17 +252,17 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			 * Build a independently deployable mock service
 			 */
 			if (!isDevServer && opts.build) {
-				await generateMockServer(opts);
+				await generateMockServer(opts, config);
 			}
 		},
 	};
 };
 
-export async function getFakeData(options: ResolvePluginOptionsType) {
-	return await fakerSchemaServer({ ...options, include: [options.include] });
+export async function getFakeData(options: ResolvePluginOptionsType, loggerOutput: Logger) {
+	return await fakerSchemaServer({ ...options, include: [options.include] }, loggerOutput);
 }
 
-export async function requestMiddleware(options: ResolvePluginOptionsType) {
+export async function requestMiddleware(options: ResolvePluginOptionsType, loggerOutput: Logger) {
 	const { logger, basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
 		const responseResult = await getResponse({
@@ -303,6 +311,7 @@ export async function requestMiddleware(options: ResolvePluginOptionsType) {
 			logger &&
 				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
 					timestamp: true,
+					clear: true,
 				});
 		} else {
 			next();

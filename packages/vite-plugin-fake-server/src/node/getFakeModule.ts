@@ -1,8 +1,8 @@
-import { loggerOutput } from "../utils";
+import type { Logger } from "../utils";
 import { resolveModule } from "./resolveModule";
 import colors from "picocolors";
 
-export async function getFakeModule(filePaths: string[]) {
+export async function getFakeModule(filePaths: string[], loggerOutput: Logger) {
 	const ret = [];
 
 	for (const absoluteFilePath of filePaths) {
