@@ -3,11 +3,11 @@ import type { VitePluginFakeServerOptions } from "./types";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}) {
+export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}, cwd = process.cwd()) {
 	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include || "mock"] });
 
 	for (const filePath of fakerOptions.include) {
-		const absolutePath = join(process.cwd(), filePath);
+		const absolutePath = join(cwd, filePath);
 		if (!existsSync(absolutePath)) {
 			throw new Error(`${filePath} does not exist`);
 		}

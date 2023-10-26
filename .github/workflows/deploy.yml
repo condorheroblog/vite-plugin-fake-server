@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     paths:
-      - 'packages/playground/ts-example/src/**'
+      - "packages/playground/react-sample/src/**"
 
 jobs:
   build-and-deploy:
@@ -26,9 +26,9 @@ jobs:
         run: |
           pnpm i
           pnpm --filter vite-plugin-fake-server run build
-          pnpm --filter ts-example run build
+          pnpm --filter react-sample run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: packages/playground/ts-example/dist
+          folder: packages/playground/react-sample/dist

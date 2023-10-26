@@ -50,7 +50,7 @@ By default, it is only valid in the development environment (`enableDev = true`)
 
 ## Examples
 
-For case details, please click this link to view [packages/playground/ts-example/src](https://github.com/condorheroblog/vite-plugin-fake-server/tree/main/packages/playground/ts-example/src)
+For case details, please click this link to view [packages/playground/react-sample/src](https://github.com/condorheroblog/vite-plugin-fake-server/tree/main/packages/playground/react-sample/src)
 
 The most recommended way is to use a TypeScript file so you can use the `defineFakeRoute` function to get good code hints.
 
@@ -310,7 +310,7 @@ A preview image:
 npm run build:watch
 
 
-# packages/playground/ts-example
+# packages/playground/react-sample
 npm run dev
 ```
 
@@ -321,7 +321,7 @@ npm run dev
 npm run build:watch
 
 
-# packages/playground/ts-example
+# packages/playground/react-sample
 npm run build
 npm run preview
 ```

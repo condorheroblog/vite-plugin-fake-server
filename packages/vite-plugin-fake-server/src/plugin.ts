@@ -10,11 +10,11 @@ import { getRequestData, isFunction, createLogger } from "./utils";
 import chokidar from "chokidar";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { join, dirname, relative } from "node:path";
+import { join, dirname, relative, isAbsolute } from "node:path";
 import { URL } from "node:url";
 import { pathToRegexp, match } from "path-to-regexp";
 import colors from "picocolors";
-import type { Plugin, ResolvedConfig, Connect, HtmlTagDescriptor } from "vite";
+import type { Plugin, ResolvedConfig, Connect, HtmlTagDescriptor, WatchOptions } from "vite";
 
 const require = createRequire(import.meta.url);
 
@@ -23,12 +23,27 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 	let config: ResolvedConfig;
 	let isDevServer = false;
 	let loggerOutput: Logger;
-
-	const opts = resolvePluginOptions(options);
+	let opts: ResolvePluginOptionsType;
 
 	return {
 		name: "vite-plugin-fake-server",
-		configResolved(resolvedConfig) {
+
+		config: (unresolvedConfig) => {
+			// https://vitejs.dev/config/shared-options.html#root
+			const currentWorkingDirectory = process.cwd();
+			const root = unresolvedConfig.root ?? currentWorkingDirectory;
+			const absoluteRoot = isAbsolute(root) ? root : join(currentWorkingDirectory, root);
+			opts = resolvePluginOptions(options, absoluteRoot);
+			return {
+				server: {
+					watch: {
+						ignored: resolveIgnored(absoluteRoot, opts.include, unresolvedConfig?.server?.watch),
+					},
+				},
+			};
+		},
+
+		async configResolved(resolvedConfig) {
 			config = resolvedConfig;
 			if (resolvedConfig.command === "serve") {
 				isDevServer = true;
@@ -39,13 +54,17 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				allowClearScreen: config.clearScreen,
 				customLogger: config.customLogger,
 			});
+
+			// load fake file
+			if (isDevServer && opts.enableDev) {
+				fakeData = await getFakeData(opts, loggerOutput, config.root);
+			}
 		},
 		async configureServer({ middlewares }) {
 			if (!isDevServer || !opts.enableDev) {
 				return;
 			}
 
-			fakeData = await getFakeData(opts, loggerOutput);
 			const middleware = await requestMiddleware(opts, loggerOutput);
 			middlewares.use(middleware);
 
@@ -60,7 +79,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						timestamp: true,
 						clear: true,
 					});
-					fakeData = await getFakeData(opts, loggerOutput);
+					fakeData = await getFakeData(opts, loggerOutput, config.root);
 				});
 			}
 		},
@@ -85,11 +104,14 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");`,
 				});
 
-				const fakeFilePath = getFakeFilePath({
-					include: opts.include.length ? [opts.include] : [],
-					exclude: opts.exclude,
-					extensions: opts.extensions,
-				});
+				const fakeFilePath = getFakeFilePath(
+					{
+						include: opts.include.length ? [opts.include] : [],
+						exclude: opts.exclude,
+						extensions: opts.extensions,
+					},
+					config.root,
+				);
 
 				const relativeFakeFilePath = fakeFilePath.map((filePath) => join("/", relative(config.root, filePath)));
 
@@ -257,8 +279,13 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 	};
 };
 
-export async function getFakeData(options: ResolvePluginOptionsType, loggerOutput: Logger) {
-	return await fakerSchemaServer({ ...options, include: [options.include] }, loggerOutput);
+export function resolveIgnored(rootDir: string, include: string, watchOptions?: WatchOptions) {
+	const { ignored = [] } = watchOptions ?? {};
+	return [join(rootDir, include, "**"), ...(Array.isArray(ignored) ? ignored : [ignored])];
+}
+
+export async function getFakeData(options: ResolvePluginOptionsType, loggerOutput: Logger, root: string) {
+	return await fakerSchemaServer({ ...options, include: [options.include] }, loggerOutput, root);
 }
 
 export async function requestMiddleware(options: ResolvePluginOptionsType, loggerOutput: Logger) {

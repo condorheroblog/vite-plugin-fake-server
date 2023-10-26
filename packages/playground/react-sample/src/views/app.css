@@ -44,7 +44,16 @@ main {
 }
 
 .code-textarea {
-	font-family: Fira Code VF,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
+	font-family:
+		Fira Code VF,
+		ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		Monaco,
+		Consolas,
+		Liberation Mono,
+		Courier New,
+		monospace;
 	background-color: #f1f1f1;
 	border: 1px solid #d9d9d9;
 	border-radius: 0.5em;
@@ -86,31 +95,30 @@ button .prefix-button-icon {
 
 @keyframes loading-rotate {
 	to {
-		transform: rotate(360deg)
+		transform: rotate(360deg);
 	}
 }
 
 @keyframes loading-dash {
 	0% {
-		stroke-dasharray: 1,200;
-		stroke-dashoffset: 0
+		stroke-dasharray: 1, 200;
+		stroke-dashoffset: 0;
 	}
 
 	50% {
-		stroke-dasharray: 90,150;
-		stroke-dashoffset: -40px
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -40px;
 	}
 
 	to {
-		stroke-dasharray: 90,150;
-		stroke-dashoffset: -120px
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -120px;
 	}
 }
 
-
 button .path {
 	animation: loading-dash 1.5s ease-in-out infinite;
-	stroke-dasharray: 90,150;
+	stroke-dasharray: 90, 150;
 	stroke-dashoffset: 0;
 	stroke-width: 2;
 	stroke: #409eff;
@@ -121,7 +129,6 @@ button .circle {
 	display: inline;
 	animation: loading-rotate 2s linear infinite;
 }
-
 
 button {
 	display: flex;
@@ -152,7 +159,16 @@ button:disabled {
 }
 
 code {
-	font-family: Fira Code VF,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
+	font-family:
+		Fira Code VF,
+		ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		Monaco,
+		Consolas,
+		Liberation Mono,
+		Courier New,
+		monospace;
 	font-size: 14px;
 	display: block;
 	min-height: 10em;
@@ -163,4 +179,3 @@ code {
 	border-radius: 4px;
 	border: 1px solid #ccc;
 }
-
