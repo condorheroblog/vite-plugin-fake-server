@@ -1,3 +1,4 @@
+import { convertPathToPosix } from "../utils";
 import type { ResolveOptionsType } from "./resolveOptions";
 import fg from "fast-glob";
 import { existsSync, statSync } from "node:fs";
@@ -9,9 +10,12 @@ export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()
 		return [];
 	}
 
+	const fastGlobIgnore = exclude.map((filepath) => convertPathToPosix(join(cwd, filepath)));
+	const posixStyleCurrentWorkingDirectory = convertPathToPosix(cwd);
+
 	const fastGlobOptions = {
-		cwd,
-		ignore: exclude.map((filepath) => join(cwd, filepath)),
+		posixStyleCurrentWorkingDirectory,
+		ignore: fastGlobIgnore,
 	};
 
 	const fakeFilePath = include.reduce<string[]>((acc, filePath) => {
@@ -22,7 +26,7 @@ export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()
 			const fileStatus = statSync(absFilePath);
 			if (!fileStatus.isDirectory() && fileExtname) {
 				if (extensions.includes(fileExtname)) {
-					const fakeFiles = fg.sync(absFilePath, fastGlobOptions);
+					const fakeFiles = fg.sync(convertPathToPosix(absFilePath), fastGlobOptions);
 					return [...acc, ...fakeFiles];
 				}
 				return acc;
@@ -31,7 +35,7 @@ export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()
 			// folder
 			const dir = join(absFilePath, "/");
 			const fakeFolderFiles = fg.sync(
-				extensions.map((ext) => `${dir}**/*.${ext}`),
+				extensions.map((ext) => convertPathToPosix(`${dir}**/*.${ext}`)),
 				fastGlobOptions,
 			);
 

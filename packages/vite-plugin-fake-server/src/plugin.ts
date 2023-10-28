@@ -72,6 +72,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				const watchDir = join(config.root, opts.include);
 				const watcher = chokidar.watch(watchDir, {
 					ignoreInitial: true,
+					ignored: opts.exclude.map((filepath) => join(config.root, filepath)),
 				});
 
 				watcher.on("change", async (file) => {
