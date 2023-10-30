@@ -1,28 +1,21 @@
 import { generateFakeServer } from "./build";
+import { createFakeMiddleware } from "./createFakeMiddleware";
 import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
-import type { FakeRoute } from "./node";
-import { fakerSchemaServer, getFakeFilePath } from "./node";
+import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import type { Logger } from "./utils";
-import { getRequestData, isFunction, createLogger } from "./utils";
-import chokidar from "chokidar";
+import { createLogger, convertPathToPosix } from "./utils";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join, dirname, relative, isAbsolute } from "node:path";
-import { URL } from "node:url";
-import { pathToRegexp, match } from "path-to-regexp";
-import colors from "picocolors";
-import type { Plugin, ResolvedConfig, Connect, HtmlTagDescriptor, WatchOptions } from "vite";
+import type { Plugin, ResolvedConfig, HtmlTagDescriptor, WatchOptions } from "vite";
 
 const require = createRequire(import.meta.url);
 
-let fakeData: FakeRoute[] = [];
 export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions = {}): Promise<Plugin> => {
 	let config: ResolvedConfig;
 	let isDevServer = false;
-	let loggerOutput: Logger;
 	let opts: ResolvePluginOptionsType;
 
 	return {
@@ -43,45 +36,23 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			};
 		},
 
-		async configResolved(resolvedConfig) {
+		configResolved(resolvedConfig) {
 			config = resolvedConfig;
 			if (resolvedConfig.command === "serve") {
 				isDevServer = true;
 			}
-
-			// Define logger
-			loggerOutput = createLogger(config.logLevel, {
-				allowClearScreen: config.clearScreen,
-				customLogger: config.customLogger,
-			});
-
-			// load fake file
-			if (isDevServer && opts.enableDev) {
-				fakeData = await getFakeData(opts, loggerOutput, config.root);
-			}
 		},
+
 		async configureServer({ middlewares }) {
-			if (!isDevServer || !opts.enableDev) {
-				return;
-			}
-
-			const middleware = await requestMiddleware(opts, loggerOutput);
-			middlewares.use(middleware);
-
-			if (opts.include && opts.include.length && opts.watch) {
-				const watchDir = join(config.root, opts.include);
-				const watcher = chokidar.watch(watchDir, {
-					ignoreInitial: true,
-					ignored: opts.exclude.map((filepath) => join(config.root, filepath)),
+			if (isDevServer && opts.enableDev) {
+				// Define logger
+				const loggerOutput = createLogger(config.logLevel, {
+					allowClearScreen: config.clearScreen,
+					customLogger: config.customLogger,
 				});
 
-				watcher.on("change", async (file) => {
-					loggerOutput.info(colors.green(`fake file changed ` + colors.dim(relative(config.root, file))), {
-						timestamp: true,
-						clear: true,
-					});
-					fakeData = await getFakeData(opts, loggerOutput, config.root);
-				});
+				const middleware = await createFakeMiddleware({ ...opts, loggerOutput, root: config.root });
+				middlewares.use(middleware);
 			}
 		},
 
@@ -283,67 +254,5 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 
 export function resolveIgnored(rootDir: string, include: string, watchOptions?: WatchOptions) {
 	const { ignored = [] } = watchOptions ?? {};
-	return [join(rootDir, include, "**"), ...(Array.isArray(ignored) ? ignored : [ignored])];
-}
-
-export async function getFakeData(options: ResolvePluginOptionsType, loggerOutput: Logger, root: string) {
-	return await fakerSchemaServer({ ...options, include: [options.include] }, loggerOutput, root);
-}
-
-export async function requestMiddleware(options: ResolvePluginOptionsType, loggerOutput: Logger) {
-	const { basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
-	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
-		const responseResult = await getResponse({
-			URL,
-			req,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			fakeModuleList: options?.fakeData ?? fakeData,
-			pathToRegexp,
-			match,
-			basename,
-			defaultTimeout,
-			globalResponseHeaders,
-		});
-		if (responseResult) {
-			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders, hash } =
-				responseResult ?? {};
-			if (isFunction(rawResponse)) {
-				await Promise.resolve(rawResponse(req, res));
-			} else if (isFunction(response)) {
-				const body = await getRequestData(req);
-
-				for (const key of responseHeaders.keys()) {
-					res.setHeader(key, responseHeaders.get(key)!);
-				}
-
-				if (!res.getHeader("Content-Type")) {
-					res.setHeader("Content-Type", "application/json");
-				}
-
-				res.statusCode = statusCode;
-				if (statusText) {
-					res.statusMessage = statusText;
-				}
-				const fakeResponse = await Promise.resolve(
-					response({ url, body: tryToJSON(body), rawBody: body, query, params, headers: req.headers, hash }, req, res),
-				);
-				if (typeof fakeResponse === "string") {
-					// XML
-					res.end(fakeResponse);
-				} else {
-					res.end(JSON.stringify(fakeResponse, null, 2));
-				}
-			}
-
-			loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
-				timestamp: true,
-				clear: true,
-			});
-		} else {
-			next();
-		}
-	};
-
-	return middleware;
+	return [convertPathToPosix(join(rootDir, include, "**")), ...(Array.isArray(ignored) ? ignored : [ignored])];
 }
