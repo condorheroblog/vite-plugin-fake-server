@@ -5,6 +5,7 @@ import type { Logger } from "./utils";
 import { convertPathToPosix } from "./utils";
 import chokidar from "chokidar";
 import EventEmitter from "node:events";
+import type { FSWatcher } from "node:fs";
 import { join } from "node:path";
 import colors from "picocolors";
 
@@ -15,8 +16,8 @@ export interface FakeFileLoaderOptions extends ResolvePluginOptionsType {
 
 export class FakeFileLoader extends EventEmitter {
 	#moduleCache = new Map<string, FakeRoute[]>();
-
 	#fakeData: FakeRoute[] = [];
+	watcher!: FSWatcher;
 
 	constructor(public options: FakeFileLoaderOptions) {
 		super();
@@ -53,6 +54,7 @@ export class FakeFileLoader extends EventEmitter {
 				ignoreInitial: true,
 				ignored: exclude,
 			});
+			this.watcher = watcher;
 
 			watcher.on("add", async (relativeFilePath) => {
 				loggerOutput.info(colors.green(`fake file add ` + colors.dim(relativeFilePath)), {
@@ -105,5 +107,9 @@ export class FakeFileLoader extends EventEmitter {
 			fakeData = [...fakeData, ...value];
 		}
 		this.#fakeData = fakeData;
+	}
+
+	close() {
+		this.watcher?.close();
 	}
 }
