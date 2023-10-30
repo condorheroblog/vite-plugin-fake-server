@@ -15,6 +15,7 @@ describe(resolveOptions.name, () => {
 			  "include": [
 			    "fake",
 			  ],
+			  "infixName": "fake",
 			}
 		`);
 	});

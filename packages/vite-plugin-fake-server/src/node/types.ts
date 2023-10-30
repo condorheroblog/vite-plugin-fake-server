@@ -13,7 +13,16 @@ export type { ServerResponse };
 export interface FakerSchemaServerOptions {
 	include?: string[];
 	exclude?: string[];
+	/**
+	 * @description Set the fake files extensions.
+	 * @default ["ts", "js", "mjs"]
+	 */
 	extensions?: string[];
+	/**
+	 * @description Set the infix name used in the fake file name.
+	 * @default fake
+	 */
+	infixName?: string;
 }
 
 export type UppercaseHttpMethodType =
