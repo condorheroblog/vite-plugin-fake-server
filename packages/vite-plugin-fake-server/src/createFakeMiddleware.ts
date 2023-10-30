@@ -3,6 +3,7 @@ import { getResponse, tryToJSON } from "./getResponse.mjs";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
 import { getRequestData, isFunction } from "./utils";
+import type { Server } from "node:http";
 import { URL } from "node:url";
 import { pathToRegexp, match } from "path-to-regexp";
 import colors from "picocolors";
@@ -13,10 +14,18 @@ export interface CreateFakeMiddlewareOptions extends ResolvePluginOptionsType {
 	root: string;
 }
 
-export async function createFakeMiddleware({ loggerOutput, root, ...options }: CreateFakeMiddlewareOptions) {
+export async function createFakeMiddleware(
+	{ loggerOutput, root, ...options }: CreateFakeMiddlewareOptions,
+	httpServer: Server | null,
+) {
 	const fakeLoader = new FakeFileLoader({ ...options, loggerOutput, root });
 
 	await fakeLoader.start();
+	if (httpServer) {
+		httpServer.on("close", () => {
+			fakeLoader.close();
+		});
+	}
 	const { basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
 		const responseResult = await getResponse({

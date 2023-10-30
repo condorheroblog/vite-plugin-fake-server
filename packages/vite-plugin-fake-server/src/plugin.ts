@@ -43,7 +43,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			}
 		},
 
-		async configureServer({ middlewares }) {
+		async configureServer({ middlewares, httpServer }) {
 			if (isDevServer && opts.enableDev) {
 				// Define logger
 				const loggerOutput = createLogger(config.logLevel, {
@@ -51,7 +51,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					customLogger: config.customLogger,
 				});
 
-				const middleware = await createFakeMiddleware({ ...opts, loggerOutput, root: config.root });
+				const middleware = await createFakeMiddleware({ ...opts, loggerOutput, root: config.root }, httpServer);
 				middlewares.use(middleware);
 			}
 		},
