@@ -7,7 +7,7 @@ export function FetchMethodPost() {
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch("/mock/mjs", { method: "POST" })
+		fetch("/api/mjs", { method: "POST" })
 			.then((response) => response.json())
 			.then((response) => {
 				setText(response.format);
@@ -29,7 +29,7 @@ export function FetchMethodPost() {
 
 export default {
 	code: `
-fetch("/mock/mjs", { method: "POST" })
+fetch("/api/mjs", { method: "POST" })
 .then((response) => response.json())
 .then((response) => {
 	setText(response.format);

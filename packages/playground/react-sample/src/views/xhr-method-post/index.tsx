@@ -13,7 +13,7 @@ export function XHRMethodPost() {
 			password: Math.random(),
 		};
 		xhr.responseType = "json";
-		xhr.open("POST", "/mock/post", true);
+		xhr.open("POST", "/api/post", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		xhr.addEventListener("load", function () {
@@ -45,7 +45,7 @@ const data = {
 	password: Math.random(),
 };
 xhr.responseType = "json";
-xhr.open("POST", "/mock/post", true);
+xhr.open("POST", "/api/post", true);
 xhr.setRequestHeader("Content-Type", "application/json");
 
 xhr.addEventListener("load", function () {

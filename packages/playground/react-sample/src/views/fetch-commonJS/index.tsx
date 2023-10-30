@@ -7,7 +7,7 @@ export function FetchCommonJS() {
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch("/mock/commonJS")
+		fetch("/api/commonJS")
 			.then((response) => response.json())
 			.then((response) => {
 				setText(`format: ${response.format}`);
@@ -29,7 +29,7 @@ export function FetchCommonJS() {
 
 export default {
 	code: `
-fetch("/mock/commonJS")
+fetch("/api/commonJS")
 .then((response) => response.json())
 .then((response) => {});`,
 	element: <FetchCommonJS />,

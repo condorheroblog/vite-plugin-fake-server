@@ -2,7 +2,7 @@ import { FAKE_FILE_EXTENSIONS } from "./constants";
 import type { FakerSchemaServerOptions } from "./types";
 
 export function resolveOptions(options: FakerSchemaServerOptions = {}) {
-	const include = options.include ?? ["mock"];
+	const include = options.include ?? ["fake"];
 	if (!Array.isArray(include) || include.length === 0) {
 		throw new Error("Invalid include option");
 	}

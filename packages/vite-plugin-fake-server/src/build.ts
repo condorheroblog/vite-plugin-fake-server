@@ -9,9 +9,9 @@ import pc from "picocolors";
 import type { ResolvedConfig } from "vite";
 
 export const PORT = 8888;
-export const OUTPUT_DIR = "mockServer";
+export const OUTPUT_DIR = "fakeServer";
 
-export async function generateMockServer(options: ResolvePluginOptionsType, config: ResolvedConfig) {
+export async function generateFakeServer(options: ResolvePluginOptionsType, config: ResolvedConfig) {
 	const buildOptions = options.build === true ? { port: PORT, outDir: OUTPUT_DIR } : options.build;
 
 	const { port = PORT, outDir = OUTPUT_DIR } = buildOptions as Required<ServerBuildOptions>;
@@ -33,8 +33,8 @@ export async function generateMockServer(options: ResolvePluginOptionsType, conf
 		await mkdir(outputDir, { recursive: true });
 	}
 
-	// copy mock directory
-	await copyMockFiles(join(cwd, options.include), join(outputDir, options.include));
+	// copy fake directory
+	await copyFakeFiles(join(cwd, options.include), join(outputDir, options.include));
 	for (const { filename, source } of outputList) {
 		await writeFile(filename, source, "utf-8");
 	}
@@ -49,8 +49,8 @@ export async function generateMockServer(options: ResolvePluginOptionsType, conf
 }
 
 function generatePackageJson() {
-	const mockPkg = {
-		name: "mock-server",
+	const fakePkg = {
+		name: "fake-server",
 		version,
 		private: true,
 		type: "module",
@@ -62,7 +62,7 @@ function generatePackageJson() {
 			[name]: `^${version}`,
 		},
 	};
-	return JSON.stringify(mockPkg, null, 2);
+	return JSON.stringify(fakePkg, null, 2);
 }
 
 function generatorServerEntryCode(port: number, options: ResolvePluginOptionsType, config: ResolvedConfig) {
@@ -89,7 +89,7 @@ main();
 `;
 }
 
-export async function copyMockFiles(sourceDir: string, targetDir: string) {
+export async function copyFakeFiles(sourceDir: string, targetDir: string) {
 	try {
 		if (!existsSync(targetDir)) {
 			await mkdir(targetDir, { recursive: true });
@@ -103,7 +103,7 @@ export async function copyMockFiles(sourceDir: string, targetDir: string) {
 
 			const fileStatus = await stat(sourcePath);
 			if (fileStatus.isDirectory()) {
-				await copyMockFiles(sourcePath, targetPath);
+				await copyFakeFiles(sourcePath, targetPath);
 			} else {
 				const ext = extname(file).toLowerCase().slice(1);
 				if (FAKE_FILE_EXTENSIONS.includes(ext)) {
@@ -112,8 +112,8 @@ export async function copyMockFiles(sourceDir: string, targetDir: string) {
 			}
 		}
 
-		// console.log(`Mock files copied from ${sourceDir} to ${targetDir}`);
+		// console.log(`Fake files copied from ${sourceDir} to ${targetDir}`);
 	} catch (error) {
-		console.error(`Error copying mock files: ${error}`);
+		console.error(`Error copying fake files: ${error}`);
 	}
 }

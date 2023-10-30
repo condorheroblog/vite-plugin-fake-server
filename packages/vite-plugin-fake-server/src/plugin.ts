@@ -1,4 +1,4 @@
-import { generateMockServer } from "./build";
+import { generateFakeServer } from "./build";
 import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
 import type { FakeRoute } from "./node";
 import { fakerSchemaServer, getFakeFilePath } from "./node";
@@ -271,10 +271,10 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 
 		async closeBundle() {
 			/**
-			 * Build a independently deployable mock service
+			 * Build a independently deployable fake service
 			 */
 			if (!isDevServer && opts.build) {
-				await generateMockServer(opts, config);
+				await generateFakeServer(opts, config);
 			}
 		},
 	};

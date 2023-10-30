@@ -3,7 +3,7 @@ import { describe, test } from "vitest";
 
 describe(resolvePluginOptions.name, () => {
 	test(`${resolvePluginOptions.name} error`, ({ expect }) => {
-		expect(() => resolvePluginOptions()).toThrowErrorMatchingInlineSnapshot('"mock does not exist"');
+		expect(() => resolvePluginOptions()).toThrowErrorMatchingInlineSnapshot('"fake folder does not exist"');
 	});
 
 	test(`${resolvePluginOptions.name} options`, ({ expect }) => {

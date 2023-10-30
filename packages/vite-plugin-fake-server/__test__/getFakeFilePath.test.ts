@@ -16,9 +16,9 @@ describe(`${getFakeFilePath.name}`, () => {
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
 			  "fixtures/fake/extra.ts",
-			  "fixtures/fake/mock.js",
-			  "fixtures/fake/mock.mjs",
-			  "fixtures/fake/mock.ts",
+			  "fixtures/fake/fake.js",
+			  "fixtures/fake/fake.mjs",
+			  "fixtures/fake/fake.ts",
 			]
 		`);
 	});
@@ -35,9 +35,9 @@ describe(`${getFakeFilePath.name}`, () => {
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
-			  "fixtures/fake/mock.js",
-			  "fixtures/fake/mock.mjs",
-			  "fixtures/fake/mock.ts",
+			  "fixtures/fake/fake.js",
+			  "fixtures/fake/fake.mjs",
+			  "fixtures/fake/fake.ts",
 			]
 		`);
 	});
@@ -54,7 +54,7 @@ describe(`${getFakeFilePath.name}`, () => {
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
-			  "fixtures/fake/mock.ts",
+			  "fixtures/fake/fake.ts",
 			]
 		`);
 	});

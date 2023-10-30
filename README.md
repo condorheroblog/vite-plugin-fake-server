@@ -46,7 +46,7 @@ export default defineConfig({
 });
 ```
 
-By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `mjs` files in the mock folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
+By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `mjs` files in the fake folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
 
 ## Examples
 
@@ -96,7 +96,7 @@ const adminUserInfo = Mock.mock(adminUserTemplate);
 
 export default defineFakeRoute([
 	{
-		url: "/mock/get-user-info",
+		url: "/api/get-user-info",
 		response: () => {
 			return adminUserInfo;
 		},
@@ -125,19 +125,19 @@ export default defineFakeRoute([
 /** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
 export default [
 	{
-		url: "/mock/esm",
+		url: "/api/esm",
 		response: ({ query }) => {
 			return { format: "ESM", query };
 		},
 	},
 	{
-		url: "/mock/response-text",
+		url: "/api/response-text",
 		response: (_, req) => {
 			return req.headers["content-type"];
 		},
 	},
 	{
-		url: "/mock/post",
+		url: "/api/post",
 		method: "POST",
 		response: ({ body }) => {
 			return { ...body, timestamp: Date.now() };
@@ -150,7 +150,7 @@ export default [
 
 ```javascript
 export default {
-	url: "/mock/mjs",
+	url: "/api/mjs",
 	method: "POST",
 	statusCode: 200,
 	statusText: "OK",
@@ -169,9 +169,9 @@ export default {
 ##### include
 
 Type: `string`\
-Default: `"mock"`
+Default: `"fake"`
 
-Set the folder where the mock/fake `ts`, `js`, `mjs` files is stored.
+Set the folder where the fake `ts`, `js`, `mjs` files is stored.
 
 ##### exclude
 
@@ -194,7 +194,7 @@ Set whether to listen to `include` files.
 Type: `string[]`\
 Default: `["ts", "js", "mjs"]`
 
-Set the mock files extensions.
+Set the fake files extensions.
 
 ##### timeout
 
@@ -235,7 +235,7 @@ Set up the service simulator in the production environment.
 
 Powered by [XHook](https://github.com/jpillora/xhook) technology.
 
-> ⚠️ The node module cannot be used in the mock file, otherwise the production environment will fail.As an alternative to keep consistent with the development environment, you can build a standalone deployment server, see [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
+> ⚠️ The node module cannot be used in the fake file, otherwise the production environment will fail.As an alternative to keep consistent with the development environment, you can build a standalone deployment server, see [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
 
 Compared with the development environment, the API interface defined in the production environment does not have a `rawResponse` function. The response function does not have the second parameter `request` and the third parameter `response`.
 
@@ -268,7 +268,7 @@ interface ServerBuildOptions {
 	/**
 	 * Directory relative from `root` where build output will be placed. If the
 	 * directory exists, it will be removed before the build.
-	 * @default "mockServer"
+	 * @default "fakeServer"
 	 */
 	outDir?: string;
 }

@@ -1,5 +1,5 @@
 export default {
-	url: "/mock/cts",
+	url: "/api/cts",
 	response: () => {
 		return { format: "cts" };
 	},

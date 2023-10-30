@@ -1,6 +1,6 @@
 module.exports = [
 	{
-		url: "/mock/commonJS",
+		url: "/api/commonJS",
 		response: () => {
 			console.log(23);
 			return { format: "commonJS" };

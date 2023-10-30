@@ -7,7 +7,7 @@ export function FetchAsyncResponse() {
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch("/mock/async-response", { method: "POST" })
+		fetch("/api/async-response", { method: "POST" })
 			.then((response) => {
 				return response.json();
 			})
@@ -31,7 +31,7 @@ export function FetchAsyncResponse() {
 
 export default {
 	code: `
-fetch("/mock/async-response", { method: "POST" })
+fetch("/api/async-response", { method: "POST" })
 	.then((response) => {
 		return response.json();
 	})

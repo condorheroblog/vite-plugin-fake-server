@@ -1,5 +1,5 @@
 import { defineFakeRoute } from "../../../src";
 
 export default defineFakeRoute({
-	url: "/fake-route/mock-mjs",
+	url: "/fake-route/fake-mjs",
 });

@@ -9,7 +9,7 @@ export function XHRResponseNumber() {
 		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
-		xhr.open("GET", "/mock/response-number");
+		xhr.open("GET", "/api/response-number");
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		xhr.addEventListener("load", function () {
@@ -42,7 +42,7 @@ export default {
 	code: `
 const xhr = new XMLHttpRequest();
 xhr.responseType = "json";
-xhr.open("GET", "/mock/response-number");
+xhr.open("GET", "/api/response-number");
 xhr.setRequestHeader("Content-Type", "application/json");
 
 xhr.addEventListener("load", function () {

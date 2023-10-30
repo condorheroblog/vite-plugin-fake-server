@@ -7,7 +7,7 @@ export function FetchResponseText() {
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch(`/mock/response-text`, { method: "get", headers: { "Content-Type": "text/plain" } })
+		fetch(`/api/response-text`, { method: "get", headers: { "Content-Type": "text/plain" } })
 			.then((response) => {
 				return response.text();
 			})
@@ -31,7 +31,7 @@ export function FetchResponseText() {
 
 export default {
 	code: `
-fetch("/mock/response-text", { method: "get", headers: { "Content-Type": "text/plain" } })
+fetch("/api/response-text", { method: "get", headers: { "Content-Type": "text/plain" } })
 .then((response) => {
 	return response.text();
 })

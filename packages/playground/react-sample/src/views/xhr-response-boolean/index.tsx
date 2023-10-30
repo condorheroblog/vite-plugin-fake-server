@@ -9,7 +9,7 @@ export function XHRResponseBoolean() {
 		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
-		xhr.open("GET", "/mock/response-boolean");
+		xhr.open("GET", "/api/response-boolean");
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		xhr.addEventListener("load", function () {
@@ -42,7 +42,7 @@ export default {
 	code: `
 const xhr = new XMLHttpRequest();
 xhr.responseType = "json";
-xhr.open("GET", "/mock/response-boolean");
+xhr.open("GET", "/api/response-boolean");
 xhr.setRequestHeader("Content-Type", "application/json");
 
 xhr.addEventListener("load", function () {

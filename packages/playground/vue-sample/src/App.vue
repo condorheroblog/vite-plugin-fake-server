@@ -5,7 +5,7 @@ const title = ref("---");
 const responseTimestamp = ref(0);
 
 function handleFetch() {
-	fetch("/vue/mock/hello")
+	fetch("/vue/api/hello")
 		.then((res) => res.json())
 		.then((res) => {
 			console.log(res);

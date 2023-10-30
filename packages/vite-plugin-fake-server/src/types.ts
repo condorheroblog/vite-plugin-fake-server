@@ -12,15 +12,15 @@ export interface ServerBuildOptions {
 	/**
 	 * Directory relative from `root` where build output will be placed. If the
 	 * directory exists, it will be removed before the build.
-	 * @default "mockServer"
+	 * @default "fakeServer"
 	 */
 	outDir?: string;
 }
 
 export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptions, "include"> {
 	/**
-	 * @description Set the folder where the mock/fake `ts`, `js`, `mjs` files is stored.
-	 * @default mock
+	 * @description Set the folder where the fake `ts`, `js`, `mjs` files is stored.
+	 * @default fake
 	 */
 	include?: string;
 
@@ -49,7 +49,7 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	watch?: boolean;
 
 	/**
-	 * @description Set the mock files extensions.
+	 * @description Set the fake files extensions.
 	 * @default ["ts", "js", "mjs"]
 	 */
 	extensions?: string[];

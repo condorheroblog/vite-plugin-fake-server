@@ -6,14 +6,14 @@ import { describe, test } from "vitest";
 describe("vite-plugin-fake-server options", () => {
 	const fakeData = defineFakeRoute([
 		{
-			url: "/mock/async-response",
+			url: "/api/async-response",
 			method: "POST",
 			response: () => {
 				return { message: "async-response" };
 			},
 		},
 	]);
-	const req = { url: "/mock/async-response", method: "POST" };
+	const req = { url: "/api/async-response", method: "POST" };
 	const getResponseOptions = {
 		req,
 		URL,
@@ -28,7 +28,7 @@ describe("vite-plugin-fake-server options", () => {
 		const basename = "api";
 		const responseResult = await getResponse({
 			...getResponseOptions,
-			req: { ...req, url: "/api/mock/async-response" },
+			req: { ...req, url: "/api/api/async-response" },
 			basename,
 		});
 
@@ -53,7 +53,7 @@ describe("vite-plugin-fake-server options", () => {
 describe("vite-plugin-fake-server response schema", async () => {
 	const fakeData = defineFakeRoute([
 		{
-			url: "/mock/:id",
+			url: "/api/:id",
 			method: "POST",
 			statusText: "OK",
 			headers: { e: "eyes" },
@@ -63,7 +63,7 @@ describe("vite-plugin-fake-server response schema", async () => {
 		},
 	]);
 	const req = {
-		url: "/mock/1?age=18&weight=50#chapter-10",
+		url: "/api/1?age=18&weight=50#chapter-10",
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 	};
@@ -102,7 +102,7 @@ describe("vite-plugin-fake-server response schema", async () => {
 
 		test(`request url`, async ({ expect }) => {
 			const url = responseResult.url;
-			expect(url).toMatchInlineSnapshot('"/mock/1?age=18&weight=50#chapter-10"');
+			expect(url).toMatchInlineSnapshot('"/api/1?age=18&weight=50#chapter-10"');
 		});
 
 		test(`request query`, async ({ expect }) => {
@@ -117,7 +117,7 @@ describe("vite-plugin-fake-server response schema", async () => {
 
 		test(`request params`, async ({ expect }) => {
 			const url = responseResult.url;
-			expect(url).toMatchInlineSnapshot('"/mock/1?age=18&weight=50#chapter-10"');
+			expect(url).toMatchInlineSnapshot('"/api/1?age=18&weight=50#chapter-10"');
 		});
 
 		test(`request hash`, async ({ expect }) => {
@@ -144,7 +144,7 @@ describe("vite-plugin-fake-server response schema", async () => {
 				    "age": "18",
 				    "weight": "50",
 				  },
-				  "url": "/mock/1?age=18&weight=50#chapter-10",
+				  "url": "/api/1?age=18&weight=50#chapter-10",
 				}
 			`);
 		});

@@ -13,7 +13,7 @@ export function XHRResponseDocument() {
 		const xhr = new XMLHttpRequest();
 		const data = `Hello, ${Date.now().toString().slice(-6)}!`;
 		xhr.responseType = "document";
-		xhr.open("POST", "/mock/xml", true);
+		xhr.open("POST", "/api/xml", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		// Force the response to be parsed as XML
@@ -53,7 +53,7 @@ export default {
 const xhr = new XMLHttpRequest();
 const data = "Hello, XML";
 xhr.responseType = "document";
-xhr.open("POST", "/mock/xml", true);
+xhr.open("POST", "/api/xml", true);
 xhr.setRequestHeader("Content-Type", "application/json");
 
 // Force the response to be parsed as XML

@@ -7,7 +7,7 @@ export function XHRGetNest() {
 	const xhrData = (e: ChangeEvent<HTMLInputElement>) => {
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
-		xhr.open("GET", `/mock/nest/${e.target.value}`);
+		xhr.open("GET", `/api/nest/${e.target.value}`);
 		xhr.addEventListener("load", function () {
 			setText(xhr.response?.id);
 		});
@@ -25,7 +25,7 @@ export default {
 	code: `
 const xhr = new XMLHttpRequest();
 xhr.responseType = "json";
-xhr.open("GET", "/mock/nest/:id");
+xhr.open("GET", "/api/nest/:id");
 xhr.addEventListener("load", function () {
 	console.log(typeof xhr.response);
 	setXhrNestTsContent(xhr.response?.id);

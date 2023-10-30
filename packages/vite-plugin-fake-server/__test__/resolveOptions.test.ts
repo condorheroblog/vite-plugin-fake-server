@@ -13,7 +13,7 @@ describe(resolveOptions.name, () => {
 			    "mjs",
 			  ],
 			  "include": [
-			    "mock",
+			    "fake",
 			  ],
 			}
 		`);
