@@ -5,5 +5,7 @@ export * from "./resolvePluginOptions";
 export * from "./node";
 export * from "./client";
 export * from "./build";
+export * from "./FakeFileLoader";
 export * from "./getResponse.mjs";
+export * from "./createFakeMiddleware";
 export { version } from "../package.json";

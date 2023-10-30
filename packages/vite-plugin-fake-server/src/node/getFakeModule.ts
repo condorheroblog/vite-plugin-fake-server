@@ -1,9 +1,10 @@
 import type { Logger } from "../utils";
 import { resolveModule } from "./resolveModule";
+import { FakeRoute } from "./types";
 import colors from "picocolors";
 
 export async function getFakeModule(filePaths: string[], loggerOutput: Logger) {
-	const ret = [];
+	const ret: FakeRoute[] = [];
 
 	for (const absoluteFilePath of filePaths) {
 		try {
