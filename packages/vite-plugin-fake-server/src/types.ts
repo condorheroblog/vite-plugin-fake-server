@@ -19,7 +19,7 @@ export interface ServerBuildOptions {
 
 export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptions, "include"> {
 	/**
-	 * @description Set the folder where the fake `ts`, `js`, `mjs` files is stored.
+	 * @description Set the folder where the fake `xxx.fake.{ts,js,mjs}` files is stored.
 	 * @default fake
 	 */
 	include?: string;
@@ -47,12 +47,6 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	 * @default true
 	 */
 	watch?: boolean;
-
-	/**
-	 * @description Set the fake files extensions.
-	 * @default ["ts", "js", "mjs"]
-	 */
-	extensions?: string[];
 
 	/**
 	 * @description Set default response delay time.

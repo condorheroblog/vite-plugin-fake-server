@@ -1,4 +1,4 @@
-import { FAKE_FILE_EXTENSIONS } from "../src";
+import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "../src";
 import { describe, test } from "vitest";
 
 describe("constant", () => {
@@ -10,5 +10,9 @@ describe("constant", () => {
 			  "mjs",
 			]
 		`);
+	});
+
+	test(`INFIX_NAME`, ({ expect }) => {
+		expect(INFIX_NAME).toMatchInlineSnapshot('"fake"');
 	});
 });

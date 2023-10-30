@@ -25,6 +25,7 @@ describe(resolvePluginOptions.name, () => {
 			  ],
 			  "headers": {},
 			  "include": "",
+			  "infixName": "fake",
 			  "timeout": undefined,
 			  "watch": true,
 			}

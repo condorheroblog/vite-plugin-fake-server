@@ -5,7 +5,7 @@ import { existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
 export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()) {
-	const { include, exclude, extensions } = options;
+	const { include, exclude, extensions, infixName } = options;
 	if (!Array.isArray(include) || include.length === 0) {
 		return [];
 	}
@@ -35,7 +35,12 @@ export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()
 			// folder
 			const dir = join(absFilePath, "/");
 			const fakeFolderFiles = fg.sync(
-				extensions.map((ext) => convertPathToPosix(`${dir}**/*.${ext}`)),
+				extensions.map((ext) => {
+					if (infixName.length > 0) {
+						return convertPathToPosix(`${dir}**/*.${infixName}.${ext}`);
+					}
+					return convertPathToPosix(`${dir}**/*.${ext}`);
+				}),
 				fastGlobOptions,
 			);
 

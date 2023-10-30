@@ -1,4 +1,4 @@
-import { FAKE_FILE_EXTENSIONS } from "./constants";
+import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "./constants";
 import type { FakerSchemaServerOptions } from "./types";
 
 export function resolveOptions(options: FakerSchemaServerOptions = {}) {
@@ -10,6 +10,7 @@ export function resolveOptions(options: FakerSchemaServerOptions = {}) {
 	return {
 		include,
 		exclude: options.exclude || [],
+		infixName: options.infixName || INFIX_NAME,
 		extensions: options.extensions || FAKE_FILE_EXTENSIONS,
 	};
 }

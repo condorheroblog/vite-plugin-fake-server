@@ -46,7 +46,7 @@ export default defineConfig({
 });
 ```
 
-By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `ts`, `js`, `mjs` files in the fake folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
+By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `xxx.fake.{ts,js,mjs}` files in the fake(`include = fake`) folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
 
 ## Examples
 
@@ -77,7 +77,7 @@ export function defineFakeRoute(config: FakeRouteConfig) {
 > It should be noted that this way of introduction will cause `vite build` to fail.
 > `import { defineFakeRoute } from "vite-plugin-fake-server";`
 
-### In `.ts` file
+### In `xxx.fake.ts` file
 
 ```ts
 import { faker } from "@faker-js/faker";
@@ -119,7 +119,7 @@ export default defineFakeRoute([
 ]);
 ```
 
-### In `.js` file
+### In `xxx.fake.js` file
 
 ```javascript
 /** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
@@ -146,7 +146,7 @@ export default [
 ];
 ```
 
-### In `.mjs` file
+### In `xxx.fake.mjs` file
 
 ```javascript
 export default {
@@ -171,7 +171,7 @@ export default {
 Type: `string`\
 Default: `"fake"`
 
-Set the folder where the fake `ts`, `js`, `mjs` files is stored.
+Set the folder where the fake `xxx.fake.{ts,js,mjs}` files is stored.
 
 ##### exclude
 
@@ -181,6 +181,13 @@ Default: `[]`
 Exclude files in the `include` directory.
 
 document: https://github.com/mrmlnc/fast-glob#ignore
+
+##### infixName
+
+Type: `string`\
+Default: `"fake"`
+
+Set the infix name used in the fake file name.
 
 ##### watch
 

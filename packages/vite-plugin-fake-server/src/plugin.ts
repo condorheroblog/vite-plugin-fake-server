@@ -110,6 +110,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						include: opts.include.length ? [opts.include] : [],
 						exclude: opts.exclude,
 						extensions: opts.extensions,
+						infixName: opts.infixName,
 					},
 					config.root,
 				);
