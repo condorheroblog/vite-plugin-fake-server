@@ -7,7 +7,7 @@ export function FetchResponse404() {
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch("/mock/404", { method: "POST" })
+		fetch("/api/404", { method: "POST" })
 			.then((response) => {
 				return response.json();
 			})
@@ -32,7 +32,7 @@ export function FetchResponse404() {
 
 export default {
 	code: `
-fetch("/mock/404", { method: "POST" })
+fetch("/api/404", { method: "POST" })
 .then((response) => {
 	return response.json();
 })

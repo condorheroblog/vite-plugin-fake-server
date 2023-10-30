@@ -14,7 +14,7 @@ const adminUserInfo = Mock.mock(adminUserTemplate);
 
 export default defineFakeRoute([
 	{
-		url: "/mock/get-user-info",
+		url: "/api/get-user-info",
 		response: () => {
 			return adminUserInfo;
 		},
@@ -35,7 +35,7 @@ export default defineFakeRoute([
 		},
 	},
 	{
-		url: "/mock/with-credentials",
+		url: "/api/with-credentials",
 		method: "POST",
 		headers: {
 			"access-control-allow-credentials": "true",
@@ -46,14 +46,14 @@ export default defineFakeRoute([
 		},
 	},
 	{
-		url: "/mock/async-response",
+		url: "/api/async-response",
 		method: "POST",
 		response: () => {
 			return { message: "async-response" };
 		},
 	},
 	{
-		url: "/mock/404",
+		url: "/api/404",
 		method: "POST",
 		statusCode: 404,
 		statusText: "Not Found",
@@ -62,7 +62,7 @@ export default defineFakeRoute([
 		},
 	},
 	{
-		url: "/mock/timeout",
+		url: "/api/timeout",
 		timeout: 1000 * 5,
 		method: "PUT",
 		response: () => {

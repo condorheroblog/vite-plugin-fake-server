@@ -1,5 +1,5 @@
 export default {
-	url: "/mock/mts",
+	url: "/api/mts",
 	response: () => {
 		return { format: "mts" };
 	},

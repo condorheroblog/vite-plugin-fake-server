@@ -9,7 +9,7 @@ export function XHRWithCredentials() {
 		setIsLoading(true);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = "json";
-		xhr.open("POST", "/mock/with-credentials", true);
+		xhr.open("POST", "/api/with-credentials", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
 		xhr.setRequestHeader("authorization", "token");
 
@@ -41,7 +41,7 @@ export default {
 	code: `
 const xhr = new XMLHttpRequest();
 xhr.responseType = "json";
-xhr.open("POST", "/mock/with-credentials", true);
+xhr.open("POST", "/api/with-credentials", true);
 xhr.setRequestHeader("Content-Type", "application/json");
 xhr.setRequestHeader("authorization", "token");
 

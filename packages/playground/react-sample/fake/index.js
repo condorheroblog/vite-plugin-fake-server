@@ -1,31 +1,31 @@
 /** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
 export default [
 	{
-		url: "/mock/esm",
+		url: "/api/esm",
 		response: ({ query }) => {
 			return { format: "ESM", query };
 		},
 	},
 	{
-		url: "/mock/response-text",
+		url: "/api/response-text",
 		response: () => {
 			return "I am a paragraph of text";
 		},
 	},
 	{
-		url: "/mock/response-number",
+		url: "/api/response-number",
 		response: () => {
 			return Math.random();
 		},
 	},
 	{
-		url: "/mock/response-boolean",
+		url: "/api/response-boolean",
 		response: () => {
 			return Math.random() > 0.5 ? true : false;
 		},
 	},
 	{
-		url: "/mock/post",
+		url: "/api/post",
 		method: "POST",
 		response: ({ body }) => {
 			return { ...body, timestamp: Date.now() };

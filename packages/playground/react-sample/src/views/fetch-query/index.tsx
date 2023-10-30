@@ -7,7 +7,7 @@ export function FetchQuery() {
 
 	const fetchData = () => {
 		setIsLoading(true);
-		fetch(`/mock/esm?timestamp=${Date.now()}`)
+		fetch(`/api/esm?timestamp=${Date.now()}`)
 			.then((response) => response.json())
 			.then((response) => {
 				setText(`format: ${response.format}, query: ${response.query?.timestamp}`);
@@ -29,7 +29,7 @@ export function FetchQuery() {
 
 export default {
 	code: `
-fetch("/mock/esm?timestamp=${Date.now()}")
+fetch("/api/esm?timestamp=${Date.now()}")
 	.then((response) => response.json())
 	.then((response) => {});`,
 	element: <FetchQuery />,

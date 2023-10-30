@@ -21,7 +21,7 @@ export function FetchResponseTimeout() {
 		setIsLoading(true);
 		startCountdown(5);
 
-		fetch("/mock/timeout", { method: "PUT" })
+		fetch("/api/timeout", { method: "PUT" })
 			.then((response) => {
 				return response.json();
 			})
@@ -53,7 +53,7 @@ export function FetchResponseTimeout() {
 
 export default {
 	code: `
-fetch("/mock/timeout", { method: "PUT" })
+fetch("/api/timeout", { method: "PUT" })
 .then((response) => {
 	return response.json();
 })

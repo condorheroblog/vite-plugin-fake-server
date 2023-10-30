@@ -1,4 +1,4 @@
-import { getFakeFilePath, getFakeModule, FAKE_FILE_EXTENSIONS } from "../src";
+import { getFakeFilePath, getFakeModule, FAKE_FILE_EXTENSIONS, createLogger } from "../src";
 import { describe, test } from "vitest";
 
 describe(`${getFakeModule.name}`, () => {
@@ -12,17 +12,18 @@ describe(`${getFakeModule.name}`, () => {
 	);
 
 	test(`${getFakeModule.name} get modules`, async ({ expect }) => {
-		const modules = await getFakeModule(fakeFilePathArr);
+		const loggerOutput = createLogger();
+		const modules = await getFakeModule(fakeFilePathArr, loggerOutput);
 		expect(modules).toMatchInlineSnapshot(`
 			[
 			  {
-			    "url": "/fake-route/mock-js",
+			    "url": "/fake-route/fake-js",
 			  },
 			  {
-			    "url": "/fake-route/mock-mjs",
+			    "url": "/fake-route/fake-mjs",
 			  },
 			  {
-			    "url": "/fake-route/mock-ts",
+			    "url": "/fake-route/fake-ts",
 			  },
 			]
 		`);

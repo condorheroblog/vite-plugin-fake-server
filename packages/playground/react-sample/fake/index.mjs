@@ -1,5 +1,5 @@
 export default {
-	url: "/mock/mjs",
+	url: "/api/mjs",
 	method: "POST",
 	response: () => {
 		return { format: "ESM" };

@@ -4,12 +4,12 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 
 export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}, cwd = process.cwd()) {
-	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include || "mock"] });
+	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include || "fake"] });
 
 	for (const filePath of fakerOptions.include) {
 		const absolutePath = join(cwd, filePath);
 		if (!existsSync(absolutePath)) {
-			throw new Error(`${filePath} does not exist`);
+			throw new Error(`${filePath} folder does not exist`);
 		}
 	}
 

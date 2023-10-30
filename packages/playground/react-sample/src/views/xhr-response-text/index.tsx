@@ -13,7 +13,7 @@ export function XHRResponseText() {
 			password: "123456",
 		};
 		xhr.responseType = "text";
-		xhr.open("GET", "/mock/response-text");
+		xhr.open("GET", "/api/response-text");
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		xhr.addEventListener("load", function () {
@@ -46,7 +46,7 @@ const data = {
 	password: "123456",
 };
 xhr.responseType = "text";
-xhr.open("GET", "/mock/response-text");
+xhr.open("GET", "/api/response-text");
 xhr.setRequestHeader("Content-Type", "application/json");
 
 xhr.addEventListener("load", function () {
