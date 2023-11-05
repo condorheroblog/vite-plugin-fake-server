@@ -1,4 +1,4 @@
-import { getFakeFilePath, getFakeModule, parallelLoader } from "./node";
+import { getFakeFilePath, parallelLoader, esbuildBundler, moduleFromString } from "./node";
 import type { FakeRoute } from "./node";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
@@ -96,7 +96,23 @@ export class FakeFileLoader extends EventEmitter {
 	}
 
 	private async loadFakeData(filepath: string) {
-		const fakeCodeData = await getFakeModule([filepath], this.options.loggerOutput);
+		const fakeCodeData = [];
+		try {
+			const { code } = await esbuildBundler(filepath);
+			const mod = await moduleFromString(filepath, code);
+			const resolvedModule = mod.default || mod;
+			if (Array.isArray(resolvedModule)) {
+				fakeCodeData.push(...resolvedModule);
+			} else {
+				fakeCodeData.push(resolvedModule);
+			}
+		} catch (error) {
+			this.options.loggerOutput.error(colors.red(`failed to load module from ${filepath}`), {
+				error: error as Error,
+				timestamp: true,
+			});
+		}
+
 		this.#moduleCache.set(filepath, fakeCodeData);
 		return fakeCodeData;
 	}
