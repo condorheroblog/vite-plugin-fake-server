@@ -26,7 +26,7 @@ export async function createFakeMiddleware(
 			fakeLoader.close();
 		});
 	}
-	const { basename, timeout: defaultTimeout, headers: globalResponseHeaders } = options;
+	const { basename, timeout: defaultTimeout, headers: globalResponseHeaders, logger } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
 		const responseResult = await getResponse({
 			URL,
@@ -69,10 +69,12 @@ export async function createFakeMiddleware(
 				}
 			}
 
-			loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
-				timestamp: true,
-				clear: true,
-			});
+			if (logger) {
+				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
+					timestamp: true,
+					clear: true,
+				});
+			}
 		} else {
 			next();
 		}

@@ -51,7 +51,7 @@ export class FakeFileLoader extends EventEmitter {
 	}
 
 	private async watchFakeFile() {
-		const { include, watch, root, exclude, loggerOutput, extensions, infixName } = this.options;
+		const { include, watch, root, exclude, loggerOutput, extensions, infixName, logger } = this.options;
 		if (include && include.length && watch) {
 			let watchPath;
 			if (infixName && infixName.length > 0) {
@@ -68,30 +68,36 @@ export class FakeFileLoader extends EventEmitter {
 			this.watcher = watcher;
 
 			watcher.on("add", async (relativeFilePath) => {
-				loggerOutput.info(colors.green(`fake file add ` + colors.dim(relativeFilePath)), {
-					timestamp: true,
-					clear: true,
-				});
+				if (logger) {
+					loggerOutput.info(colors.green(`fake file add ` + colors.dim(relativeFilePath)), {
+						timestamp: true,
+						clear: true,
+					});
+				}
 
 				await this.loadFakeData(relativeFilePath);
 				this.updateFakeData();
 			});
 
 			watcher.on("change", async (relativeFilePath) => {
-				loggerOutput.info(colors.green(`fake file change ` + colors.dim(relativeFilePath)), {
-					timestamp: true,
-					clear: true,
-				});
+				if (logger) {
+					loggerOutput.info(colors.green(`fake file change ` + colors.dim(relativeFilePath)), {
+						timestamp: true,
+						clear: true,
+					});
+				}
 
 				await this.loadFakeData(relativeFilePath);
 				this.updateFakeData();
 			});
 
 			watcher.on("unlink", async (relativeFilePath) => {
-				loggerOutput.info(colors.green(`fake file unlink ` + colors.dim(relativeFilePath)), {
-					timestamp: true,
-					clear: true,
-				});
+				if (logger) {
+					loggerOutput.info(colors.green(`fake file unlink ` + colors.dim(relativeFilePath)), {
+						timestamp: true,
+						clear: true,
+					});
+				}
 
 				this.#moduleCache.delete(relativeFilePath);
 				this.updateFakeData();
