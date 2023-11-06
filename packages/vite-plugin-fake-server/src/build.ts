@@ -39,6 +39,7 @@ export async function generateFakeServer(options: ResolvePluginOptionsType, conf
 		await writeFile(filename, source, "utf-8");
 	}
 	console.log(`\n[${name}]Builded a independently service in`, pc.green(outputDir), "\n");
+	console.log(pc.yellow(`\nThis is just a template, you can adjust it according to your needs\n`));
 	console.log(
 		`We suggest that you begin by typing:\n\n  ${pc.blue("cd")} ${outDir}\n  ${pc.blue("npm install")}\n  ${pc.blue(
 			"npm run start",
@@ -67,7 +68,7 @@ function generatePackageJson() {
 
 function generatorServerEntryCode(port: number, options: ResolvePluginOptionsType, config: ResolvedConfig) {
 	return `import connect from "connect";
-import { getFakeData, requestMiddleware, createLogger } from "${name}";
+import { createFakeMiddleware, createLogger } from "${name}";
 
 const loggerOutput = createLogger(${JSON.stringify(config.logLevel)}, {
 	allowClearScreen: ${config.clearScreen},
@@ -75,10 +76,17 @@ const loggerOutput = createLogger(${JSON.stringify(config.logLevel)}, {
 });
 
 async function main() {
-	const fakeData = await getFakeData(${JSON.stringify(options, null, 2)}, loggerOutput);
-	const middleware = await requestMiddleware({...${JSON.stringify(options, null, 2)}, fakeData}, loggerOutput);
 
 	const app = connect();
+	const middleware = await createFakeMiddleware(
+		{
+			...${JSON.stringify(options, null, 2)},
+			loggerOutput,
+			// config.root
+			root: process.cwd(),
+		},
+		app
+	);
 	app.use(middleware);
 
 	app.listen(${port});
