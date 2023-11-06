@@ -4,7 +4,7 @@
 	"private": true,
 	"type": "module",
 	"license": "MIT",
-	"packageManager": "pnpm@8.9.2",
+	"packageManager": "pnpm@8.10.2",
 	"author": "Condor Hero",
 	"description": "A fake server plugin for Vite.",
 	"repository": {
@@ -32,7 +32,7 @@
 		"pre-commit": "npx lint-staged"
 	},
 	"lint-staged": {
-		"*.{ts,js,mjs,cjs,json}": [
+		"*.{ts,js,mjs,cjs,cts,mts,json}": [
 			"eslint --fix",
 			"prettier --write"
 		],
@@ -46,20 +46,22 @@
 	"devDependencies": {
 		"@rollup/plugin-json": "^6.0.1",
 		"@trivago/prettier-plugin-sort-imports": "^4.2.1",
-		"@types/node": "^20.8.9",
-		"@typescript-eslint/eslint-plugin": "^6.9.0",
-		"@typescript-eslint/parser": "^6.9.0",
+		"@types/node": "^20.8.10",
+		"@typescript-eslint/eslint-plugin": "^6.9.1",
+		"@typescript-eslint/parser": "^6.9.1",
 		"bumpp": "^9.2.0",
 		"esbuild": "^0.19.5",
 		"eslint": "^8.52.0",
 		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-import": "^2.29.0",
 		"eslint-plugin-mdx": "^2.2.0",
+		"eslint-plugin-node-import": "^1.0.4",
 		"eslint-plugin-prettier": "^5.0.1",
 		"esno": "^0.17.0",
 		"lint-staged": "^15.0.2",
 		"prettier": "^3.0.3",
 		"rimraf": "^5.0.5",
-		"rollup": "^4.1.4",
+		"rollup": "^4.3.0",
 		"rollup-plugin-dts": "^6.1.0",
 		"rollup-plugin-esbuild": "^6.1.0",
 		"rollup-plugin-node-externals": "^6.1.2",
