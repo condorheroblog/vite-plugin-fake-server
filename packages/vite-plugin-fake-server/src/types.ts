@@ -49,6 +49,12 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	watch?: boolean;
 
 	/**
+	 * @description Set whether to display the request log on the console.
+	 * @default true
+	 */
+	logger?: boolean;
+
+	/**
 	 * @description Set default response delay time.
 	 * @default undefined
 	 */
