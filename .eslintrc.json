@@ -1,8 +1,15 @@
 {
 	"reportUnusedDisableDirectives": true,
 	"parser": "@typescript-eslint/parser",
-	"extends": ["plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
+	"plugins": ["node-import"],
+	"extends": [
+		"plugin:@typescript-eslint/recommended",
+		"plugin:import/recommended",
+		"prettier",
+		"plugin:prettier/recommended"
+	],
 	"rules": {
+		"node-import/prefer-node-protocol": 2,
 		"@typescript-eslint/no-var-requires": "off"
 	},
 	"overrides": [
