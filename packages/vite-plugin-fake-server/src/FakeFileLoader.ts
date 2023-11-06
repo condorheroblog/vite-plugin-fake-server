@@ -7,7 +7,7 @@ import chokidar from "chokidar";
 import type { Metafile } from "import-from-string";
 import EventEmitter from "node:events";
 import type { FSWatcher } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import colors from "picocolors";
 
 export interface FakeFileLoaderOptions extends ResolvePluginOptionsType {
@@ -38,12 +38,13 @@ export class FakeFileLoader extends EventEmitter {
 
 		// console.time("loader");
 		const { include, exclude, extensions, infixName, root } = this.options;
+		// Note: return absolute path
 		const fakeFilePathArr = getFakeFilePath({ exclude, include: [include], extensions, infixName }, root);
 
 		// 5.402s => 1.309s
 		// this.updateFakeData(await getFakeModule(fakeFilePathArr, this.options.loggerOutput));
 
-		const fakeFilePathFunc = fakeFilePathArr.map((file) => () => this.loadFakeData(file));
+		const fakeFilePathFunc = fakeFilePathArr.map((absFile) => () => this.loadFakeData(relative(root, absFile)));
 		// TODO: Try to Web Worker
 		await parallelLoader(fakeFilePathFunc, 10);
 		this.updateFakeData();
