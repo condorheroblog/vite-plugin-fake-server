@@ -8,6 +8,9 @@ describe("constant", () => {
 			  "ts",
 			  "js",
 			  "mjs",
+			  "cjs",
+			  "cts",
+			  "mts",
 			]
 		`);
 	});

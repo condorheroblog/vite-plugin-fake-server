@@ -53,7 +53,13 @@ export class FakeFileLoader extends EventEmitter {
 	private async watchFakeFile() {
 		const { include, watch, root, exclude, loggerOutput, extensions, infixName } = this.options;
 		if (include && include.length && watch) {
-			const watchDir = convertPathToPosix(join(include, `/**/*.${infixName}.{${extensions.join(",")}}`));
+			let watchPath;
+			if (infixName && infixName.length > 0) {
+				watchPath = `/**/*.${infixName}.{${extensions.join(",")}}`;
+			} else {
+				watchPath = `/**/*.{${extensions.join(",")}}`;
+			}
+			const watchDir = convertPathToPosix(join(include, watchPath));
 			const watcher = chokidar.watch(watchDir, {
 				cwd: root,
 				ignoreInitial: true,

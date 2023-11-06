@@ -12,7 +12,7 @@ A fake server plugin for Vite. [Live Demo](https://condorheroblog.github.io/vite
 - Simple to use, configuration file driven.
 - No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
 - ESM first.
-- Support `ts`, `js`, `mjs` files.
+- Support `ts`, `js`, `mjs`, `cjs`, `cts`, `mts` files.
 - Support multiple response methods —— [responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType).
 - Support custom response headers.
 - Support development and production environments.
@@ -46,7 +46,7 @@ export default defineConfig({
 });
 ```
 
-By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `xxx.fake.{ts,js,mjs}` files in the fake(`include = fake`) folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
+By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files in the fake(`include = fake`) folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (Vite's `logLevel = "info"` and `clearScreen = true`).
 
 ## Examples
 
@@ -171,7 +171,7 @@ export default {
 Type: `string`\
 Default: `"fake"`
 
-Set the folder where the fake `xxx.fake.{ts,js,mjs}` files is stored.
+Set the folder where the fake `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files is stored.
 
 ##### exclude
 
@@ -184,7 +184,7 @@ document: https://github.com/mrmlnc/fast-glob#ignore
 
 ##### infixName
 
-Type: `string`\
+Type: `string ｜ boolean`\
 Default: `"fake"`
 
 Set the infix name used in the fake file name.
@@ -199,7 +199,7 @@ Set whether to listen to `include` files.
 ##### extensions
 
 Type: `string[]`\
-Default: `["ts", "js", "mjs"]`
+Default: `["ts", "js", "mjs", "cjs", "cts", "mts"]`
 
 Set the fake files extensions.
 

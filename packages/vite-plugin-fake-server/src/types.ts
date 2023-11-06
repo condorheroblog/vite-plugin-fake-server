@@ -19,7 +19,7 @@ export interface ServerBuildOptions {
 
 export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptions, "include"> {
 	/**
-	 * @description Set the folder where the fake `xxx.fake.{ts,js,mjs}` files is stored.
+	 * @description Set the folder where the fake `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files is stored.
 	 * @default fake
 	 */
 	include?: string;

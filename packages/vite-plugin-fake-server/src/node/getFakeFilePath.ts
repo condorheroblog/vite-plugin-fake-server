@@ -36,7 +36,7 @@ export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()
 			const dir = join(absFilePath, "/");
 			const fakeFolderFiles = fg.sync(
 				extensions.map((ext) => {
-					if (infixName.length > 0) {
+					if (infixName && infixName.length > 0) {
 						return convertPathToPosix(`${dir}**/*.${infixName}.${ext}`);
 					}
 					return convertPathToPosix(`${dir}**/*.${ext}`);

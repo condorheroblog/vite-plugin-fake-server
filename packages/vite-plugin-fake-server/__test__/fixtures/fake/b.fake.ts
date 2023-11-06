@@ -2,6 +2,6 @@ import { defineFakeRoute } from "../../../src";
 
 export default defineFakeRoute([
 	{
-		url: "/fake-route/fake-ts",
+		url: "/fake-route/b",
 	},
 ]);
