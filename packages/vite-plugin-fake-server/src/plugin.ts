@@ -86,7 +86,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					config.root,
 				);
 
-				const relativeFakeFilePath = fakeFilePath.map((filePath) => join("/", relative(config.root, filePath)));
+				const relativeFakeFilePath = fakeFilePath.map((filePath) => "/" + relative(config.root, filePath));
 
 				const fakeTemplate = `
 					const modules = import.meta.glob(${JSON.stringify(relativeFakeFilePath, null, 2)}, { eager: true });
@@ -146,8 +146,8 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							fakeModuleList,
 							pathToRegexp,
 							match,
-							basename: ${opts.basename.length ? opts.basename : '""'},
-							defaultTimeout: ${opts.timeout},
+							basename: ${JSON.stringify(opts.basename)},
+							defaultTimeout: ${JSON.stringify(opts.timeout)},
 							globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
 						});
 						if (responseResult) {
