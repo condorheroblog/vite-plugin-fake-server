@@ -13,6 +13,9 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "preserve",
+		"paths": {
+			"@/*": ["./fake/*"]
+		},
 
 		/* Linting */
 		"strict": true,

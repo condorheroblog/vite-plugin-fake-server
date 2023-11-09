@@ -145,15 +145,15 @@ importers:
 
   packages/vite-plugin-fake-server:
     dependencies:
+      bundle-import:
+        specifier: ^0.0.1
+        version: registry.npmmirror.com/bundle-import@0.0.1
       chokidar:
         specifier: ^3.5.3
         version: registry.npmmirror.com/chokidar@3.5.3
       fast-glob:
         specifier: ^3.3.1
         version: registry.npmmirror.com/fast-glob@3.3.1
-      import-from-string:
-        specifier: ^0.0.3
-        version: registry.npmmirror.com/import-from-string@0.0.3
       path-to-regexp:
         specifier: ^6.2.1
         version: registry.npmmirror.com/path-to-regexp@6.2.1
@@ -2282,6 +2282,15 @@ packages:
       - supports-color
     dev: true
 
+  registry.npmmirror.com/bundle-import@0.0.1:
+    resolution: {integrity: sha512-L0z0iPX7t7ff5eZsK7oMEH+Ly2lzJczFKPHwrta6X8SF64a20R3wOrAOYK1MzHZVaWWugg9qlSTVfVwqvQJ2dw==, tarball: https://registry.npmmirror.com/bundle-import/-/bundle-import-0.0.1.tgz}
+    name: bundle-import
+    version: 0.0.1
+    dependencies:
+      get-tsconfig: registry.npmmirror.com/get-tsconfig@4.7.2
+      import-from-string: registry.npmmirror.com/import-from-string@0.0.4
+    dev: false
+
   registry.npmmirror.com/bundle-name@3.0.0:
     resolution: {integrity: sha512-PKA4BeSvBpQKQ8iPOGCSiell+N8P+Tf1DlwqmYhpe2gAhKPHn8EYOxVT+ShuGmhg8lN8XiSlS80yiExKXrURlw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/bundle-name/-/bundle-name-3.0.0.tgz}
     name: bundle-name
@@ -3587,12 +3596,11 @@ packages:
     dev: true
 
   registry.npmmirror.com/get-tsconfig@4.7.2:
-    resolution: {integrity: sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/get-tsconfig/-/get-tsconfig-4.7.2.tgz}
+    resolution: {integrity: sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==, tarball: https://registry.npmmirror.com/get-tsconfig/-/get-tsconfig-4.7.2.tgz}
     name: get-tsconfig
     version: 4.7.2
     dependencies:
       resolve-pkg-maps: registry.npmmirror.com/resolve-pkg-maps@1.0.0
-    dev: true
 
   registry.npmmirror.com/giget@1.1.2:
     resolution: {integrity: sha512-HsLoS07HiQ5oqvObOI+Qb2tyZH4Gj5nYGfF9qQcZNrPw+uEFhdXtgJr01aO2pWadGHucajYDLxxbtQkm97ON2A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/giget/-/giget-1.1.2.tgz}
@@ -3839,10 +3847,10 @@ packages:
       resolve-from: registry.npmmirror.com/resolve-from@4.0.0
     dev: true
 
-  registry.npmmirror.com/import-from-string@0.0.3:
-    resolution: {integrity: sha512-+OUXMrDjXcZQWovmzAUuZ9D+f+veX5rba9OgwKG+HqJQB9c0UB4PsbYFqhwpx9msFm4dSq/adjTfU9metaw91w==, tarball: https://registry.npmmirror.com/import-from-string/-/import-from-string-0.0.3.tgz}
+  registry.npmmirror.com/import-from-string@0.0.4:
+    resolution: {integrity: sha512-ZmtWHOGv55OEFb3HxfQH4L4vAR7g3HUm82N5LmvXugiXlaZ1j/epItoUDjQ+gJ+MjNl+apczmCnqGFq8q2CM6w==, tarball: https://registry.npmmirror.com/import-from-string/-/import-from-string-0.0.4.tgz}
     name: import-from-string
-    version: 0.0.3
+    version: 0.0.4
     dependencies:
       esbuild: registry.npmmirror.com/esbuild@0.19.5
       import-meta-resolve: registry.npmmirror.com/import-meta-resolve@3.1.1
@@ -5730,10 +5738,9 @@ packages:
     dev: true
 
   registry.npmmirror.com/resolve-pkg-maps@1.0.0:
-    resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/resolve-pkg-maps/-/resolve-pkg-maps-1.0.0.tgz}
+    resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==, tarball: https://registry.npmmirror.com/resolve-pkg-maps/-/resolve-pkg-maps-1.0.0.tgz}
     name: resolve-pkg-maps
     version: 1.0.0
-    dev: true
 
   registry.npmmirror.com/resolve@1.22.8:
     resolution: {integrity: sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==, tarball: https://registry.npmmirror.com/resolve/-/resolve-1.22.8.tgz}

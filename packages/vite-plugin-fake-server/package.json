@@ -55,9 +55,9 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"bundle-import": "^0.0.1",
 		"chokidar": "^3.5.3",
 		"fast-glob": "^3.3.1",
-		"import-from-string": "^0.0.3",
 		"path-to-regexp": "^6.2.1",
 		"picocolors": "^1.0.0",
 		"xhook": "^1.6.2"

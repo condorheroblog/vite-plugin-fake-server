@@ -1,10 +1,11 @@
-import { getFakeFilePath, parallelLoader, esbuildBundler, moduleFromString } from "./node";
+import { getFakeFilePath, parallelLoader } from "./node";
 import type { FakeRoute } from "./node";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
 import { convertPathToPosix } from "./utils";
+import { bundleImport } from "bundle-import";
+import type { DependenciesType } from "bundle-import";
 import chokidar from "chokidar";
-import type { Metafile } from "import-from-string";
 import EventEmitter from "node:events";
 import type { FSWatcher } from "node:fs";
 import { join, relative } from "node:path";
@@ -152,9 +153,8 @@ export class FakeFileLoader extends EventEmitter {
 		const fakeCodeData = [];
 		let fakeFileDependencies = {};
 		try {
-			const { code, deps } = await esbuildBundler(filepath);
-			fakeFileDependencies = deps;
-			const mod = await moduleFromString(filepath, code);
+			const { mod, dependencies } = await bundleImport({ filepath, cwd: this.options.root });
+			fakeFileDependencies = dependencies;
 			const resolvedModule = mod.default || mod;
 			if (Array.isArray(resolvedModule)) {
 				fakeCodeData.push(...resolvedModule);
@@ -173,7 +173,7 @@ export class FakeFileLoader extends EventEmitter {
 		return fakeCodeData;
 	}
 
-	private updateFakeFileDeps(filepath: string, deps: Metafile["inputs"]) {
+	private updateFakeFileDeps(filepath: string, deps: DependenciesType) {
 		Object.keys(deps).forEach((mPath) => {
 			const imports = deps[mPath].imports.map((_) => _.path);
 			imports.forEach((dep) => {
