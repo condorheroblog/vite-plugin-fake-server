@@ -10,6 +10,7 @@
 	],
 	"rules": {
 		"node-import/prefer-node-protocol": 2,
+		"@typescript-eslint/consistent-type-imports": "error",
 		"import/no-unresolved": "off",
 		"@typescript-eslint/no-var-requires": "off"
 	},
