@@ -71,10 +71,12 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				const scriptTagList: HtmlTagDescriptor[] = [];
 
 				// warning message in production environment
-				scriptTagList.push({
-					...scriptTagOptions,
-					children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");`,
-				});
+				if (opts.logger) {
+					scriptTagList.push({
+						...scriptTagOptions,
+						children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");`,
+					});
+				}
 
 				const fakeFilePath = getFakeFilePath(
 					{
@@ -86,6 +88,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					config.root,
 				);
 
+				// import.meta.glob must use posix style paths
 				const relativeFakeFilePath = fakeFilePath.map((filePath) =>
 					convertPathToPosix("/" + relative(config.root, filePath)),
 				);
@@ -231,7 +234,9 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 									}
 								}
 							}
-							console.log("%c request invoke", "color: blue", req.url);
+							if (${JSON.stringify(opts.logger)}){
+								console.log("%c request invoke", "color: blue", req.url);
+							}
 						} else {
 							// next external URL
 							callback();
