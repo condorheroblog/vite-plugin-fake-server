@@ -70,7 +70,7 @@ export async function createFakeMiddleware(
 			}
 
 			if (logger) {
-				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.url)), {
+				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.method + " " + req.url)), {
 					timestamp: true,
 					clear: true,
 				});

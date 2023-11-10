@@ -235,7 +235,8 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 								}
 							}
 							if (${JSON.stringify(opts.logger)}){
-								console.log("%c request invoke", "color: blue", req.url);
+								const requestMethod = req.method ? req.method.toUpperCase() : "GET";
+								console.log("%c request invoke" + " %c" + requestMethod + " " + req.url, "color: green", "color: blue");
 							}
 						} else {
 							// next external URL
