@@ -1,6 +1,8 @@
-import { getFakeFilePath, FAKE_FILE_EXTENSIONS } from "../src";
 import { relative } from "node:path";
+
 import { describe, test } from "vitest";
+
+import { getFakeFilePath, FAKE_FILE_EXTENSIONS } from "../src";
 
 describe(`${getFakeFilePath.name}`, () => {
 	test(`${getFakeFilePath.name} include`, ({ expect }) => {

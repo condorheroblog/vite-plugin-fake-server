@@ -1,12 +1,15 @@
-import { version, name } from "../package.json";
-import { FAKE_FILE_EXTENSIONS } from "./node";
-import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
-import type { ServerBuildOptions } from "./types";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile, readdir, copyFile, stat } from "node:fs/promises";
 import { join, extname } from "node:path";
+
 import pc from "picocolors";
 import type { ResolvedConfig } from "vite";
+
+import { version, name } from "../package.json";
+
+import type { ServerBuildOptions } from "./types";
+import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
+import { FAKE_FILE_EXTENSIONS } from "./node";
 
 export const PORT = 8888;
 export const OUTPUT_DIR = "fakeServer";

@@ -1,5 +1,6 @@
-import { tryToJSON } from "../src";
 import { describe, test, expectTypeOf } from "vitest";
+
+import { tryToJSON } from "../src";
 
 describe(`${tryToJSON.name}`, () => {
 	test(`${tryToJSON.name} - parameters type`, () => {

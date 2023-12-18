@@ -1,15 +1,17 @@
+import EventEmitter from "node:events";
+import type { FSWatcher } from "node:fs";
+import { join, relative } from "node:path";
+
+import { bundleImport } from "bundle-import";
+import type { DependenciesType } from "bundle-import";
+import chokidar from "chokidar";
+import colors from "picocolors";
+
 import { getFakeFilePath, parallelLoader } from "./node";
 import type { FakeRoute } from "./node";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
 import { convertPathToPosix } from "./utils";
-import { bundleImport } from "bundle-import";
-import type { DependenciesType } from "bundle-import";
-import chokidar from "chokidar";
-import EventEmitter from "node:events";
-import type { FSWatcher } from "node:fs";
-import { join, relative } from "node:path";
-import colors from "picocolors";
 
 export interface FakeFileLoaderOptions extends ResolvePluginOptionsType {
 	loggerOutput: Logger;

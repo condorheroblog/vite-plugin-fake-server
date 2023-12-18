@@ -1,13 +1,16 @@
+import type { Server } from "node:http";
+import type { Http2SecureServer } from "node:http2";
+import { URL } from "node:url";
+
+import { pathToRegexp, match } from "path-to-regexp";
+import colors from "picocolors";
+import type { Connect } from "vite";
+
 import { FakeFileLoader } from "./FakeFileLoader";
 import { getResponse, tryToJSON } from "./getResponse.mjs";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
 import { getRequestData, isFunction } from "./utils";
-import type { Server } from "node:http";
-import { URL } from "node:url";
-import { pathToRegexp, match } from "path-to-regexp";
-import colors from "picocolors";
-import type { Connect } from "vite";
 
 export interface CreateFakeMiddlewareOptions extends ResolvePluginOptionsType {
 	loggerOutput: Logger;
@@ -16,7 +19,7 @@ export interface CreateFakeMiddlewareOptions extends ResolvePluginOptionsType {
 
 export async function createFakeMiddleware(
 	{ loggerOutput, root, ...options }: CreateFakeMiddlewareOptions,
-	httpServer: Server | null,
+	httpServer: Server | Http2SecureServer | null,
 ) {
 	const fakeLoader = new FakeFileLoader({ ...options, loggerOutput, root });
 

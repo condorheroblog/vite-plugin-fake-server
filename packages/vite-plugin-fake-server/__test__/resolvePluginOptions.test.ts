@@ -1,5 +1,6 @@
-import { resolvePluginOptions, INFIX_NAME, FAKE_FILE_EXTENSIONS } from "../src";
 import { describe, test } from "vitest";
+
+import { resolvePluginOptions, INFIX_NAME, FAKE_FILE_EXTENSIONS } from "../src";
 
 describe(resolvePluginOptions.name, () => {
 	const cwd = process.cwd();

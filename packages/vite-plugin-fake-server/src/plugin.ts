@@ -1,3 +1,9 @@
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { join, dirname, relative, isAbsolute } from "node:path";
+
+import type { Plugin, ResolvedConfig, HtmlTagDescriptor, WatchOptions } from "vite";
+
 import { generateFakeServer } from "./build";
 import { createFakeMiddleware } from "./createFakeMiddleware";
 import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
@@ -6,10 +12,6 @@ import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
 import { createLogger, convertPathToPosix } from "./utils";
-import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { join, dirname, relative, isAbsolute } from "node:path";
-import type { Plugin, ResolvedConfig, HtmlTagDescriptor, WatchOptions } from "vite";
 
 const require = createRequire(import.meta.url);
 
@@ -260,7 +262,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 	};
 };
 
-export function resolveIgnored(rootDir: string, include: string, watchOptions?: WatchOptions) {
+export function resolveIgnored(rootDir: string, include: string, watchOptions?: WatchOptions | null) {
 	const { ignored = [] } = watchOptions ?? {};
 	return [convertPathToPosix(join(rootDir, include, "**")), ...(Array.isArray(ignored) ? ignored : [ignored])];
 }

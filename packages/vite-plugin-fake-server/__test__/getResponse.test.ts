@@ -1,7 +1,9 @@
-import { getResponse, defineFakeRoute } from "../src";
 import { URL } from "node:url";
+
 import { pathToRegexp, match } from "path-to-regexp";
 import { describe, test } from "vitest";
+
+import { getResponse, defineFakeRoute } from "../src";
 
 describe("vite-plugin-fake-server options", () => {
 	const fakeData = defineFakeRoute([

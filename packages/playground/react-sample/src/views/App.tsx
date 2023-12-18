@@ -1,4 +1,8 @@
 import "./app.css";
+import { useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { CodePreview } from "./code-preview";
 import FetchAsyncResponse from "./fetch-async-response";
 import FetchCommonJS from "./fetch-commonJS";
@@ -15,9 +19,6 @@ import XHRResponseDocument from "./xhr-response-document";
 import XHRResponseNumber from "./xhr-response-number";
 import XHRResponseText from "./xhr-response-text";
 import XHRWithCredentials from "./xhr-with-credentials";
-import { useState, useEffect } from "react";
-import type { ChangeEvent } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const fetchGroupOptions = [
 	{

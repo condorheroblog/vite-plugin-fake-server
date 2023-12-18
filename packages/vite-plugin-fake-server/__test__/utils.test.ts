@@ -1,5 +1,6 @@
-import { isFunction } from "../src";
 import { describe, test } from "vitest";
+
+import { isFunction } from "../src";
 
 describe(isFunction.name, () => {
 	test(`should be return true`, ({ expect }) => {

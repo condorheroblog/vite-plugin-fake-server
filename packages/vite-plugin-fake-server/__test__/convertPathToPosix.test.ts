@@ -1,6 +1,8 @@
-import { convertPathToPosix } from "../src";
 import { platform } from "node:os";
+
 import { describe, test } from "vitest";
+
+import { convertPathToPosix } from "../src";
 
 describe(`${convertPathToPosix.name}`, () => {
 	test(`${convertPathToPosix.name} - Posix Style`, ({ expect }) => {

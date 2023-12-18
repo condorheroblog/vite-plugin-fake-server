@@ -1,5 +1,6 @@
-import type { FakerSchemaServerOptions } from "./node";
 import type { OutgoingHttpHeaders } from "node:http";
+
+import type { FakerSchemaServerOptions } from "./node";
 
 export type { FakeRoute, IncomingMessage, ServerResponse, HttpMethodType } from "./node";
 

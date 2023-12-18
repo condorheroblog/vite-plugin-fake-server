@@ -1,5 +1,6 @@
-import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "../src";
 import { describe, test } from "vitest";
+
+import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "../src";
 
 describe("constant", () => {
 	test(`EXTENSIONS`, ({ expect }) => {

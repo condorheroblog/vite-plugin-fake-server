@@ -1,5 +1,6 @@
-import { Button } from "#src/components";
 import { useState } from "react";
+
+import { Button } from "#src/components";
 
 export function FetchCommonJS() {
 	const [isLoading, setIsLoading] = useState(false);

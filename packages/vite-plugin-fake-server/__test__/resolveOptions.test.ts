@@ -1,5 +1,6 @@
-import { resolveOptions, INFIX_NAME, FAKE_FILE_EXTENSIONS } from "../src";
 import { describe, test } from "vitest";
+
+import { resolveOptions, INFIX_NAME, FAKE_FILE_EXTENSIONS } from "../src";
 
 describe(resolveOptions.name, () => {
 	test(`${resolveOptions.name} default options`, ({ expect }) => {

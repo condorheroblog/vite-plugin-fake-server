@@ -1,10 +1,12 @@
 /**
  * @link https://github.com/vitejs/vite/blob/main/packages/vite/src/node/logger.ts
  */
-import { name } from "../../package.json";
 import readline from "node:readline";
+
 import colors from "picocolors";
 import type { RollupError } from "rollup";
+
+import { name } from "../../package.json";
 
 export type LogType = "error" | "warn" | "info";
 export type LogLevel = LogType | "silent";
@@ -77,8 +79,8 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 						type === "info"
 							? colors.cyan(colors.bold(prefix))
 							: type === "warn"
-							? colors.yellow(colors.bold(prefix))
-							: colors.red(colors.bold(prefix));
+								? colors.yellow(colors.bold(prefix))
+								: colors.red(colors.bold(prefix));
 					return `${colors.dim(timeFormatter.format(new Date()))} ${tag} ${msg}`;
 				} else {
 					return msg;

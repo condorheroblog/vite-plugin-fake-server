@@ -1,5 +1,6 @@
-import { defineFakeRoute } from "../src";
 import { describe, test } from "vitest";
+
+import { defineFakeRoute } from "../src";
 
 describe(defineFakeRoute.name, () => {
 	test(`${defineFakeRoute.name} option is a object`, ({ expect }) => {
