@@ -78,7 +78,7 @@ export async function getResponse({
 				await sleep(timeout);
 			}
 
-			const urlMatch = match(url, { encode: encodeURI });
+			const urlMatch = basename.length > 0 ? match(`/${basename}${url}`) : match(url, { encode: encodeURI });
 
 			const searchParams = instanceURL.searchParams;
 			const query = {};
