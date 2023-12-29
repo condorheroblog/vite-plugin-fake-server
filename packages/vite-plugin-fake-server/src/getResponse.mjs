@@ -78,7 +78,13 @@ export async function getResponse({
 				await sleep(timeout);
 			}
 
-			const urlMatch = match(url, { encode: encodeURI });
+			const basePathname = new URL(basename, "http://localhost:5173/").pathname;
+			const userPathname = new URL(url, "http://localhost:5173/").pathname;
+			const concatenatedPathname = basePathname.endsWith("/")
+				? basePathname.slice(0, -1) + userPathname
+				: basePathname + userPathname;
+
+			const urlMatch = match(concatenatedPathname, { encode: encodeURI });
 
 			const searchParams = instanceURL.searchParams;
 			const query = {};
