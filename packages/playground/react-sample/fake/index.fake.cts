@@ -1,5 +1,5 @@
-export default {
-	url: "/response-in-mjs-file",
+module.exports = {
+	url: "/response-in-cts-file",
 	timeout: 2000,
 	response: () => {
 		return {
@@ -8,7 +8,7 @@ export default {
 			code: 200,
 			message: "operation successful",
 			data: {
-				description: "Response in mjs file",
+				description: "Response in cts file",
 			},
 		};
 	},

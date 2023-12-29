@@ -1,9 +1,17 @@
 const { defineFakeRoute } = require("vite-plugin-fake-server/client");
 
 exports.default = defineFakeRoute({
-	url: "/api/cjs",
-	method: "POST",
+	url: "/response-in-cjs-file",
+	timeout: 2000,
 	response: () => {
-		return { format: "CJS" };
+		return {
+			timestamp: Date.now(),
+			status: "success",
+			code: 200,
+			message: "operation successful",
+			data: {
+				description: "Response in cjs file",
+			},
+		};
 	},
 });

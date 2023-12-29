@@ -1,6 +1,5 @@
 export default {
-	url: "/response-in-mjs-file",
-	timeout: 2000,
+	url: "/response-in-mts-file",
 	response: () => {
 		return {
 			timestamp: Date.now(),
@@ -8,7 +7,7 @@ export default {
 			code: 200,
 			message: "operation successful",
 			data: {
-				description: "Response in mjs file",
+				description: "Response in mts file",
 			},
 		};
 	},

@@ -7,7 +7,13 @@ export default defineConfig({
 	base: "/vite-plugin-fake-server/",
 	plugins: [
 		react(),
-		vitePluginFakeServer({ timeout: 1000, enableProd: true, build: true, headers: { "---------": "----------" } }),
+		vitePluginFakeServer({
+			basename: "api",
+			timeout: 1000,
+			enableProd: true,
+			build: true,
+			headers: { "---------": "----------" },
+		}),
 	],
 	build: {
 		rollupOptions: {

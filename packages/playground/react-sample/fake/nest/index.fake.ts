@@ -1,11 +1,16 @@
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
 
 export default defineFakeRoute({
-	url: "/api/nest/:id",
-	timeout: 0,
-	response: ({ params }) => {
+	url: "/response-in-nest-file",
+	response: () => {
 		return {
-			...params,
+			timestamp: Date.now(),
+			status: "success",
+			code: 200,
+			message: "operation successful",
+			data: {
+				description: "Response in nest file",
+			},
 		};
 	},
 });
