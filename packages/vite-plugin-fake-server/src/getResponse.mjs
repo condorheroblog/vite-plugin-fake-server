@@ -120,7 +120,6 @@ export async function getResponse({
 				query,
 				params,
 				responseHeaders: new Headers({ ...globalResponseHeaders, ...responseHeaders }),
-				hash: instanceURL.hash,
 			};
 		}
 	}

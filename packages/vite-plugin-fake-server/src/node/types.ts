@@ -65,10 +65,6 @@ export interface ProcessedRequest {
 	 */
 	params: Record<string, string | string[]>;
 	/**
-	 * The hash portion of the request URL.
-	 */
-	hash: string;
-	/**
 	 * The headers of the request.
 	 */
 	headers: IncomingHttpHeaders;

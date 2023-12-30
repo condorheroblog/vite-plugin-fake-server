@@ -163,10 +163,10 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
 						});
 						if (responseResult) {
-							const { response, statusCode, statusText, url, query, params, responseHeaders, hash } = responseResult ?? {};
+							const { response, statusCode, statusText, url, query, params, responseHeaders } = responseResult ?? {};
 							if (response && typeof response === "function") {
 								const fakeResponse = await Promise.resolve(
-									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers, hash })
+									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers })
 								);
 								if(req.isFetch){
 									if (typeof fakeResponse === "string") {

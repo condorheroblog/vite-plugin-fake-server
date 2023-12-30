@@ -42,7 +42,7 @@ export async function createFakeMiddleware(
 			globalResponseHeaders,
 		});
 		if (responseResult) {
-			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders, hash } =
+			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders } =
 				responseResult ?? {};
 			if (isFunction(rawResponse)) {
 				await Promise.resolve(rawResponse(req, res));
@@ -62,7 +62,7 @@ export async function createFakeMiddleware(
 					res.statusMessage = statusText;
 				}
 				const fakeResponse = await Promise.resolve(
-					response({ url, body: tryToJSON(body), rawBody: body, query, params, headers: req.headers, hash }, req, res),
+					response({ url, body: tryToJSON(body), rawBody: body, query, params, headers: req.headers }, req, res),
 				);
 				if (typeof fakeResponse === "string") {
 					// XML
