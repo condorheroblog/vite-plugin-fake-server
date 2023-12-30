@@ -4,6 +4,8 @@ import { join, dirname, relative, isAbsolute } from "node:path";
 
 import type { Plugin, ResolvedConfig, HtmlTagDescriptor, WatchOptions } from "vite";
 
+import pkg from "../package.json";
+
 import { generateFakeServer } from "./build";
 import { createFakeMiddleware } from "./createFakeMiddleware";
 import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
@@ -76,9 +78,26 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				if (opts.logger) {
 					scriptTagList.push({
 						...scriptTagOptions,
-						children: `console.warn("[vite-plugin-fake-server]: The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod");`,
+						children: [
+							`console.warn("[`,
+							pkg.name,
+							"]:",
+							"The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod",
+							`");`,
+						].join(""),
 					});
 				}
+
+				// Initialize a global variable for the vite-plugin-fake-server
+				scriptTagList.push({
+					...scriptTagOptions,
+					children: [
+						"window.__VITE__PLUGIN__FAKE__SERVER__",
+						"=",
+						JSON.stringify({ meta: pkg, vitePluginFakeServerOptions: opts }, null, 2),
+						";",
+					].join(""),
+				});
 
 				const fakeFilePath = getFakeFilePath(
 					{
@@ -110,7 +129,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							return [...list, ...modList];
 						}
 					}, []);
-					window.__FAKE__MODULE__LIST__ = fakeModuleList;
+					window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList = fakeModuleList;
 				`;
 
 				// import.meta.glob
@@ -124,7 +143,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				const xhookContent = readFileSync(xhookPath, "utf-8");
 				scriptTagList.push({
 					...scriptTagOptions,
-					children: `${xhookContent}\n;window.__XHOOK__=xhook;`,
+					children: `${xhookContent}\n;window.__VITE__PLUGIN__FAKE__SERVER__.xhook=xhook;`,
 				});
 
 				// add path-to-regexp
@@ -132,14 +151,14 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
 				scriptTagList.push({
 					...scriptTagOptions,
-					children: `${pathToRegexpContent}\n;window.__PATH_TO_REGEXP__={pathToRegexp, match};`,
+					children: `${pathToRegexpContent}\n;window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp={pathToRegexp, match};`,
 				});
 
 				scriptTagList.push({
 					...scriptTagOptions,
-					children: `const fakeModuleList = window.__FAKE__MODULE__LIST__;
-					const { pathToRegexp, match } = window.__PATH_TO_REGEXP__;
-					__XHOOK__.before(async function(req, callback) {
+					children: `const fakeModuleList = window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList;
+					const { pathToRegexp, match } = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
+					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(async function(req, callback) {
 						${sleep.toString()}
 						${tryToJSON.toString()}
 						${getResponse.toString()}
