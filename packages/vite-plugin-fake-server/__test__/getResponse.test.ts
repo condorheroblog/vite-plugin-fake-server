@@ -1,7 +1,7 @@
 import { URL } from "node:url";
 
 import { pathToRegexp, match } from "path-to-regexp";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { getResponse, defineFakeRoute } from "../src";
 
@@ -26,15 +26,70 @@ describe("vite-plugin-fake-server options", () => {
 		defaultTimeout: 0,
 		globalResponseHeaders: {},
 	};
+
 	test(`vite-plugin-fake-server basename`, async ({ expect }) => {
-		const basename = "api";
+		const basename = "prefix-root";
 		const responseResult = await getResponse({
 			...getResponseOptions,
-			req: { ...req, url: "/api/api/async-response" },
+			req: { ...req, url: "/prefix-root/api/async-response" },
 			basename,
 		});
 
 		expect(!!responseResult).toBe(true);
+	});
+
+	test.each([
+		["/prefix-root/", "/dynamic-route/:id"],
+		["/prefix-root", "/dynamic-route/:id"],
+		["prefix-root/", "/dynamic-route/:id"],
+		["/prefix-root/", "dynamic-route/:id"],
+		["/prefix-root", "dynamic-route/:id"],
+		["prefix-root/", "dynamic-route/:id"],
+	])("basename(%s) + fake URL(%s) is match request url", async (a, b) => {
+		const responseResult = await getResponse({
+			basename: a,
+			req: { url: "/prefix-root/dynamic-route/icu" },
+			fakeModuleList: [
+				{
+					url: b,
+					response: () => {
+						return {};
+					},
+				},
+			],
+			URL,
+			pathToRegexp,
+			match,
+			defaultTimeout: 0,
+			globalResponseHeaders: {},
+		});
+		expect(!!responseResult).toBeTruthy();
+		expect(responseResult?.params).toMatchObject({ id: "icu" });
+	});
+
+	test(`vite-plugin-fake-server basename with response params`, async ({ expect }) => {
+		const basename = "prefix-root";
+		const responseResult = await getResponse({
+			basename,
+			req: { url: "/prefix-root/dynamic-route/996" },
+			fakeModuleList: [
+				{
+					url: "/dynamic-route/:id",
+					response: () => {
+						return { message: "async-response" };
+					},
+				},
+			],
+			URL,
+			pathToRegexp,
+			match,
+			defaultTimeout: 0,
+			globalResponseHeaders: {},
+		});
+
+		expect(responseResult?.params).toMatchObject({
+			id: "996",
+		});
 	});
 
 	test(`vite-plugin-fake-server globalResponseHeaders`, async ({ expect }) => {

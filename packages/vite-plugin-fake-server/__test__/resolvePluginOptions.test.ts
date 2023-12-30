@@ -9,7 +9,7 @@ describe(resolvePluginOptions.name, () => {
 	const jumpOptions = { include };
 
 	test(`${resolvePluginOptions.name} error`, ({ expect }) => {
-		expect(() => resolvePluginOptions()).toThrowErrorMatchingInlineSnapshot('"fake folder does not exist"');
+		expect(() => resolvePluginOptions()).toThrowErrorMatchingInlineSnapshot(`[Error: fake folder does not exist]`);
 	});
 
 	test(`${resolvePluginOptions.name} default options`, ({ expect }) => {
