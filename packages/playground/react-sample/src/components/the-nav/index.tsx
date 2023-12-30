@@ -119,6 +119,7 @@ export const OPTIONS = [
 		label: "Use Raw Response(Local)",
 		value: "use-raw-response",
 		method: "GET",
+		disabled: !import.meta.env.DEV,
 	},
 ];
 
@@ -142,6 +143,9 @@ export function TheNav() {
 			"dark:text-slate-400",
 			"cursor-pointer",
 			"hover:bg-gray-100",
+			"disabled:cursor-not-allowed",
+			"disabled:text-gray-300",
+			"disabled:bg-gray-100",
 		];
 		const params = new URLSearchParams(location.hash.slice(1));
 		if (params.get("type") === type && params.get("path") === path) {
@@ -165,17 +169,22 @@ export function TheNav() {
 								`flex md:gap-4 gap-3 flex-wrap` + (REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : "")
 							}
 						>
-							{OPTIONS.map(({ value, label }) => {
+							{OPTIONS.map(({ value, label, disabled }) => {
 								return (
 									<div className="relative" key={`${requestItem}-${value}`}>
 										<button
+											disabled={disabled}
 											title={value}
 											className={activeButton(requestItem, value)}
 											onClick={() => go(requestItem, value)}
 										>
 											{label}
 										</button>
-										<sup className="absolute right-1 -top-2 text-xs italic font-bold text-yellow-900 px-1 opacity-80 dark:bg-transparent dark:opacity-100 dark:text-emerald-500">
+										<sup
+											className={`absolute right-1 -top-2 text-xs italic font-bold text-yellow-900 px-1 dark:bg-transparent dark:opacity-100 dark:text-emerald-500${
+												disabled ? " opacity-20" : " opacity-80"
+											}`}
+										>
 											{requestItem}
 										</sup>
 									</div>

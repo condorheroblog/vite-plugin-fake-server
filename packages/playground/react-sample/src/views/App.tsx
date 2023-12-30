@@ -17,7 +17,9 @@ function App() {
 				{option ? (
 					<TheCard key={`${option.type}-${option.value}`} {...option} />
 				) : (
-					BUTTON_LIST.map((item) => <TheCard key={`${item.type}-${item.value}-${item.label}`} {...item} />)
+					BUTTON_LIST.filter((item) => !item.disabled).map((item) => (
+						<TheCard key={`${item.type}-${item.value}-${item.label}`} {...item} />
+					))
 				)}
 			</main>
 		</section>
