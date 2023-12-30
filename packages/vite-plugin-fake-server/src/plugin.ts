@@ -99,9 +99,14 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					const modules = import.meta.glob(${JSON.stringify(relativeFakeFilePath, null, 2)}, { eager: true });
 					const fakeModuleList = Object.keys(modules).reduce((list, key) => {
 						const module = modules[key] ?? {};
-						for (const moduleKey of Object.keys(module)) {
-							const mod = modules[key][moduleKey] ?? [];
-							const modList = Array.isArray(mod) ? [...mod] : [mod];
+						if (module.default) {
+							for (const moduleKey of Object.keys(module)) {
+								const mod = modules[key][moduleKey] ?? [];
+								const modList = Array.isArray(mod) ? [...mod] : [mod];
+								return [...list, ...modList];
+							}
+						} else {
+							const modList = Array.isArray(module) ? [...module] : [module];
 							return [...list, ...modList];
 						}
 					}, []);
