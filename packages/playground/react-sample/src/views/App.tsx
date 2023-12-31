@@ -10,19 +10,21 @@ function App() {
 	});
 
 	return (
-		<section className="max-md:p-5 p-10">
+		<>
 			<TheHead />
-			<TheNav />
-			<main className="space-y-14">
-				{option ? (
-					<TheCard key={`${option.type}-${option.value}`} {...option} />
-				) : (
-					BUTTON_LIST.filter((item) => !item.disabled).map((item) => (
-						<TheCard key={`${item.type}-${item.value}-${item.label}`} {...item} />
-					))
-				)}
-			</main>
-		</section>
+			<section className="max-md:px-4 px-10">
+				<TheNav />
+				<main className="space-y-14">
+					{option ? (
+						<TheCard key={`${option.type}-${option.value}`} {...option} />
+					) : (
+						BUTTON_LIST.filter((item) => !item.disabled).map((item) => (
+							<TheCard key={`${item.type}-${item.value}-${item.label}`} {...item} />
+						))
+					)}
+				</main>
+			</section>
+		</>
 	);
 }
 

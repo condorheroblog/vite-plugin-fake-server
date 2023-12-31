@@ -74,16 +74,6 @@ export const OPTIONS = [
 		method: "POST",
 	},
 	{
-		label: "Custom Response Header",
-		value: "custom-response-header",
-		method: "DELETE",
-	},
-	{
-		label: "Custom Response Status Text",
-		value: "custom-response-status-text",
-		method: "GET",
-	},
-	{
 		label: "Delay Response For 5s",
 		value: "delay-response-for-5s",
 		method: "PUT",
@@ -114,6 +104,16 @@ export const OPTIONS = [
 		value: `post-payload`,
 		method: "POST",
 		body: { name: "CondorHero", age: 18 },
+	},
+	{
+		label: "Custom Response Header",
+		value: "custom-response-header",
+		method: "DELETE",
+	},
+	{
+		label: "Custom Response Status Text",
+		value: "custom-response-status-text",
+		method: "GET",
 	},
 	{
 		label: "Use Raw Response(Local)",
@@ -162,11 +162,11 @@ export function TheNav() {
 		<nav className="md:mt-5 md:mb-18 mt-4 mb-10 flex gap-10 flex-col">
 			{REQUEST_TYPE.map((requestItem, requestIndex) => {
 				return (
-					<div key={requestItem} className="flex gap-4">
-						<div className="opacity-80 text-sm w-44">{requestItem}</div>
+					<div key={requestItem} className="flex gap-4 max-md:gap-3">
+						<div className="opacity-80 text-sm">{requestItem}</div>
 						<div
 							className={
-								`flex md:gap-4 gap-3 flex-wrap` + (REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : "")
+								`flex max-md:gap-2 gap-4 flex-wrap` + (REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : "")
 							}
 						>
 							{OPTIONS.map(({ value, label, disabled }) => {

@@ -5,7 +5,7 @@ export function SwitchAppearance() {
 
 	return (
 		<button
-			className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md px-4"
+			className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md max-md:px-2 px-4"
 			onClick={() => changeMode(!mode)}
 		>
 			{mode ? (
