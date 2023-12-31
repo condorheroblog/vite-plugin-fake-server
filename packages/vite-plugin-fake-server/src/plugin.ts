@@ -114,6 +114,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					convertPathToPosix("/" + relative(config.root, filePath)),
 				);
 
+				// import.meta.glob imports the CommonJS module, which has the default object by default
 				const fakeTemplate = `
 					const modules = import.meta.glob(${JSON.stringify(relativeFakeFilePath, null, 2)}, { eager: true });
 					const fakeModuleList = Object.keys(modules).reduce((list, key) => {
@@ -125,8 +126,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 								return [...list, ...modList];
 							}
 						} else {
-							const modList = Array.isArray(module) ? [...module] : [module];
-							return [...list, ...modList];
+							return list;
 						}
 					}, []);
 					window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList = fakeModuleList;
