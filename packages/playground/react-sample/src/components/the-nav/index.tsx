@@ -53,6 +53,11 @@ export const OPTIONS = [
 		method: "GET",
 	},
 	{
+		label: "External URL",
+		value: "https://my-json-server.typicode.com/typicode/demo/posts",
+		method: "GET",
+	},
+	{
 		label: "Response XML",
 		value: "response-xml",
 		responseType: "xml",

@@ -187,7 +187,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 								const fakeResponse = await Promise.resolve(
 									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers })
 								);
-								if(req.isFetch){
+								if(req.isFetch) {
 									if (typeof fakeResponse === "string") {
 										if (!responseHeaders.get("Content-Type")) {
 											responseHeaders.set("Content-Type", "text/plain");

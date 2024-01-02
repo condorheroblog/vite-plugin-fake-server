@@ -37,6 +37,15 @@ export async function getResponse({
 	defaultTimeout,
 	globalResponseHeaders,
 }) {
+	/**
+	 * Join two paths into a complete path
+	 */
+	function joinPathname(a, b) {
+		const aPathname = new URL(a, "http://localhost:5173/").pathname;
+		const bPathname = new URL(b, "http://localhost:5173/").pathname;
+		return aPathname.endsWith("/") ? aPathname.slice(0, -1) + bPathname : aPathname + bPathname;
+	}
+
 	if (req.url) {
 		const instanceURL = new URL(req.url, "http://localhost:5173/");
 
@@ -53,14 +62,7 @@ export async function getResponse({
 			if (method.toUpperCase() !== reqMethod.toUpperCase()) {
 				return false;
 			}
-			const absolutePath = new URL(item.url, "http://localhost:5173/").pathname;
-			const basePath = new URL(basename, "http://localhost:5173/").pathname;
-			let realURL = "";
-			if (basePath.endsWith("/")) {
-				realURL = basePath.slice(0, basePath.length - 1) + absolutePath;
-			} else {
-				realURL = basePath + absolutePath;
-			}
+			const realURL = joinPathname(basename, item.url);
 			return pathToRegexp(realURL).test(pathname);
 		});
 		if (matchRequest) {
@@ -78,13 +80,8 @@ export async function getResponse({
 				await sleep(timeout);
 			}
 
-			const basePathname = new URL(basename, "http://localhost:5173/").pathname;
-			const userPathname = new URL(url, "http://localhost:5173/").pathname;
-			const concatenatedPathname = basePathname.endsWith("/")
-				? basePathname.slice(0, -1) + userPathname
-				: basePathname + userPathname;
-
-			const urlMatch = match(concatenatedPathname, { encode: encodeURI });
+			const joinedUrl = joinPathname(basename, url);
+			const urlMatch = match(joinedUrl, { encode: encodeURI });
 
 			const searchParams = instanceURL.searchParams;
 			const query = {};

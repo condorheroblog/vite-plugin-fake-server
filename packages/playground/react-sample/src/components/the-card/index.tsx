@@ -21,10 +21,11 @@ export function TheCard({ value, method = "GET", label, type, responseType, body
 			// @ts-expect-error
 			queryParams = new URLSearchParams(body).toString();
 		}
+		const baseURL = value.startsWith("http") ? "" : "/api/";
 		// :id 动态路由
 		const requestURL = !value.endsWith(":id")
-			? `/api/${value}`
-			: `/api/${value}`.replace(":id", Math.random().toString());
+			? `${baseURL}${value}`
+			: `${baseURL}${value}`.replace(":id", Math.random().toString());
 
 		if (type === REQUEST_TYPE[0]) {
 			setLoading(true);
