@@ -59,11 +59,9 @@
 		"chokidar": "^3.5.3",
 		"fast-glob": "^3.3.2",
 		"path-to-regexp": "^6.2.1",
-		"picocolors": "^1.0.0",
-		"xhook": "^1.6.2"
+		"picocolors": "^1.0.0"
 	},
 	"devDependencies": {
-		"@types/xhook": "^1.5.3",
 		"vite": "^5.0.10"
 	},
 	"publishConfig": {

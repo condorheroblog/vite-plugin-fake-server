@@ -172,13 +172,7 @@ importers:
       picocolors:
         specifier: ^1.0.0
         version: 1.0.0
-      xhook:
-        specifier: ^1.6.2
-        version: 1.6.2
     devDependencies:
-      '@types/xhook':
-        specifier: ^1.5.3
-        version: 1.5.3
       vite:
         specifier: ^5.0.10
         version: 5.0.10(@types/node@20.10.6)
@@ -1308,10 +1302,6 @@ packages:
 
   /@types/unist@3.0.2:
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
-    dev: true
-
-  /@types/xhook@1.5.3:
-    resolution: {integrity: sha512-BtBwD7SVDa49utvejEs80EcjWYKfP6A+FHYtiRU8izd5HjFsczORWvg4zaJAHyqSJ5jDijwRP1JgdFaYK/SYZQ==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.17.0(@typescript-eslint/parser@6.17.0)(eslint@8.56.0)(typescript@5.3.3):
@@ -5801,10 +5791,6 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
-
-  /xhook@1.6.2:
-    resolution: {integrity: sha512-kmOpJ5SyqpubjIgVXWIdTWYqZmTr3mlqaCa8ISg2IirkpvUOfbWeQbJICqVjQ8fo5tkG3FsKi/Pb2TvUOlMuMQ==}
-    dev: false
 
   /yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}

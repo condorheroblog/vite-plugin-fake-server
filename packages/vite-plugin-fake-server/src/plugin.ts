@@ -14,6 +14,7 @@ import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
 import { createLogger, convertPathToPosix } from "./utils";
+import { xhook } from "./xhook/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -139,11 +140,9 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				});
 
 				// add xhook
-				const xhookPath = join(dirname(require.resolve("xhook")), "../dist/xhook.js");
-				const xhookContent = readFileSync(xhookPath, "utf-8");
 				scriptTagList.push({
 					...scriptTagOptions,
-					children: `${xhookContent}\n;window.__VITE__PLUGIN__FAKE__SERVER__.xhook=xhook;`,
+					children: `${xhook.toString()};window.__VITE__PLUGIN__FAKE__SERVER__.xhook=xhook();`,
 				});
 
 				// add path-to-regexp
