@@ -17,11 +17,11 @@ function handleFetch() {
 
 <template>
 	<div class="container">
-		<div>
+		<div style="width: 250px">
 			<h1>
 				<a href="https://vuejs.org/" target="_blank"> Vue Doc </a>
 			</h1>
-			<button @click="handleFetch">fetch</button>
+			<button @click="handleFetch" style="padding: 0.3rem 0.6rem">Fetch</button>
 			<h3>
 				message {{ title }} <br />
 				timestamp: {{ responseTimestamp }}
@@ -35,6 +35,5 @@ function handleFetch() {
 	height: 100vh;
 	display: flex;
 	justify-content: center;
-	align-items: center;
 }
 </style>

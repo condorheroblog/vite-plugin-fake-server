@@ -81,34 +81,36 @@ export interface FakeRoute {
 
 	/**
 	 * The HTTP method type of the route (e.g., GET, POST, PUT, DELETE).
-	 * Defaults to GET if not specified.
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+	 * @default GET
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
 	 */
 	method?: HttpMethodType;
 
 	/**
 	 * The duration in milliseconds after which the request will time out.
-	 * If not provided, the request will not have a timeout.
+	 * @default undefined
 	 */
 	timeout?: number;
 
 	/**
-	 * The HTTP status code to be sent as the response.
-	 * If not specified, the default status code will be used.
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+	 * The HTTP status codes to be sent as the response.
+	 * @default 200
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 	 */
 	statusCode?: number;
 
 	/**
-	 * The status message associated with the HTTP status code.
-	 * If not provided, a default status message corresponding to the status code will be used.
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+	 * The status text associated with the HTTP status codes.
+	 * If not provided, a default status text corresponding to the status code will be used.
+	 * Responses over an HTTP/2 connection will always have an empty string as status message as HTTP/2 does not support them.
+	 * Option {@link https://github.com/condorheroblog/vite-plugin-fake-server#http2} of the plugin can control this behavior.
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 	 */
 	statusText?: string;
 
 	/**
 	 * An object containing key-value pairs representing the HTTP headers to be sent in the response.
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 	 */
 	headers?: OutgoingHttpHeaders;
 

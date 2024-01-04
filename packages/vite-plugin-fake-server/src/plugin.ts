@@ -32,7 +32,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			const currentWorkingDirectory = process.cwd();
 			const root = unresolvedConfig.root ?? currentWorkingDirectory;
 			const absoluteRoot = isAbsolute(root) ? root : join(currentWorkingDirectory, root);
-			opts = resolvePluginOptions(options, absoluteRoot);
+			opts = resolvePluginOptions({ ...options, http2: options.http2 ?? !!unresolvedConfig.server }, absoluteRoot);
 			return {
 				server: {
 					watch: {
@@ -183,7 +183,16 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
 						});
 						if (responseResult) {
-							const { response, statusCode, statusText = STATUS_CODES[statusCode], url, query, params, responseHeaders } = responseResult ?? {};
+							const {
+								response,
+								statusCode,
+								statusText: responseStatusText = STATUS_CODES[statusCode],
+								url,
+								query,
+								params,
+								responseHeaders,
+							} = responseResult ?? {};
+							const statusText = ${JSON.stringify(opts.http2)} ? "" : responseStatusText;
 							if (response && typeof response === "function") {
 								const fakeResponse = await Promise.resolve(
 									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers })

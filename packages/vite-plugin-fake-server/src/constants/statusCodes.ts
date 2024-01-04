@@ -1,5 +1,5 @@
 /**
- * @link https://nodejs.org/api/http.html#httpstatus_codes
+ * @see https://nodejs.org/api/http.html#httpstatus_codes
  * STATUS_CODES is obtained through the following code
  * ```js
  * import { STATUS_CODES } from "node:http";

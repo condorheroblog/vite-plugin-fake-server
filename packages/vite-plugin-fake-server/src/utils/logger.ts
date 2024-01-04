@@ -1,5 +1,5 @@
 /**
- * @link https://github.com/vitejs/vite/blob/main/packages/vite/src/node/logger.ts
+ * @see https://github.com/vitejs/vite/blob/main/packages/vite/src/node/logger.ts
  */
 import readline from "node:readline";
 

@@ -18,7 +18,7 @@ const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@{}])/g;
  * On Windows, it replaces DOS device paths and converts backslashes to forward slashes.
  * @param {string} path - The file path to convert.
  * @returns {string} The converted POSIX-style path.
- * @link https://github.com/mrmlnc/fast-glob/blob/28a3d61e44d5d9193ba97de4f21df6dc7725f7c0/src/utils/path.ts
+ * @see https://github.com/mrmlnc/fast-glob/blob/28a3d61e44d5d9193ba97de4f21df6dc7725f7c0/src/utils/path.ts
  */
 export function convertPathToPosix(path: string) {
 	return platform() === "win32"

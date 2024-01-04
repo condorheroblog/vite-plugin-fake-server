@@ -31,6 +31,7 @@ describe(resolvePluginOptions.name, () => {
 			    "mts",
 			  ],
 			  "headers": {},
+			  "http2": undefined,
 			  "include": "",
 			  "infixName": "fake",
 			  "logger": true,
@@ -49,6 +50,7 @@ describe(resolvePluginOptions.name, () => {
 		expect(options.infixName).toBe(INFIX_NAME);
 		expect(options.timeout).toBeUndefined();
 		expect(options.watch).toBeTruthy();
+		expect(options.http2).toBeUndefined();
 	});
 
 	test(`${resolvePluginOptions.name} options - basename`, ({ expect }) => {
@@ -134,5 +136,14 @@ describe(resolvePluginOptions.name, () => {
 		expect(options1.watch).toBeTruthy();
 		const options2 = resolvePluginOptions({ ...jumpOptions, watch: false });
 		expect(options2.watch).toBeFalsy();
+	});
+
+	test(`${resolvePluginOptions.name} options - http2`, ({ expect }) => {
+		const options = resolvePluginOptions({ ...jumpOptions });
+		expect(options.http2).toBeUndefined();
+		const options1 = resolvePluginOptions({ ...jumpOptions, http2: true });
+		expect(options1.http2).toBeTruthy();
+		const options2 = resolvePluginOptions({ ...jumpOptions, http2: false });
+		expect(options2.http2).toBeFalsy();
 	});
 });

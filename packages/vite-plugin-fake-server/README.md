@@ -275,6 +275,15 @@ export interface FakeRoute {
 }
 ```
 
+##### http2
+
+Type: `boolean`\
+Default: `false`
+
+Clarify that the plugin runs on the HTTP/2 protocol. By default, automatically follow Vite's [server-https](https://vitejs.dev/config/server-options.html#server-https) configuration.
+
+> The status text in HTTP/2 is always an empty string.
+
 ##### build
 
 Type: `boolean | ServerBuildOptions`\

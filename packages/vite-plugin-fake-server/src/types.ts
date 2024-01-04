@@ -74,6 +74,13 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	headers?: OutgoingHttpHeaders;
 
 	/**
+	 * @description The plugin is running in HTTP/2(default HTTP/1).
+	 * The status text in HTTP/2 is always an empty string.
+	 * By default, automatically follow Vite's {@link https://vitejs.dev/config/server-options.html#server-https} configuration.
+	 */
+	http2?: boolean;
+
+	/**
 	 * @description Set whether to export a independently deployable fake service(only valid in build mode).
 	 * @default false
 	 */
