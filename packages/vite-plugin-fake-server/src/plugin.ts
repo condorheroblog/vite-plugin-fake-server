@@ -14,6 +14,7 @@ import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
 import { createLogger, convertPathToPosix } from "./utils";
+import { STATUS_CODES } from "./constants";
 import { xhook } from "./xhook/index.mjs";
 
 const require = createRequire(import.meta.url);
@@ -161,6 +162,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 						${sleep.toString()}
 						${tryToJSON.toString()}
 						${getResponse.toString()}
+						const STATUS_CODES = ${JSON.stringify(STATUS_CODES, null, 2)};
 
 						function headersToObject(headers) {
 							const headersObject = {};
@@ -181,7 +183,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
 						});
 						if (responseResult) {
-							const { response, statusCode, statusText, url, query, params, responseHeaders } = responseResult ?? {};
+							const { response, statusCode, statusText = STATUS_CODES[statusCode], url, query, params, responseHeaders } = responseResult ?? {};
 							if (response && typeof response === "function") {
 								const fakeResponse = await Promise.resolve(
 									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers })
