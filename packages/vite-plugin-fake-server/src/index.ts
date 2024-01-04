@@ -1,7 +1,6 @@
 export * from "./types";
 export * from "./plugin";
 export * from "./utils";
-export * from "./constants";
 export * from "./resolvePluginOptions";
 export * from "./node";
 export * from "./client";

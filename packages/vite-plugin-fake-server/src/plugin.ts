@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join, dirname, relative, isAbsolute } from "node:path";
+import { STATUS_CODES } from "node:http";
 
 import type { Plugin, ResolvedConfig, HtmlTagDescriptor, WatchOptions } from "vite";
 
@@ -14,7 +15,6 @@ import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
 import { createLogger, convertPathToPosix } from "./utils";
-import { STATUS_CODES } from "./constants";
 import { xhook } from "./xhook/index.mjs";
 
 const require = createRequire(import.meta.url);
