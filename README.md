@@ -10,15 +10,17 @@ A fake server plugin for Vite. [Live Demo](https://condorheroblog.github.io/vite
 ## Features
 
 - Simple to use, configuration file driven.
-- No reliance on fake library —— you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
-- ESM first.
+- Support ECMAScript modules(ESM) and CommonJS modules(CommonJS).
+- Friendly type prompt - defineFakeRoute.
+- No reliance on fake library - you can use [@faker-js/faker](https://github.com/faker-js/faker) or [mockjs](https://github.com/nuysoft/Mock) and so on.
+- Support HTTP/1 and HTTP/2 - [http2 option](https://github.com/condorheroblog/vite-plugin-fake-server#http2).
 - Support `ts`, `js`, `mjs`, `cjs`, `cts`, `mts` files.
-- Support multiple response methods —— [responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType).
+- Support multiple response methods - [responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType).
 - Support custom response headers.
 - Support development and production environments.
-- Support exporting independent deployment services —— [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
-- Friendly type prompt —— defineFakeRoute.
-- Intercept XHR and Fetch request - [XHook](https://github.com/jpillora/xhook).
+- Support exporting independent deployment services - [build option](https://github.com/condorheroblog/vite-plugin-fake-server#build).
+- Support interception XHR and Fetch request - [XHook](https://github.com/jpillora/xhook).
+- Support requesting real URL.
 
 ## Install
 
@@ -32,73 +34,36 @@ Configure plugins in the configuration file of [Vite](https://vitejs.dev/config/
 
 ```ts
 // vite.config.ts
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { vitePluginFakeServer } from "vite-plugin-fake-server";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
-		react(),
-		// here
 		vitePluginFakeServer(),
 	],
 });
 ```
 
-By default, it is only valid in the development environment (`enableDev = true`), and monitors in real time (`watch = true`) all `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files in the fake(`include = fake`) folder under the current project. When the browser has For the real requested link, the terminal will automatically print the requested URL (`logger = true`).
-
-## Examples
-
-For case details, please click this link to view [packages/playground/react-sample/src](https://github.com/condorheroblog/vite-plugin-fake-server/tree/main/packages/playground/react-sample/src)
-
-The most recommended way is to use a TypeScript file so you can use the `defineFakeRoute` function to get good code hints.
-
-The defineFakeRoute function parameters require the user to enter the route type as follows:
+You can create a new file in the **`fake`** folder in the directory where the Vite configuration file is located, such as `user.fake.ts`:
 
 ```ts
-export interface FakeRoute {
-	url: string;
-	method?: HttpMethodType;
-	timeout?: number;
-	statusCode?: number;
-	statusText?: string;
-	headers?: OutgoingHttpHeaders;
-	response?: (processedRequest: ProcessedRequest, req: IncomingMessage, res: ServerResponse) => any;
-	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
-}
-export type FakeRouteConfig = FakeRoute[] | FakeRoute;
-
-export function defineFakeRoute(config: FakeRouteConfig) {
-	return config;
-}
-```
-
-> It should be noted that this way of introduction will cause `vite build` to fail.
-> `import { defineFakeRoute } from "vite-plugin-fake-server";`
-
-### In `xxx.fake.ts` file
-
-```ts
-import { faker } from "@faker-js/faker";
+// fake/user.fake.ts
 import Mock from "mockjs";
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
-
-const adminUserTemplate = {
-	id: "@guid",
-	username: "@first",
-	email: "@email",
-	avatar: '@image("200x200")',
-	role: "admin",
-};
-
-const adminUserInfo = Mock.mock(adminUserTemplate);
+import { faker } from "@faker-js/faker";
 
 export default defineFakeRoute([
 	{
-		url: "/api/get-user-info",
+		url: "/mock/get-user-info",
 		response: () => {
-			return adminUserInfo;
+			return Mock.mock({
+				id: "@guid",
+				username: "@first",
+				email: "@email",
+				avatar: '@image("200x200")',
+				role: "admin",
+			});
 		},
 	},
 	{
@@ -119,45 +84,29 @@ export default defineFakeRoute([
 ]);
 ```
 
-### In `xxx.fake.js` file
+After starting the project through Vite, you can request the custom URL above through XHR or Fetch.
 
-```javascript
-/** @type {import("vite-plugin-fake-server").FakeRouteConfig} */
-export default [
-	{
-		url: "/api/esm",
-		response: ({ query }) => {
-			return { format: "ESM", query };
-		},
-	},
-	{
-		url: "/api/response-text",
-		response: (_, req) => {
-			return req.headers["content-type"];
-		},
-	},
-	{
-		url: "/api/post",
-		method: "POST",
-		response: ({ body }) => {
-			return { ...body, timestamp: Date.now() };
-		},
-	},
-];
-```
+For case details, please click this link to view [some examples](https://github.com/condorheroblog/vite-plugin-fake-server/tree/main/packages/playground/react-sample/fake) or experience it directly online - [Live Demo](https://condorheroblog.github.io/vite-plugin-fake-server/)
 
-### In `xxx.fake.mjs` file
+## defineFakeRoute
 
-```javascript
-export default {
-	url: "/api/mjs",
-	method: "POST",
-	statusCode: 200,
-	statusText: "OK",
-	response: () => {
-		return { format: "ESM" };
-	},
-};
+The defineFakeRoute function parameters require the user to enter the route type as follows:
+
+```ts
+export interface FakeRoute {
+	url: string;
+	method?: HttpMethodType;
+	timeout?: number;
+	statusCode?: number;
+	statusText?: string;
+	headers?: OutgoingHttpHeaders;
+	response?: (processedRequest: ProcessedRequest, req: IncomingMessage, res: ServerResponse) => any;
+	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
+}
+
+export function defineFakeRoute(config: FakeRoute | FakeRoute[]) {
+	return config;
+}
 ```
 
 ## API
@@ -277,8 +226,7 @@ export interface FakeRoute {
 
 ##### http2
 
-Type: `boolean`\
-Default: `false`
+Type: `boolean`
 
 Clarify that the plugin runs on the HTTP/2 protocol. By default, automatically follow Vite's [server-https](https://vitejs.dev/config/server-options.html#server-https) configuration.
 

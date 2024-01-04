@@ -2,16 +2,6 @@ import { faker } from "@faker-js/faker/locale/zh_CN";
 import Mock from "mockjs";
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
 
-const adminUserTemplate = {
-	id: "@guid",
-	username: "@first",
-	email: "@email",
-	avatar: '@image("200x200")',
-	role: "admin",
-};
-
-const adminUserInfo = Mock.mock(adminUserTemplate);
-
 export default defineFakeRoute([
 	{
 		url: "/response-in-ts-file",
@@ -101,7 +91,13 @@ export default defineFakeRoute([
 	{
 		url: "/response-in-mock",
 		response: () => {
-			return adminUserInfo;
+			return Mock.mock({
+				id: "@guid",
+				username: "@first",
+				email: "@email",
+				avatar: '@image("200x200")',
+				role: "admin",
+			});
 		},
 	},
 	{
