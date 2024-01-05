@@ -109,7 +109,7 @@ export interface FakeRoute {
 	statusText?: string;
 
 	/**
-	 * An object containing key-value pairs representing the HTTP headers to be sent in the response.
+	 * An object containing key(the key is lowercase) and value pairs representing the HTTP headers to be sent in the response.
 	 * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 	 */
 	headers?: OutgoingHttpHeaders;

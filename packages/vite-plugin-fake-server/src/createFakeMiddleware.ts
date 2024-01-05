@@ -46,7 +46,7 @@ export async function createFakeMiddleware(
 				responseResult ?? {};
 			if (isFunction(rawResponse)) {
 				await Promise.resolve(rawResponse(req, res));
-			} else if (isFunction(response)) {
+			} else {
 				const body = await getRequestData(req);
 
 				for (const key of responseHeaders.keys()) {
@@ -61,14 +61,19 @@ export async function createFakeMiddleware(
 				if (statusText) {
 					res.statusMessage = statusText;
 				}
-				const fakeResponse = await Promise.resolve(
-					response({ url, body: tryToJSON(body), rawBody: body, query, params, headers: req.headers }, req, res),
-				);
-				if (typeof fakeResponse === "string") {
-					// XML
-					res.end(fakeResponse);
+
+				if (isFunction(response)) {
+					const fakeResponse = await Promise.resolve(
+						response({ url, body: tryToJSON(body), rawBody: body, query, params, headers: req.headers }, req, res),
+					);
+					if (typeof fakeResponse === "string") {
+						// XML
+						res.end(fakeResponse);
+					} else {
+						res.end(JSON.stringify(fakeResponse, null, 2));
+					}
 				} else {
-					res.end(JSON.stringify(fakeResponse, null, 2));
+					res.end();
 				}
 			}
 

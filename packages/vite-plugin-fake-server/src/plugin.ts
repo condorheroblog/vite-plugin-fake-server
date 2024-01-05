@@ -193,85 +193,85 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 								responseHeaders,
 							} = responseResult ?? {};
 							const statusText = ${JSON.stringify(opts.http2)} ? "" : responseStatusText;
-							if (response && typeof response === "function") {
-								const requestHeaders = {};
-								for (const key in req.headers) {
-									requestHeaders[key.toLowerCase()] = req.headers[key];
-								}
-								const fakeResponse = await Promise.resolve(
-									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: requestHeaders })
-								);
-								if(req.isFetch) {
-									if (typeof fakeResponse === "string") {
-										if (!responseHeaders.get("Content-Type")) {
-											responseHeaders.set("Content-Type", "text/plain");
-										}
-										callback(new Response(
-											fakeResponse,
-											{
-												statusText,
-												status: statusCode,
-												headers: headersToObject(responseHeaders),
-											}
-										));
-									} else {
-										if (!responseHeaders.get("Content-Type")) {
-											responseHeaders.set("Content-Type", "application/json");
-										}
-										callback(new Response(
-											JSON.stringify(fakeResponse, null, 2),
-											{
-												statusText,
-												status: statusCode,
-												headers: headersToObject(responseHeaders),
-											}
-										));
+							const responseIsFunction = typeof response === "function";
+							const requestHeaders = {};
+							for (const key in req.headers) {
+								requestHeaders[key.toLowerCase()] = req.headers[key];
+							}
+							const fakeResponse = !responseIsFunction || await Promise.resolve(
+								response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: requestHeaders })
+							);
+							if(req.isFetch) {
+								if (typeof fakeResponse === "string") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "text/plain");
 									}
+									callback(new Response(
+										responseIsFunction ? fakeResponse : null,
+										{
+											statusText,
+											status: statusCode,
+											headers: headersToObject(responseHeaders),
+										}
+									));
 								} else {
-									if(!req.type || req.type.toLowerCase() === "text") {
-										if (!responseHeaders.get("Content-Type")) {
-											responseHeaders.set("Content-Type", "text/plain");
-										}
-										callback({
-											statusText,
-											status: statusCode,
-											text: fakeResponse,
-											data: fakeResponse,
-											headers: headersToObject(responseHeaders),
-										});
-									} else if (req.type.toLowerCase() === "json") {
-										if (!responseHeaders.get("Content-Type")) {
-											responseHeaders.set("Content-Type", "application/json");
-										}
-										callback({
-											statusText,
-											status: statusCode,
-											data: fakeResponse,
-											headers: headersToObject(responseHeaders),
-										});
-									} else if (req.type.toLowerCase() === "document") {
-										if (!responseHeaders.get("Content-Type")) {
-											responseHeaders.set("Content-Type", "application/xml");
-										}
-										const parser = new DOMParser();
-										const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
-										callback({
-											statusText,
-											status: statusCode,
-											xml: xmlDoc,
-											data: xmlDoc,
-											headers: headersToObject(responseHeaders),
-										});
-									} else {
-										// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
-										// "arraybuffer" | "blob"
-										callback({
-											statusText,
-											status: statusCode,
-											data: fakeResponse,
-											headers: headersToObject(responseHeaders),
-										});
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "application/json");
 									}
+									callback(new Response(
+										responseIsFunction ? JSON.stringify(fakeResponse, null, 2) : null,
+										{
+											statusText,
+											status: statusCode,
+											headers: headersToObject(responseHeaders),
+										}
+									));
+								}
+							} else {
+								const dataResponse = responseIsFunction ? { data: fakeResponse } : {};
+								if(!req.type || req.type.toLowerCase() === "text") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "text/plain");
+									}
+									callback({
+										statusText,
+										status: statusCode,
+										text: fakeResponse,
+										...dataResponse,
+										headers: headersToObject(responseHeaders),
+									});
+								} else if (req.type.toLowerCase() === "json") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "application/json");
+									}
+									callback({
+										statusText,
+										status: statusCode,
+										...dataResponse,
+										headers: headersToObject(responseHeaders),
+									});
+								} else if (req.type.toLowerCase() === "document") {
+									if (!responseHeaders.get("Content-Type")) {
+										responseHeaders.set("Content-Type", "application/xml");
+									}
+									const parser = new DOMParser();
+									const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
+									callback({
+										statusText,
+										status: statusCode,
+										xml: xmlDoc,
+										data: xmlDoc,
+										headers: headersToObject(responseHeaders),
+									});
+								} else {
+									// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
+									// "arraybuffer" | "blob"
+									callback({
+										statusText,
+										status: statusCode,
+										...dataResponse,
+										headers: headersToObject(responseHeaders),
+									});
 								}
 							}
 							if (${JSON.stringify(opts.logger)}){

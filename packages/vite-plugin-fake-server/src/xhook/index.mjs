@@ -303,7 +303,19 @@ export function xhook() {
 			}
 			if ("data" in response) {
 				facade.response = response.data;
+			} else {
+				//https://github.com/jpillora/xhook/issues/173
+				//The new code belongs to vite-plugin-fake-server
+				const defaultResponseBody = {
+					"": "",
+					text: "",
+					json: null,
+					blob: new Blob([], { type: new Headers(response.headers ?? {}).get("content-type") }),
+					arraybuffer: new ArrayBuffer(),
+				};
+				facade.response = defaultResponseBody[facade.responseType];
 			}
+
 			//The new code belongs to vite-plugin-fake-server
 			if ("responseURL" in response || request.url) {
 				facade.responseURL =
