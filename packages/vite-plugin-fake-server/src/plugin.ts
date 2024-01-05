@@ -194,8 +194,12 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 							} = responseResult ?? {};
 							const statusText = ${JSON.stringify(opts.http2)} ? "" : responseStatusText;
 							if (response && typeof response === "function") {
+								const requestHeaders = {};
+								for (const key in req.headers) {
+									requestHeaders[key.toLowerCase()] = req.headers[key];
+								}
 								const fakeResponse = await Promise.resolve(
-									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: req.headers })
+									response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: requestHeaders })
 								);
 								if(req.isFetch) {
 									if (typeof fakeResponse === "string") {
