@@ -38,6 +38,13 @@ export default defineFakeRoute([
 		},
 	},
 	{
+		url: "/lowercase-headers-key",
+		method: "GET",
+		response: ({ headers }) => {
+			return { timestamp: Date.now(), ...headers };
+		},
+	},
+	{
 		url: "/response-is-async",
 		method: "POST",
 		response: async () => {

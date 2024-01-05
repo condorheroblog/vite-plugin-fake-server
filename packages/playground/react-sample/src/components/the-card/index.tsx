@@ -7,7 +7,15 @@ function getType(value: unknown) {
 	return Object.prototype.toString.call(value).slice(8, -1);
 }
 
-export function TheCard({ value, method = "GET", label, type, responseType, body }: (typeof BUTTON_LIST)[number]) {
+export function TheCard({
+	value,
+	method = "GET",
+	label,
+	type,
+	responseType,
+	body,
+	headers,
+}: (typeof BUTTON_LIST)[number]) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [responseOrigin, setResponseOrigin] = useState<{ [key: string]: any }>({});
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,6 +50,11 @@ export function TheCard({ value, method = "GET", label, type, responseType, body
 			if (method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD") {
 				xhr.open(method, `${requestURL}?${queryParams}`, true);
 				xhr.setRequestHeader("Content-Type", "application/json");
+				for (const key in headers) {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					xhr.setRequestHeader(key.toString(), headers[key]);
+				}
 				xhr.send();
 			} else {
 				xhr.open(method, requestURL, true);
@@ -78,9 +91,9 @@ export function TheCard({ value, method = "GET", label, type, responseType, body
 			setLoading(true);
 			let payloadFetch;
 			if ((method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD") && body) {
-				payloadFetch = fetch(`${requestURL}?${queryParams}`, { method });
+				payloadFetch = fetch(`${requestURL}?${queryParams}`, { method, headers });
 			} else {
-				payloadFetch = fetch(requestURL, { method, body: JSON.stringify(body) });
+				payloadFetch = fetch(requestURL, { method, body: JSON.stringify(body), headers });
 			}
 
 			payloadFetch

@@ -94,6 +94,17 @@ export const OPTIONS = [
 		method: "POST",
 	},
 	{
+		label: "Lowercase Headers Key",
+		value: "lowercase-headers-key",
+		method: "GET",
+		headers: {
+			"ANIMAL-CROSSING": "Animal Crossing",
+			AAAAAAAAAAAAAA: "_________",
+			BBBBBBBBBBBBBB: "_________",
+			CCCCCCCCCCCCCC: "_________",
+		},
+	},
+	{
 		label: "Dynamic Route",
 		value: `user/:id`,
 		method: "GET",
