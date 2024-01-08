@@ -1,10 +1,13 @@
 import type { FakeRoute } from "../node";
 
-export function parallelLoader<T>(promises: (() => PromiseLike<T>)[], limit = Infinity) {
+export function parallelLoader<T>(promises: (() => PromiseLike<T> | T)[], limit = Infinity) {
+	const len = promises.length;
+	if (len === 0) {
+		return Promise.resolve([]);
+	}
 	let current = 0;
 	const result: FakeRoute[] = [];
 	let resolvedCount = 0;
-	const len = promises.length;
 	return new Promise<FakeRoute[]>((resolve, reject) => {
 		function processNext() {
 			const index = current;

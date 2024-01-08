@@ -44,7 +44,7 @@ export class FakeFileLoader extends EventEmitter {
 		// Note: return absolute path
 		const fakeFilePathArr = getFakeFilePath({ exclude, include: [include], extensions, infixName }, root);
 
-		// 5.402s => 1.309s
+		// 5.402s => 1.309s in packages/react-sample
 		// this.updateFakeData(await getFakeModule(fakeFilePathArr, this.options.loggerOutput));
 
 		const fakeFilePathFunc = fakeFilePathArr.map((absFile) => () => this.loadFakeData(relative(root, absFile)));
