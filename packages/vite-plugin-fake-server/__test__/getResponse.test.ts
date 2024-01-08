@@ -6,33 +6,21 @@ import { describe, expect, test } from "vitest";
 import { getResponse, defineFakeRoute } from "../src";
 
 describe("vite-plugin-fake-server options", () => {
-	const fakeData = defineFakeRoute([
-		{
-			url: "/api/async-response",
-			method: "POST",
-			response: () => {
-				return { message: "async-response" };
-			},
-		},
-	]);
-	const req = { url: "/api/async-response", method: "POST" };
-	const getResponseOptions = {
-		req,
-		URL,
-		fakeModuleList: fakeData,
-		pathToRegexp,
-		match,
-		basename: "",
-		defaultTimeout: 0,
-		globalResponseHeaders: {},
-	};
-
 	test(`vite-plugin-fake-server basename`, async ({ expect }) => {
-		const basename = "prefix-root";
 		const responseResult = await getResponse({
-			...getResponseOptions,
-			req: { ...req, url: "/prefix-root/api/async-response" },
-			basename,
+			req: { url: "/prefix-root/api/basename", method: "POST" },
+			fakeModuleList: [
+				{
+					url: "/api/basename",
+					method: "POST",
+				},
+			],
+			URL,
+			pathToRegexp,
+			match,
+			basename: "prefix-root",
+			defaultTimeout: 0,
+			globalResponseHeaders: {},
 		});
 
 		expect(!!responseResult).toBe(true);
@@ -95,7 +83,18 @@ describe("vite-plugin-fake-server options", () => {
 	test(`vite-plugin-fake-server globalResponseHeaders`, async ({ expect }) => {
 		const globalResponseHeaders = { a: "foo", b: "bar" };
 		const responseResult = await getResponse({
-			...getResponseOptions,
+			req: { url: "/api/global-response-headers", method: "POST" },
+			fakeModuleList: [
+				{
+					url: "/api/global-response-headers",
+					method: "POST",
+				},
+			],
+			URL,
+			pathToRegexp,
+			match,
+			basename: "",
+			defaultTimeout: 0,
 			globalResponseHeaders,
 		});
 
