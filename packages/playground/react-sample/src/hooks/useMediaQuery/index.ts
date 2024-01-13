@@ -1,53 +1,41 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 import { useSupported } from "../useSupported";
 import { defaultWindow } from "../_configurable";
 import type { ConfigurableWindow } from "../_configurable";
 
+function getMediaSnapshot(query: string) {
+	return window.matchMedia(query).matches;
+}
+
+// https://julesblom.com/writing/usesyncexternalstore
 export function useMediaQuery(query: string, options: ConfigurableWindow = {}) {
 	const { window = defaultWindow } = options;
 	const isSupported = useSupported(() => window && "matchMedia" in window && typeof window.matchMedia === "function");
-	const [matches, setMatches] = useState(false);
+	if (!isSupported) return false;
 
-	let mediaQuery: MediaQueryList | undefined;
+	const subscribeMediaQuery = useCallback(
+		(handler: (ev: MediaQueryListEvent) => void) => {
+			const mediaQuery = window!.matchMedia(query);
+			if ("addEventListener" in mediaQuery) {
+				mediaQuery.addEventListener("change", handler);
+			} else {
+				// @ts-expect-error deprecated API
+				mediaQuery.addListener(handler);
+			}
 
-	const handler = useCallback(
-		(event: MediaQueryListEvent) => {
-			setMatches(event.matches);
+			return () => {
+				if ("removeEventListener" in mediaQuery) {
+					mediaQuery.removeEventListener("change", handler);
+				} else {
+					// @ts-expect-error deprecated API
+					mediaQuery.removeListener(handler);
+				}
+			};
 		},
-		[setMatches],
+		[query],
 	);
 
-	const cleanup = useCallback(() => {
-		if (!mediaQuery) return;
-		if ("removeEventListener" in mediaQuery) {
-			mediaQuery.removeEventListener("change", handler);
-		} else {
-			// @ts-expect-error deprecated API
-			mediaQuery.removeListener(handler);
-		}
-	}, [mediaQuery, handler]);
-
-	useEffect(() => {
-		if (!isSupported) return;
-
-		cleanup();
-
-		mediaQuery = window!.matchMedia(query);
-
-		if ("addEventListener" in mediaQuery) {
-			mediaQuery.addEventListener("change", handler);
-		} else {
-			// @ts-expect-error deprecated API
-			mediaQuery.addListener(handler);
-		}
-
-		setMatches(mediaQuery.matches);
-		return () => {
-			cleanup();
-			mediaQuery = undefined;
-		};
-	}, [isSupported, mediaQuery, cleanup, setMatches]);
-
+	const matches = useSyncExternalStore(subscribeMediaQuery, () => getMediaSnapshot(query));
 	return matches;
 }
