@@ -740,6 +740,8 @@ export function xhook() {
 			options = Object.assign(Object.assign(Object.assign({}, requestObj), init), {
 				headers: prevHeaders,
 				acceptedRequest: true,
+				//The new code belongs to vite-plugin-fake-server
+				isFetch: true,
 			});
 		} else {
 			options.url = input;
