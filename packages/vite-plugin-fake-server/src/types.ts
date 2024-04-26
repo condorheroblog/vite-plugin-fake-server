@@ -85,4 +85,10 @@ export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptio
 	 * @default false
 	 */
 	build?: boolean | ServerBuildOptions;
+
+	/**
+	 * @description Set whether to enable cors.
+	 * @default false
+	 */
+	cors?: boolean;
 }

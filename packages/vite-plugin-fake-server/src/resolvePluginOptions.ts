@@ -26,6 +26,7 @@ export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}, 
 		headers: options.headers ?? {},
 		build: options.build ?? false,
 		http2: options.http2,
+		cors: options.cors ?? false,
 	};
 }
 

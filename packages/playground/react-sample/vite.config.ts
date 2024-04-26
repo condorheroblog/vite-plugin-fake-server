@@ -13,6 +13,7 @@ export default defineConfig({
 			enableProd: true,
 			build: true,
 			headers: { "---------": "----------" },
+			cors: true,
 		}),
 	],
 	build: {

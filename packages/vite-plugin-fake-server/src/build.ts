@@ -63,6 +63,7 @@ function generatePackageJson() {
 		},
 		dependencies: {
 			connect: "latest",
+			cors: "latest",
 			[name]: `^${version}`,
 		},
 	};
@@ -71,6 +72,7 @@ function generatePackageJson() {
 
 function generatorServerEntryCode(port: number, options: ResolvePluginOptionsType, config: ResolvedConfig) {
 	return `import connect from "connect";
+${options.cors ? 'import cors from "cors";' : ""}
 import { createFakeMiddleware, createLogger } from "${name}";
 
 const loggerOutput = createLogger(${JSON.stringify(config.logLevel)}, {
@@ -81,6 +83,7 @@ const loggerOutput = createLogger(${JSON.stringify(config.logLevel)}, {
 async function main() {
 
 	const app = connect();
+	${options.cors ? "app.use(cors());" : ""}
 	const middleware = await createFakeMiddleware(
 		{
 			...${JSON.stringify(options, null, 2)},
