@@ -47,7 +47,7 @@
 	},
 	"homepage": "https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/README.md",
 	"scripts": {
-		"prepublishOnly": "nr build",
+		"prepublishOnly": "npm run build",
 		"test": "vitest",
 		"dev": "esno ./src/index.ts",
 		"build": "rimraf dist && rollup -c",
