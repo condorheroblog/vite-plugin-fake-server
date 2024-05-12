@@ -3,6 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/vite-plugin-fake-server)](https://www.npmjs.com/package/vite-plugin-fake-server)
 [![Downloads](https://img.shields.io/npm/dw/vite-plugin-fake-server)](https://www.npmjs.com/package/vite-plugin-fake-server)
 [![License](https://img.shields.io/npm/l/vite-plugin-fake-server)](https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/LICENSE)
+[![node compatibility](https://img.shields.io/node/v/vite.svg)](https://nodejs.org/en/about/previous-releases)
 [![GitHub stars](https://img.shields.io/github/stars/condorheroblog/vite-plugin-fake-server)](https://github.com/condorheroblog/vite-plugin-fake-server/blob/main/packages/vite-plugin-fake-server)
 
 A fake server plugin for Vite. [Live Demo](https://condorheroblog.github.io/vite-plugin-fake-server/)
