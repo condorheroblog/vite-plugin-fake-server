@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import process from "node:process";
 import { join } from "node:path";
 
 import { resolveOptions as fakerResolveOptions } from "./node";

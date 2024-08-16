@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { usePreferredDark } from "../usePreferredDark";
 
@@ -11,7 +11,8 @@ export function useColorMode() {
 		if (isDark) {
 			htmlDOM?.classList.add("dark");
 			htmlDOM?.style.setProperty("color-scheme", "dark");
-		} else {
+		}
+		else {
 			htmlDOM?.style.removeProperty("color-scheme");
 			htmlDOM?.classList.remove("dark");
 		}

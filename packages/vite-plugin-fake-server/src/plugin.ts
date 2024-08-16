@@ -1,9 +1,10 @@
+import process from "node:process";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { join, dirname, relative, isAbsolute } from "node:path";
+import { dirname, isAbsolute, join, relative } from "node:path";
 import { STATUS_CODES } from "node:http";
 
-import type { Plugin, ResolvedConfig, HtmlTagDescriptor, WatchOptions } from "vite";
+import type { HtmlTagDescriptor, Plugin, ResolvedConfig, WatchOptions } from "vite";
 
 import pkg from "../package.json";
 
@@ -14,12 +15,12 @@ import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import { createLogger, convertPathToPosix } from "./utils";
+import { convertPathToPosix, createLogger } from "./utils";
 import { xhook } from "./xhook/index.mjs";
 
 const require = createRequire(import.meta.url);
 
-export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions = {}): Promise<Plugin> => {
+export async function vitePluginFakeServer(options: VitePluginFakeServerOptions = {}): Promise<Plugin> {
 	let config: ResolvedConfig;
 	let isDevServer = false;
 	let opts: ResolvePluginOptionsType;
@@ -81,11 +82,11 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					scriptTagList.push({
 						...scriptTagOptions,
 						children: [
-							`console.warn("[`,
+							"console.warn(\"[",
 							pkg.name,
 							"]:",
 							"The plugin is applied in the production environment, check in https://github.com/condorheroblog/vite-plugin-fake-server#enableprod",
-							`");`,
+							"\");",
 						].join(""),
 					});
 				}
@@ -112,8 +113,8 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 				);
 
 				// import.meta.glob must use posix style paths
-				const relativeFakeFilePath = fakeFilePath.map((filePath) =>
-					convertPathToPosix("/" + relative(config.root, filePath)),
+				const relativeFakeFilePath = fakeFilePath.map(filePath =>
+					convertPathToPosix(`/${relative(config.root, filePath)}`),
 				);
 
 				// import.meta.glob imports the CommonJS module, which has the default object by default
@@ -146,6 +147,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 					children: `${xhook.toString()};window.__VITE__PLUGIN__FAKE__SERVER__.xhook=xhook();`,
 				});
 
+				/* Waring: path-to-regexp = v6.2.2, Because v7.0.0 just only export ES2015 module */
 				// add path-to-regexp
 				const pathToRegexpPath = join(dirname(require.resolve("path-to-regexp")), "../dist.es2015/index.js");
 				const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
@@ -298,7 +300,7 @@ export const vitePluginFakeServer = async (options: VitePluginFakeServerOptions 
 			}
 		},
 	};
-};
+}
 
 export function resolveIgnored(rootDir: string, include: string, watchOptions?: WatchOptions | null) {
 	const { ignored = [] } = watchOptions ?? {};

@@ -14,8 +14,8 @@ import type { Logger } from "./utils";
 import { convertPathToPosix } from "./utils";
 
 export interface FakeFileLoaderOptions extends ResolvePluginOptionsType {
-	loggerOutput: Logger;
-	root: string;
+	loggerOutput: Logger
+	root: string
 }
 
 export class FakeFileLoader extends EventEmitter {
@@ -47,7 +47,7 @@ export class FakeFileLoader extends EventEmitter {
 		// 5.402s => 1.309s in packages/react-sample
 		// this.updateFakeData(await getFakeModule(fakeFilePathArr, this.options.loggerOutput));
 
-		const fakeFilePathFunc = fakeFilePathArr.map((absFile) => () => this.loadFakeData(relative(root, absFile)));
+		const fakeFilePathFunc = fakeFilePathArr.map(absFile => () => this.loadFakeData(relative(root, absFile)));
 		// TODO: Try to Web Worker
 		await parallelLoader(fakeFilePathFunc, 10);
 		this.updateFakeData();
@@ -60,7 +60,8 @@ export class FakeFileLoader extends EventEmitter {
 			let watchPath;
 			if (infixName && infixName.length > 0) {
 				watchPath = `/**/*.${infixName}.{${extensions.join(",")}}`;
-			} else {
+			}
+			else {
 				watchPath = `/**/*.{${extensions.join(",")}}`;
 			}
 			const watchDir = convertPathToPosix(join(include, watchPath));
@@ -73,7 +74,7 @@ export class FakeFileLoader extends EventEmitter {
 
 			watcher.on("add", async (relativeFilePath) => {
 				if (logger) {
-					loggerOutput.info(colors.green(`fake file add ` + colors.dim(relativeFilePath)), {
+					loggerOutput.info(colors.green(`fake file add ${colors.dim(relativeFilePath)}`), {
 						timestamp: true,
 						clear: true,
 					});
@@ -85,7 +86,7 @@ export class FakeFileLoader extends EventEmitter {
 
 			watcher.on("change", async (relativeFilePath) => {
 				if (logger) {
-					loggerOutput.info(colors.green(`fake file change ` + colors.dim(relativeFilePath)), {
+					loggerOutput.info(colors.green(`fake file change ${colors.dim(relativeFilePath)}`), {
 						timestamp: true,
 						clear: true,
 					});
@@ -97,7 +98,7 @@ export class FakeFileLoader extends EventEmitter {
 
 			watcher.on("unlink", async (relativeFilePath) => {
 				if (logger) {
-					loggerOutput.info(colors.green(`fake file unlink ` + colors.dim(relativeFilePath)), {
+					loggerOutput.info(colors.green(`fake file unlink ${colors.dim(relativeFilePath)}`), {
 						timestamp: true,
 						clear: true,
 					});
@@ -144,9 +145,11 @@ export class FakeFileLoader extends EventEmitter {
 				for (const [dep] of this.#fakeFileDeps.entries()) {
 					deps.push(dep);
 				}
-				const exactDeps = deps.filter((dep) => !oldDeps.includes(dep));
+				const exactDeps = deps.filter(dep => !oldDeps.includes(dep));
 
-				exactDeps.length > 0 && watcherDeps.add(exactDeps);
+				if (exactDeps.length > 0) {
+					watcherDeps.add(exactDeps);
+				}
 			});
 		}
 	}
@@ -160,10 +163,12 @@ export class FakeFileLoader extends EventEmitter {
 			const resolvedModule = mod.default || mod;
 			if (Array.isArray(resolvedModule)) {
 				fakeCodeData.push(...resolvedModule);
-			} else {
+			}
+			else {
 				fakeCodeData.push(resolvedModule);
 			}
-		} catch (error) {
+		}
+		catch (error) {
 			this.options.loggerOutput.error(colors.red(`failed to load module from ${filepath}`), {
 				error: error as Error,
 				timestamp: true,
@@ -177,7 +182,7 @@ export class FakeFileLoader extends EventEmitter {
 
 	private updateFakeFileDeps(filepath: string, deps: DependenciesType) {
 		Object.keys(deps).forEach((mPath) => {
-			const imports = deps[mPath].imports.map((_) => _.path);
+			const imports = deps[mPath].imports.map(_ => _.path);
 			imports.forEach((dep) => {
 				if (!this.#fakeFileDeps.has(dep)) {
 					this.#fakeFileDeps.set(dep, new Set());

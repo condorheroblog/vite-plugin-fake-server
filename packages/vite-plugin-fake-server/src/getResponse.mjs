@@ -21,7 +21,8 @@ export function tryToJSON(str) {
 	let result = "";
 	try {
 		result = JSON.parse(str);
-	} catch (err) {
+	}
+	catch {
 		result = str;
 	}
 	return result;
@@ -86,14 +87,16 @@ export async function getResponse({
 			const searchParams = instanceURL.searchParams;
 			const query = {};
 			for (const [key, value] of searchParams.entries()) {
-				if (query.hasOwnProperty(key)) {
+				if (Object.prototype.hasOwnProperty.call(query, key)) {
 					const queryValue = query[key];
 					if (Array.isArray(queryValue)) {
 						queryValue.push(value);
-					} else {
+					}
+					else {
 						query[key] = [queryValue, value];
 					}
-				} else {
+				}
+				else {
 					query[key] = value;
 				}
 			}

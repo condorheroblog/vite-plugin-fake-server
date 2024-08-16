@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - "packages/playground/react-sample/src/**"
+      - 'packages/playground/react-sample/src/**'
 
 jobs:
   build-and-deploy:

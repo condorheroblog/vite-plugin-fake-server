@@ -1,12 +1,12 @@
 import { URL } from "node:url";
 
-import { pathToRegexp, match } from "path-to-regexp";
-import { describe, expect, test } from "vitest";
+import { match, pathToRegexp } from "path-to-regexp";
+import { describe, expect, it } from "vitest";
 
-import { getResponse, defineFakeRoute } from "../src";
+import { defineFakeRoute, getResponse } from "../src";
 
 describe("vite-plugin-fake-server options", () => {
-	test(`vite-plugin-fake-server basename`, async ({ expect }) => {
+	it("vite-plugin-fake-server basename", async ({ expect }) => {
 		const responseResult = await getResponse({
 			req: { url: "/prefix-root/api/basename", method: "POST" },
 			fakeModuleList: [
@@ -26,7 +26,7 @@ describe("vite-plugin-fake-server options", () => {
 		expect(!!responseResult).toBe(true);
 	});
 
-	test.each([
+	it.each([
 		["/prefix-root/", "/dynamic-route/:id"],
 		["/prefix-root", "/dynamic-route/:id"],
 		["prefix-root/", "/dynamic-route/:id"],
@@ -55,7 +55,7 @@ describe("vite-plugin-fake-server options", () => {
 		expect(responseResult?.params).toMatchObject({ id: "icu" });
 	});
 
-	test(`vite-plugin-fake-server basename with response params`, async ({ expect }) => {
+	it("vite-plugin-fake-server basename with response params", async ({ expect }) => {
 		const basename = "prefix-root";
 		const responseResult = await getResponse({
 			basename,
@@ -80,7 +80,7 @@ describe("vite-plugin-fake-server options", () => {
 		});
 	});
 
-	test(`vite-plugin-fake-server globalResponseHeaders`, async ({ expect }) => {
+	it("vite-plugin-fake-server globalResponseHeaders", async ({ expect }) => {
 		const globalResponseHeaders = { a: "foo", b: "bar" };
 		const responseResult = await getResponse({
 			req: { url: "/api/global-response-headers", method: "POST" },
@@ -136,32 +136,32 @@ describe("vite-plugin-fake-server response schema", async () => {
 	const responseResult = await getResponse(getResponseOptions);
 
 	if (responseResult) {
-		test(`http response headers`, ({ expect }) => {
+		it("http response headers", ({ expect }) => {
 			const responseHeaders = responseResult.responseHeaders;
 			expect(responseHeaders.get("e")).toBe("eyes");
 		});
 
-		test(`http status code`, async ({ expect }) => {
+		it("http status code", async ({ expect }) => {
 			const statusCode = responseResult.statusCode;
 			expect(statusCode).toBe(200);
 		});
 
-		test(`http status text`, async ({ expect }) => {
+		it("http status text", async ({ expect }) => {
 			const statusText = responseResult.statusText;
 			expect(statusText).toBe("OK");
 		});
 
-		test(`http timeout`, async ({ expect }) => {
+		it("http timeout", async ({ expect }) => {
 			const timeout = responseResult.timeout;
 			expect(timeout).toBe(0);
 		});
 
-		test(`request url`, async ({ expect }) => {
+		it("request url", async ({ expect }) => {
 			const url = responseResult.url;
-			expect(url).toMatchInlineSnapshot('"/api/1?age=18&weight=50#chapter-10"');
+			expect(url).toMatchInlineSnapshot("\"/api/1?age=18&weight=50#chapter-10\"");
 		});
 
-		test(`request query`, async ({ expect }) => {
+		it("request query", async ({ expect }) => {
 			const query = responseResult.query;
 			expect(query).toMatchInlineSnapshot(`
 				{
@@ -171,12 +171,12 @@ describe("vite-plugin-fake-server response schema", async () => {
 			`);
 		});
 
-		test(`request params`, async ({ expect }) => {
+		it("request params", async ({ expect }) => {
 			const url = responseResult.url;
-			expect(url).toMatchInlineSnapshot('"/api/1?age=18&weight=50#chapter-10"');
+			expect(url).toMatchInlineSnapshot("\"/api/1?age=18&weight=50#chapter-10\"");
 		});
 
-		test(`get serialize url in response`, async ({ expect }) => {
+		it("get serialize url in response", async ({ expect }) => {
 			const { response, url, query, params } = responseResult;
 			const fakeResponse = await Promise.resolve(response({ url, body: "x", query, params, headers: req.headers }));
 			expect(fakeResponse).toMatchInlineSnapshot(`

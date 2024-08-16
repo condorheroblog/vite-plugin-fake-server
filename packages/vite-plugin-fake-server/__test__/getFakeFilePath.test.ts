@@ -1,11 +1,11 @@
 import { relative } from "node:path";
 
-import { describe, test } from "vitest";
+import { describe, it } from "vitest";
 
-import { getFakeFilePath, FAKE_FILE_EXTENSIONS } from "../src";
+import { FAKE_FILE_EXTENSIONS, getFakeFilePath } from "../src";
 
 describe(`${getFakeFilePath.name}`, () => {
-	test(`${getFakeFilePath.name} include`, ({ expect }) => {
+	it(`${getFakeFilePath.name} include`, ({ expect }) => {
 		const fakeFilePath = getFakeFilePath(
 			{
 				include: ["./fixtures/fake"],
@@ -14,7 +14,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map((filePath) => relative(__dirname, filePath));
+		).map(filePath => relative(__dirname, filePath));
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
@@ -29,7 +29,7 @@ describe(`${getFakeFilePath.name}`, () => {
 		`);
 	});
 
-	test(`${getFakeFilePath.name} exclude`, ({ expect }) => {
+	it(`${getFakeFilePath.name} exclude`, ({ expect }) => {
 		const fakeFilePath = getFakeFilePath(
 			{
 				include: ["./fixtures/fake"],
@@ -38,7 +38,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map((filePath) => relative(__dirname, filePath));
+		).map(filePath => relative(__dirname, filePath));
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
@@ -58,7 +58,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map((filePath) => relative(__dirname, filePath));
+		).map(filePath => relative(__dirname, filePath));
 
 		expect(fakeFilePath1).toMatchInlineSnapshot(`
 			[
@@ -72,7 +72,7 @@ describe(`${getFakeFilePath.name}`, () => {
 		`);
 	});
 
-	test(`${getFakeFilePath.name} extensions`, ({ expect }) => {
+	it(`${getFakeFilePath.name} extensions`, ({ expect }) => {
 		const fakeFilePath = getFakeFilePath(
 			{
 				include: ["./fixtures/fake"],
@@ -81,7 +81,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map((filePath) => relative(__dirname, filePath));
+		).map(filePath => relative(__dirname, filePath));
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[

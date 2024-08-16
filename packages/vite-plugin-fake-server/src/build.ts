@@ -1,11 +1,13 @@
+/* eslint-disable no-console */
+import process from "node:process";
 import { existsSync } from "node:fs";
-import { mkdir, writeFile, readdir, copyFile, stat } from "node:fs/promises";
-import { join, extname } from "node:path";
+import { copyFile, mkdir, readdir, stat, writeFile } from "node:fs/promises";
+import { extname, join } from "node:path";
 
 import pc from "picocolors";
 import type { ResolvedConfig } from "vite";
 
-import { version, name } from "../package.json";
+import { name, version } from "../package.json";
 
 import type { ServerBuildOptions } from "./types";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
@@ -42,7 +44,7 @@ export async function generateFakeServer(options: ResolvePluginOptionsType, conf
 		await writeFile(filename, source, "utf-8");
 	}
 	console.log(`\n[${name}]Builded a independently service in`, pc.green(outputDir), "\n");
-	console.log(pc.yellow(`\nThis is just a template, you can adjust it according to your needs\n`));
+	console.log(pc.yellow("\nThis is just a template, you can adjust it according to your needs\n"));
 	console.log(
 		`We suggest that you begin by typing:\n\n  ${pc.blue("cd")} ${outDir}\n  ${pc.blue("npm install")}\n  ${pc.blue(
 			"npm run start",
@@ -115,7 +117,8 @@ export async function copyFakeFiles(sourceDir: string, targetDir: string) {
 			const fileStatus = await stat(sourcePath);
 			if (fileStatus.isDirectory()) {
 				await copyFakeFiles(sourcePath, targetPath);
-			} else {
+			}
+			else {
 				const ext = extname(file).toLowerCase().slice(1);
 				if (FAKE_FILE_EXTENSIONS.includes(ext)) {
 					await copyFile(sourcePath, targetPath);
@@ -124,7 +127,8 @@ export async function copyFakeFiles(sourceDir: string, targetDir: string) {
 		}
 
 		// console.log(`Fake files copied from ${sourceDir} to ${targetDir}`);
-	} catch (error) {
+	}
+	catch (error) {
 		console.error(`Error copying fake files: ${error}`);
 	}
 }

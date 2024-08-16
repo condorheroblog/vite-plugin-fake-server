@@ -35,7 +35,7 @@ export default [
 	{
 		url: "/response-boolean",
 		response: () => {
-			return Math.random() > 0.5 ? true : false;
+			return Math.random() > 0.5;
 		},
 	},
 	{

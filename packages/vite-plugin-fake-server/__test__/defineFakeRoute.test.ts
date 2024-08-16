@@ -1,9 +1,9 @@
-import { describe, test } from "vitest";
+import { describe, it } from "vitest";
 
 import { defineFakeRoute } from "../src";
 
 describe(defineFakeRoute.name, () => {
-	test(`${defineFakeRoute.name} option is a object`, ({ expect }) => {
+	it(`${defineFakeRoute.name} option is a object`, ({ expect }) => {
 		const userConfig = defineFakeRoute({ url: "/api/user" });
 		expect(userConfig).toMatchInlineSnapshot(`
 			{
@@ -12,7 +12,7 @@ describe(defineFakeRoute.name, () => {
 		`);
 	});
 
-	test(`${defineFakeRoute.name} option is a array`, ({ expect }) => {
+	it(`${defineFakeRoute.name} option is a array`, ({ expect }) => {
 		const userConfig = defineFakeRoute([{ url: "/api/user" }]);
 		expect(userConfig).toMatchInlineSnapshot(`
 			[

@@ -12,16 +12,20 @@ export function resolveOptions(options: FakerSchemaServerOptions = {}) {
 	if (typeof options.infixName === "boolean") {
 		if (options.infixName) {
 			infixName = INFIX_NAME;
-		} else {
+		}
+		else {
 			infixName = false;
 		}
-	} else if (typeof options.infixName === "string") {
+	}
+	else if (typeof options.infixName === "string") {
 		if (options.infixName.length === 0) {
 			infixName = false;
-		} else {
+		}
+		else {
 			infixName = options.infixName;
 		}
-	} else {
+	}
+	else {
 		infixName = INFIX_NAME;
 	}
 

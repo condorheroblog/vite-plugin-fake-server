@@ -14,7 +14,10 @@ export function TheHead() {
 				<a href="https://github.com/condorheroblog/vite-plugin-fake-server" target="_blank">
 					Vite Plugin Fake Server Examples
 				</a>
-				<sup className="opacity-50">v{version}</sup>
+				<sup className="opacity-50">
+					v
+					{version}
+				</sup>
 			</h1>
 
 			<div className="flex">

@@ -17,7 +17,8 @@ export function parallelLoader<T>(promises: (() => PromiseLike<T> | T)[], limit 
 				.then((res) => {
 					if (Array.isArray(res)) {
 						result.push(...res);
-					} else {
+					}
+					else {
 						result.push(res as FakeRoute);
 					}
 					resolvedCount = resolvedCount + 1;
@@ -26,9 +27,10 @@ export function parallelLoader<T>(promises: (() => PromiseLike<T> | T)[], limit 
 						resolve(result);
 					}
 
-					if (current < len) processNext();
+					if (current < len)
+						processNext();
 				})
-				.catch((reason) => reject(reason));
+				.catch(reason => reject(reason));
 		}
 		for (let i = 0; i < limit && i < len; i++) {
 			processNext();

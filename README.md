@@ -62,7 +62,7 @@ export default defineFakeRoute([
 				id: "@guid",
 				username: "@first",
 				email: "@email",
-				avatar: '@image("200x200")',
+				avatar: "@image(\"200x200\")",
 				role: "admin",
 			});
 		},
@@ -95,14 +95,14 @@ The defineFakeRoute function parameters require the user to enter the route type
 
 ```ts
 export interface FakeRoute {
-	url: string;
-	method?: HttpMethodType;
-	timeout?: number;
-	statusCode?: number;
-	statusText?: string;
-	headers?: OutgoingHttpHeaders;
-	response?: (processedRequest: ProcessedRequest, req: IncomingMessage, res: ServerResponse) => any;
-	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
+	url: string
+	method?: HttpMethodType
+	timeout?: number
+	statusCode?: number
+	statusText?: string
+	headers?: OutgoingHttpHeaders
+	response?: (processedRequest: ProcessedRequest, req: IncomingMessage, res: ServerResponse) => any
+	rawResponse?: (req: IncomingMessage, res: ServerResponse) => void
 }
 
 export function defineFakeRoute(config: FakeRoute | FakeRoute[]) {
@@ -215,13 +215,13 @@ Compared with the development environment, the API interface defined in the prod
 
 ```ts
 export interface FakeRoute {
-	url: string;
-	method?: HttpMethodType;
-	timeout?: number;
-	statusCode?: number;
-	statusText?: string;
-	headers?: OutgoingHttpHeaders;
-	response?: (processedRequest: ProcessedRequest) => any;
+	url: string
+	method?: HttpMethodType
+	timeout?: number
+	statusCode?: number
+	statusText?: string
+	headers?: OutgoingHttpHeaders
+	response?: (processedRequest: ProcessedRequest) => any
 }
 ```
 
@@ -246,13 +246,13 @@ interface ServerBuildOptions {
 	 * @description Server port
 	 * @default 8888
 	 */
-	port?: number;
+	port?: number
 	/**
 	 * Directory relative from `root` where build output will be placed. If the
 	 * directory exists, it will be removed before the build.
 	 * @default "fakeServer"
 	 */
-	outDir?: string;
+	outDir?: string
 }
 ```
 
@@ -279,7 +279,6 @@ interface ServerBuildOptions {
 # packages/vite-plugin-fake-server
 npm run build:watch
 
-
 # packages/playground/react-sample
 npm run dev
 ```
@@ -289,7 +288,6 @@ npm run dev
 ```
 # packages/vite-plugin-fake-server
 npm run build:watch
-
 
 # packages/playground/react-sample
 npm run build

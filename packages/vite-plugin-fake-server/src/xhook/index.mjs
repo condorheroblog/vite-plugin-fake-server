@@ -1,3 +1,6 @@
+/* eslint-disable eslint-comments/no-unlimited-disable */
+/* eslint-disable */
+
 /**
  * @namespace xhook
  * @description Easily intercept and modify XHR request and response

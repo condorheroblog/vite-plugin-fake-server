@@ -1,5 +1,6 @@
 import { existsSync, statSync } from "node:fs";
-import { join, extname } from "node:path";
+import { extname, join } from "node:path";
+import process from "node:process";
 
 import fg from "fast-glob";
 
@@ -13,7 +14,7 @@ export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()
 		return [];
 	}
 
-	const fastGlobIgnore = exclude.map((filepath) => convertPathToPosix(join(cwd, filepath)));
+	const fastGlobIgnore = exclude.map(filepath => convertPathToPosix(join(cwd, filepath)));
 	const posixStyleCurrentWorkingDirectory = convertPathToPosix(cwd);
 
 	const fastGlobOptions = {

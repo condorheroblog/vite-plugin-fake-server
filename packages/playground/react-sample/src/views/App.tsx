@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import { TheHead, TheNav, TheCard, BUTTON_LIST } from "#src/components";
+import { BUTTON_LIST, TheCard, TheHead, TheNav } from "#src/components";
 
 function App() {
 	const location = useLocation();
@@ -15,13 +15,15 @@ function App() {
 			<section className="max-md:px-4 px-10">
 				<TheNav />
 				<main className="space-y-14">
-					{option ? (
-						<TheCard key={`${option.type}-${option.value}`} {...option} />
-					) : (
-						BUTTON_LIST.filter((item) => !item.disabled).map((item) => (
-							<TheCard key={`${item.type}-${item.value}-${item.label}`} {...item} />
-						))
-					)}
+					{option
+						? (
+							<TheCard key={`${option.type}-${option.value}`} {...option} />
+						)
+						: (
+							BUTTON_LIST.filter(item => !item.disabled).map(item => (
+								<TheCard key={`${item.type}-${item.value}-${item.label}`} {...item} />
+							))
+						)}
 				</main>
 			</section>
 		</>

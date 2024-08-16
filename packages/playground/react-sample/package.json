@@ -1,11 +1,11 @@
 {
 	"name": "react-sample",
+	"type": "module",
+	"version": "2.1.1",
 	"private": true,
 	"imports": {
 		"#*": "./*"
 	},
-	"version": "2.1.1",
-	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
@@ -13,22 +13,22 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-router-dom": "^6.21.2"
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-router-dom": "^6.26.1"
 	},
 	"devDependencies": {
-		"@faker-js/faker": "^8.3.1",
+		"@faker-js/faker": "^8.4.1",
 		"@types/mockjs": "^1.0.10",
-		"@types/react": "^18.2.47",
-		"@types/react-dom": "^18.2.18",
-		"@vitejs/plugin-react": "^4.2.1",
-		"autoprefixer": "^10.4.16",
+		"@types/react": "^18.3.3",
+		"@types/react-dom": "^18.3.0",
+		"@vitejs/plugin-react": "^4.3.1",
+		"autoprefixer": "^10.4.20",
 		"mockjs": "^ 1.1.0",
-		"postcss": "^8.4.33",
-		"tailwindcss": "^3.4.1",
-		"typescript": "^5.3.3",
-		"vite": "^5.0.11",
+		"postcss": "^8.4.41",
+		"tailwindcss": "^3.4.10",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.1",
 		"vite-plugin-fake-server": "workspace:^"
 	}
 }

@@ -19,7 +19,7 @@ export default {
 						"stroke-dashoffset": "-120px",
 					},
 				},
-				loading: {
+				"loading": {
 					"50%": {
 						transform: "rotate(180deg)",
 					},

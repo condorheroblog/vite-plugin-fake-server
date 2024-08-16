@@ -2,7 +2,7 @@ import type { Server } from "node:http";
 import type { Http2SecureServer } from "node:http2";
 import { URL } from "node:url";
 
-import { pathToRegexp, match } from "path-to-regexp";
+import { match, pathToRegexp } from "path-to-regexp";
 import colors from "picocolors";
 import type { Connect } from "vite";
 
@@ -13,8 +13,8 @@ import type { Logger } from "./utils";
 import { getRequestData, isFunction } from "./utils";
 
 export interface CreateFakeMiddlewareOptions extends ResolvePluginOptionsType {
-	loggerOutput: Logger;
-	root: string;
+	loggerOutput: Logger
+	root: string
 }
 
 export async function createFakeMiddleware(
@@ -42,11 +42,12 @@ export async function createFakeMiddleware(
 			globalResponseHeaders,
 		});
 		if (responseResult) {
-			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders } =
-				responseResult ?? {};
+			const { rawResponse, response, statusCode, statusText, url, query, params, responseHeaders }
+				= responseResult ?? {};
 			if (isFunction(rawResponse)) {
 				await Promise.resolve(rawResponse(req, res));
-			} else {
+			}
+			else {
 				const body = await getRequestData(req);
 
 				for (const key of responseHeaders.keys()) {
@@ -69,21 +70,24 @@ export async function createFakeMiddleware(
 					if (typeof fakeResponse === "string") {
 						// XML
 						res.end(fakeResponse);
-					} else {
+					}
+					else {
 						res.end(JSON.stringify(fakeResponse, null, 2));
 					}
-				} else {
+				}
+				else {
 					res.end();
 				}
 			}
 
 			if (logger) {
-				loggerOutput.info(colors.green(`request invoke ` + colors.cyan(req.method + " " + req.url)), {
+				loggerOutput.info(colors.green(`request invoke ${colors.cyan(`${req.method} ${req.url}`)}`), {
 					timestamp: true,
 					clear: true,
 				});
 			}
-		} else {
+		}
+		else {
 			next();
 		}
 	};

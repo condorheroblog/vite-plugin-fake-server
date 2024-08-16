@@ -1,7 +1,9 @@
+/* eslint-disable no-console */
 /**
  * @see https://github.com/vitejs/vite/blob/main/packages/vite/src/node/logger.ts
  */
 import readline from "node:readline";
+import process from "node:process";
 
 import colors from "picocolors";
 import type { RollupError } from "rollup";
@@ -11,22 +13,22 @@ import { name } from "../../package.json";
 export type LogType = "error" | "warn" | "info";
 export type LogLevel = LogType | "silent";
 export interface Logger {
-	info(msg: string, options?: LogOptions): void;
-	warn(msg: string, options?: LogOptions): void;
-	warnOnce(msg: string, options?: LogOptions): void;
-	error(msg: string, options?: LogErrorOptions): void;
-	clearScreen(type: LogType): void;
-	hasErrorLogged(error: Error | RollupError): boolean;
-	hasWarned: boolean;
+	info: (msg: string, options?: LogOptions) => void
+	warn: (msg: string, options?: LogOptions) => void
+	warnOnce: (msg: string, options?: LogOptions) => void
+	error: (msg: string, options?: LogErrorOptions) => void
+	clearScreen: (type: LogType) => void
+	hasErrorLogged: (error: Error | RollupError) => boolean
+	hasWarned: boolean
 }
 
 export interface LogOptions {
-	clear?: boolean;
-	timestamp?: boolean;
+	clear?: boolean
+	timestamp?: boolean
 }
 
 export interface LogErrorOptions extends LogOptions {
-	error?: Error | RollupError | null;
+	error?: Error | RollupError | null
 }
 
 export const LogLevels: Record<LogLevel, number> = {
@@ -49,9 +51,9 @@ function clearScreen() {
 }
 
 export interface LoggerOptions {
-	prefix?: string;
-	allowClearScreen?: boolean;
-	customLogger?: Logger;
+	prefix?: string
+	allowClearScreen?: boolean
+	customLogger?: Logger
 }
 
 export function createLogger(level: LogLevel = "info", options: LoggerOptions = {}): Logger {
@@ -75,14 +77,15 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 			const method = type === "info" ? "log" : type;
 			const format = () => {
 				if (options.timestamp) {
-					const tag =
-						type === "info"
+					const tag
+						= type === "info"
 							? colors.cyan(colors.bold(prefix))
 							: type === "warn"
 								? colors.yellow(colors.bold(prefix))
 								: colors.red(colors.bold(prefix));
 					return `${colors.dim(timeFormatter.format(new Date()))} ${tag} ${msg}`;
-				} else {
+				}
+				else {
 					return msg;
 				}
 			};
@@ -94,7 +97,8 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 					sameCount++;
 					clear();
 					console[method](format(), colors.yellow(`(x${sameCount + 1})`));
-				} else {
+				}
+				else {
 					sameCount = 0;
 					lastMsg = msg;
 					lastType = type;
@@ -103,7 +107,8 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 					}
 					console[method](format());
 				}
-			} else {
+			}
+			else {
 				console[method](format());
 			}
 		}
@@ -121,7 +126,8 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 			output("warn", msg, opts);
 		},
 		warnOnce(msg, opts) {
-			if (warnedMessages.has(msg)) return;
+			if (warnedMessages.has(msg))
+				return;
 			logger.hasWarned = true;
 			output("warn", msg, opts);
 			warnedMessages.add(msg);

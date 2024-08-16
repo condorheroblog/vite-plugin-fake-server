@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const REQUEST_TYPE = ["XHR", "Fetch"];
 export const OPTIONS = [
@@ -99,25 +99,25 @@ export const OPTIONS = [
 		method: "GET",
 		headers: {
 			"ANIMAL-CROSSING": "Animal Crossing",
-			AAAAAAAAAAAAAA: "_________",
-			BBBBBBBBBBBBBB: "_________",
-			CCCCCCCCCCCCCC: "_________",
+			"AAAAAAAAAAAAAA": "_________",
+			"BBBBBBBBBBBBBB": "_________",
+			"CCCCCCCCCCCCCC": "_________",
 		},
 	},
 	{
 		label: "Dynamic Route",
-		value: `user/:id`,
+		value: "user/:id",
 		method: "GET",
 	},
 	{
 		label: "Get Payload",
-		value: `get-payload`,
+		value: "get-payload",
 		method: "GET",
 		body: { name: "John", age: 18 },
 	},
 	{
 		label: "Post Payload",
-		value: `post-payload`,
+		value: "post-payload",
 		method: "POST",
 		body: { name: "CondorHero", age: 18 },
 	},
@@ -139,7 +139,7 @@ export const OPTIONS = [
 	},
 ];
 
-export const BUTTON_LIST = REQUEST_TYPE.flatMap((typeItem) => OPTIONS.map((item) => ({ ...item, type: typeItem })));
+export const BUTTON_LIST = REQUEST_TYPE.flatMap(typeItem => OPTIONS.map(item => ({ ...item, type: typeItem })));
 
 export function TheNav() {
 	const navigate = useNavigate();
@@ -182,7 +182,7 @@ export function TheNav() {
 						<div className="opacity-80 text-sm">{requestItem}</div>
 						<div
 							className={
-								`flex max-md:gap-2 gap-4 flex-wrap` + (REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : "")
+								`flex max-md:gap-2 gap-4 flex-wrap${REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : ""}`
 							}
 						>
 							{OPTIONS.map(({ value, label, disabled }) => {

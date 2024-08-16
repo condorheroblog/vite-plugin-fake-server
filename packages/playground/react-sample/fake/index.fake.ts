@@ -102,7 +102,7 @@ export default defineFakeRoute([
 				id: "@guid",
 				username: "@first",
 				email: "@email",
-				avatar: '@image("200x200")',
+				avatar: "@image(\"200x200\")",
 				role: "admin",
 			});
 		},
@@ -141,7 +141,7 @@ export default defineFakeRoute([
 		url: "/user/:id",
 		response: ({ params }) => {
 			return {
-				params: params,
+				params,
 			};
 		},
 	},

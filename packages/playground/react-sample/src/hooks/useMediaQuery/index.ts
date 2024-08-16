@@ -12,14 +12,16 @@ function getMediaSnapshot(query: string) {
 export function useMediaQuery(query: string, options: ConfigurableWindow = {}) {
 	const { window = defaultWindow } = options;
 	const isSupported = useSupported(() => window && "matchMedia" in window && typeof window.matchMedia === "function");
-	if (!isSupported) return false;
+	if (!isSupported)
+		return false;
 
 	const subscribeMediaQuery = useCallback(
 		(handler: (ev: MediaQueryListEvent) => void) => {
 			const mediaQuery = window!.matchMedia(query);
 			if ("addEventListener" in mediaQuery) {
 				mediaQuery.addEventListener("change", handler);
-			} else {
+			}
+			else {
 				// @ts-expect-error deprecated API
 				mediaQuery.addListener(handler);
 			}
@@ -27,7 +29,8 @@ export function useMediaQuery(query: string, options: ConfigurableWindow = {}) {
 			return () => {
 				if ("removeEventListener" in mediaQuery) {
 					mediaQuery.removeEventListener("change", handler);
-				} else {
+				}
+				else {
 					// @ts-expect-error deprecated API
 					mediaQuery.removeListener(handler);
 				}

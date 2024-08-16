@@ -1,6 +1,6 @@
-import { describe, test } from "vitest";
+import { describe, it } from "vitest";
 
-import { resolvePluginOptions, INFIX_NAME, FAKE_FILE_EXTENSIONS } from "../src";
+import { FAKE_FILE_EXTENSIONS, INFIX_NAME, resolvePluginOptions } from "../src";
 
 describe(resolvePluginOptions.name, () => {
 	const cwd = process.cwd();
@@ -8,11 +8,11 @@ describe(resolvePluginOptions.name, () => {
 	const include = cwd.includes("packages") ? "src" : "packages/vite-plugin-fake-server/src";
 	const jumpOptions = { include };
 
-	test(`${resolvePluginOptions.name} error`, ({ expect }) => {
-		expect(() => resolvePluginOptions()).toThrowErrorMatchingInlineSnapshot(`[Error: fake folder does not exist]`);
+	it(`${resolvePluginOptions.name} error`, ({ expect }) => {
+		expect(() => resolvePluginOptions()).toThrowErrorMatchingInlineSnapshot("[Error: fake folder does not exist]");
 	});
 
-	test(`${resolvePluginOptions.name} default options`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} default options`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		options.include = "";
 		expect(options).toMatchInlineSnapshot(`
@@ -53,12 +53,12 @@ describe(resolvePluginOptions.name, () => {
 		expect(options.http2).toBeUndefined();
 	});
 
-	test(`${resolvePluginOptions.name} options - basename`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - basename`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions, basename: "xxxx" });
 		expect(options.basename).toBe("xxxx");
 	});
 
-	test(`${resolvePluginOptions.name} options - build`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - build`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.build).toBeFalsy();
 		const options1 = resolvePluginOptions({ ...jumpOptions, build: true });
@@ -67,7 +67,7 @@ describe(resolvePluginOptions.name, () => {
 		expect(options2.build).toBeFalsy();
 	});
 
-	test(`${resolvePluginOptions.name} options - enableDev`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - enableDev`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.enableDev).toBeTruthy();
 		const options1 = resolvePluginOptions({ ...jumpOptions, enableDev: true });
@@ -76,7 +76,7 @@ describe(resolvePluginOptions.name, () => {
 		expect(options2.enableDev).toBeFalsy();
 	});
 
-	test(`${resolvePluginOptions.name} options - enableProd`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - enableProd`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.enableProd).toBeFalsy();
 		const options1 = resolvePluginOptions({ ...jumpOptions, enableProd: true });
@@ -85,35 +85,35 @@ describe(resolvePluginOptions.name, () => {
 		expect(options2.enableProd).toBeFalsy();
 	});
 
-	test(`${resolvePluginOptions.name} options - exclude`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - exclude`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.exclude).toEqual([]);
 		const options1 = resolvePluginOptions({ ...jumpOptions, exclude: ["a.ts"] });
 		expect(options1.exclude).toEqual(["a.ts"]);
 	});
 
-	test(`${resolvePluginOptions.name} options - extensions`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - extensions`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.extensions).toEqual(FAKE_FILE_EXTENSIONS);
 		const options1 = resolvePluginOptions({ ...jumpOptions, extensions: ["ts"] });
 		expect(options1.extensions).toEqual(["ts"]);
 	});
 
-	test(`${resolvePluginOptions.name} options - headers`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - headers`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.headers).toEqual({});
 		const options1 = resolvePluginOptions({ ...jumpOptions, headers: { x: "x" } });
 		expect(options1.headers).toEqual({ x: "x" });
 	});
 
-	test(`${resolvePluginOptions.name} options - infixName`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - infixName`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.infixName).toBe(INFIX_NAME);
 		const options1 = resolvePluginOptions({ ...jumpOptions, infixName: "x" });
 		expect(options1.infixName).toBe("x");
 	});
 
-	test(`${resolvePluginOptions.name} options - logger`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - logger`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.logger).toBeTruthy();
 		const options1 = resolvePluginOptions({ ...jumpOptions, logger: true });
@@ -122,14 +122,14 @@ describe(resolvePluginOptions.name, () => {
 		expect(options2.logger).toBeFalsy();
 	});
 
-	test(`${resolvePluginOptions.name} options - timeout`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - timeout`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.timeout).toBeUndefined();
 		const options1 = resolvePluginOptions({ ...jumpOptions, timeout: 1 });
 		expect(options1.timeout).toBe(1);
 	});
 
-	test(`${resolvePluginOptions.name} options - watch`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - watch`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.watch).toBeTruthy();
 		const options1 = resolvePluginOptions({ ...jumpOptions, watch: true });
@@ -138,7 +138,7 @@ describe(resolvePluginOptions.name, () => {
 		expect(options2.watch).toBeFalsy();
 	});
 
-	test(`${resolvePluginOptions.name} options - http2`, ({ expect }) => {
+	it(`${resolvePluginOptions.name} options - http2`, ({ expect }) => {
 		const options = resolvePluginOptions({ ...jumpOptions });
 		expect(options.http2).toBeUndefined();
 		const options1 = resolvePluginOptions({ ...jumpOptions, http2: true });
