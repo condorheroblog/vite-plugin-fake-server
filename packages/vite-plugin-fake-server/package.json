@@ -58,11 +58,11 @@
 		"bundle-import": "^0.0.1",
 		"chokidar": "^3.6.0",
 		"fast-glob": "^3.3.2",
-		"path-to-regexp": "^6.2.2",
+		"path-to-regexp": "^8.0.0",
 		"picocolors": "^1.0.1"
 	},
 	"devDependencies": {
-		"vite": "^5.4.1"
+		"vite": "^5.4.2"
 	},
 	"publishConfig": {
 		"access": "public",

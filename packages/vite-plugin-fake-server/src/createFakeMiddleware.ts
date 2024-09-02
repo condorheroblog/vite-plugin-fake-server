@@ -2,7 +2,7 @@ import type { Server } from "node:http";
 import type { Http2SecureServer } from "node:http2";
 import { URL } from "node:url";
 
-import { match, pathToRegexp } from "path-to-regexp";
+import { match } from "path-to-regexp";
 import colors from "picocolors";
 import type { Connect } from "vite";
 
@@ -35,7 +35,6 @@ export async function createFakeMiddleware(
 			URL,
 			req,
 			fakeModuleList: fakeLoader.fakeData,
-			pathToRegexp,
 			match,
 			basename,
 			defaultTimeout,

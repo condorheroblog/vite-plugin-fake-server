@@ -1,7 +1,5 @@
 import process from "node:process";
-import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { dirname, isAbsolute, join, relative } from "node:path";
+import { isAbsolute, join, relative } from "node:path";
 import { STATUS_CODES } from "node:http";
 
 import type { HtmlTagDescriptor, Plugin, ResolvedConfig, WatchOptions } from "vite";
@@ -15,10 +13,8 @@ import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
-import { convertPathToPosix, createLogger } from "./utils";
+import { buildPackage, convertPathToPosix, createLogger } from "./utils";
 import { xhook } from "./xhook/index.mjs";
-
-const require = createRequire(import.meta.url);
 
 export async function vitePluginFakeServer(options: VitePluginFakeServerOptions = {}): Promise<Plugin> {
 	let config: ResolvedConfig;
@@ -147,19 +143,17 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 					children: `${xhook.toString()};window.__VITE__PLUGIN__FAKE__SERVER__.xhook=xhook();`,
 				});
 
-				/* Waring: path-to-regexp = v6.2.2, Because v7.0.0 just only export ES2015 module */
 				// add path-to-regexp
-				const pathToRegexpPath = join(dirname(require.resolve("path-to-regexp")), "../dist.es2015/index.js");
-				const pathToRegexpContent = readFileSync(pathToRegexpPath, "utf-8");
+				const pathToRegexpContent = await buildPackage("path-to-regexp");
 				scriptTagList.push({
 					...scriptTagOptions,
-					children: `${pathToRegexpContent}\n;window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp={pathToRegexp, match};`,
+					children: `${pathToRegexpContent}`,
 				});
 
 				scriptTagList.push({
 					...scriptTagOptions,
 					children: `const fakeModuleList = window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList;
-					const { pathToRegexp, match } = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
+					const { match } = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
 					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(async function(req, callback) {
 						${sleep.toString()}
 						${tryToJSON.toString()}
@@ -178,7 +172,6 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 							URL,
 							req,
 							fakeModuleList,
-							pathToRegexp,
 							match,
 							basename: ${JSON.stringify(opts.basename)},
 							defaultTimeout: ${JSON.stringify(opts.timeout)},

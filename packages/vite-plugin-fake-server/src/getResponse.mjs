@@ -32,7 +32,6 @@ export async function getResponse({
 	URL,
 	req,
 	fakeModuleList,
-	pathToRegexp,
 	match,
 	basename,
 	defaultTimeout,
@@ -64,7 +63,7 @@ export async function getResponse({
 				return false;
 			}
 			const realURL = joinPathname(basename, item.url);
-			return pathToRegexp(realURL).test(pathname);
+			return !!match(realURL)(pathname);
 		});
 		if (matchRequest) {
 			const {

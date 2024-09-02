@@ -1,6 +1,6 @@
 import { URL } from "node:url";
 
-import { match, pathToRegexp } from "path-to-regexp";
+import { match } from "path-to-regexp";
 import { describe, expect, it } from "vitest";
 
 import { defineFakeRoute, getResponse } from "../src";
@@ -16,7 +16,6 @@ describe("vite-plugin-fake-server options", () => {
 				},
 			],
 			URL,
-			pathToRegexp,
 			match,
 			basename: "prefix-root",
 			defaultTimeout: 0,
@@ -46,7 +45,6 @@ describe("vite-plugin-fake-server options", () => {
 				},
 			],
 			URL,
-			pathToRegexp,
 			match,
 			defaultTimeout: 0,
 			globalResponseHeaders: {},
@@ -69,7 +67,6 @@ describe("vite-plugin-fake-server options", () => {
 				},
 			],
 			URL,
-			pathToRegexp,
 			match,
 			defaultTimeout: 0,
 			globalResponseHeaders: {},
@@ -91,7 +88,6 @@ describe("vite-plugin-fake-server options", () => {
 				},
 			],
 			URL,
-			pathToRegexp,
 			match,
 			basename: "",
 			defaultTimeout: 0,
@@ -127,7 +123,6 @@ describe("vite-plugin-fake-server response schema", async () => {
 		req,
 		URL,
 		fakeModuleList: fakeData,
-		pathToRegexp,
 		match,
 		basename: "",
 		defaultTimeout: 0,
