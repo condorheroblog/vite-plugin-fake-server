@@ -610,6 +610,8 @@ export function xhook() {
 		facade.responseXML = null;
 		facade.readyState = 0;
 		facade.statusText = "";
+		//The new code belongs to vite-plugin-fake-server
+		facade.responseType = "";
 
 		return facade;
 	};
