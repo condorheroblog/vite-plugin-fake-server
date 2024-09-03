@@ -28,18 +28,25 @@ export function tryToJSON(str) {
 	return result;
 }
 
-export async function getResponse({
-	URL,
-	req,
-	fakeModuleList,
-	match,
-	basename,
-	defaultTimeout,
-	globalResponseHeaders,
-}) {
+/**
+ * Simulates a server response.
+ * @param {object} req - The request object.
+ * @param {Array} fakeModuleList - The list of fake modules.
+ * @param {object} config - The configuration object.
+ * @returns {Promise<object>} - A Promise that resolves with the server response.
+ */
+export async function simulateServerResponse(req = {}, fakeModuleList = [], config = {}) {
+	const {
+		match,
+		basename = "",
+		defaultTimeout = 0,
+		globalResponseHeaders = {},
+	} = config;
+
 	/**
 	 * Join two paths into a complete path
 	 */
+	// eslint-disable-next-line unicorn/consistent-function-scoping
 	function joinPathname(a, b) {
 		const aPathname = new URL(a, "http://localhost:5173/").pathname;
 		const bPathname = new URL(b, "http://localhost:5173/").pathname;

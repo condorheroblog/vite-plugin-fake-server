@@ -8,7 +8,7 @@ import pkg from "../package.json";
 
 import { generateFakeServer } from "./build";
 import { createFakeMiddleware } from "./createFakeMiddleware";
-import { getResponse, sleep, tryToJSON } from "./getResponse.mjs";
+import { simulateServerResponse, sleep, tryToJSON } from "./shared/simulateServerResponse.mjs";
 import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
@@ -157,7 +157,7 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(async function(req, callback) {
 						${sleep.toString()}
 						${tryToJSON.toString()}
-						${getResponse.toString()}
+						${simulateServerResponse.toString()}
 						const STATUS_CODES = ${JSON.stringify(STATUS_CODES, null, 2)};
 
 						function headersToObject(headers) {
@@ -168,10 +168,7 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 							return headersObject;
 						}
 
-						const responseResult = await getResponse({
-							URL,
-							req,
-							fakeModuleList,
+						const responseResult = await simulateServerResponse(req, fakeModuleList, {
 							match,
 							basename: ${JSON.stringify(opts.basename)},
 							defaultTimeout: ${JSON.stringify(opts.timeout)},

@@ -1,26 +1,25 @@
-import { URL } from "node:url";
-
 import { match } from "path-to-regexp";
 import { describe, expect, it } from "vitest";
 
-import { defineFakeRoute, getResponse } from "../src";
+import { defineFakeRoute, simulateServerResponse } from "../src";
 
 describe("vite-plugin-fake-server options", () => {
 	it("vite-plugin-fake-server basename", async ({ expect }) => {
-		const responseResult = await getResponse({
-			req: { url: "/prefix-root/api/basename", method: "POST" },
-			fakeModuleList: [
+		const responseResult = await simulateServerResponse(
+			{ url: "/prefix-root/api/basename", method: "POST" },
+			[
 				{
 					url: "/api/basename",
 					method: "POST",
 				},
 			],
-			URL,
-			match,
-			basename: "prefix-root",
-			defaultTimeout: 0,
-			globalResponseHeaders: {},
-		});
+			{
+				match,
+				basename: "prefix-root",
+				defaultTimeout: 0,
+				globalResponseHeaders: {},
+			},
+		);
 
 		expect(!!responseResult).toBe(true);
 	});
@@ -33,10 +32,9 @@ describe("vite-plugin-fake-server options", () => {
 		["/prefix-root", "dynamic-route/:id"],
 		["prefix-root/", "dynamic-route/:id"],
 	])("basename(%s) + fake URL(%s) is match request url", async (a, b) => {
-		const responseResult = await getResponse({
-			basename: a,
-			req: { url: "/prefix-root/dynamic-route/icu" },
-			fakeModuleList: [
+		const responseResult = await simulateServerResponse(
+			{ url: "/prefix-root/dynamic-route/icu" },
+			[
 				{
 					url: b,
 					response: () => {
@@ -44,21 +42,22 @@ describe("vite-plugin-fake-server options", () => {
 					},
 				},
 			],
-			URL,
-			match,
-			defaultTimeout: 0,
-			globalResponseHeaders: {},
-		});
+			{
+				match,
+				basename: a,
+				defaultTimeout: 0,
+				globalResponseHeaders: {},
+			},
+		);
 		expect(!!responseResult).toBeTruthy();
 		expect(responseResult?.params).toMatchObject({ id: "icu" });
 	});
 
 	it("vite-plugin-fake-server basename with response params", async ({ expect }) => {
 		const basename = "prefix-root";
-		const responseResult = await getResponse({
-			basename,
-			req: { url: "/prefix-root/dynamic-route/996" },
-			fakeModuleList: [
+		const responseResult = await simulateServerResponse(
+			{ url: `${basename}/dynamic-route/996` },
+			[
 				{
 					url: "/dynamic-route/:id",
 					response: () => {
@@ -66,11 +65,13 @@ describe("vite-plugin-fake-server options", () => {
 					},
 				},
 			],
-			URL,
-			match,
-			defaultTimeout: 0,
-			globalResponseHeaders: {},
-		});
+			{
+				match,
+				basename,
+				defaultTimeout: 0,
+				globalResponseHeaders: {},
+			},
+		);
 
 		expect(responseResult?.params).toMatchObject({
 			id: "996",
@@ -79,20 +80,21 @@ describe("vite-plugin-fake-server options", () => {
 
 	it("vite-plugin-fake-server globalResponseHeaders", async ({ expect }) => {
 		const globalResponseHeaders = { a: "foo", b: "bar" };
-		const responseResult = await getResponse({
-			req: { url: "/api/global-response-headers", method: "POST" },
-			fakeModuleList: [
+		const responseResult = await simulateServerResponse(
+			{ url: "/api/global-response-headers", method: "POST" },
+			[
 				{
 					url: "/api/global-response-headers",
 					method: "POST",
 				},
 			],
-			URL,
-			match,
-			basename: "",
-			defaultTimeout: 0,
-			globalResponseHeaders,
-		});
+			{
+				match,
+				basename: "",
+				defaultTimeout: 0,
+				globalResponseHeaders,
+			},
+		);
 
 		if (responseResult) {
 			const responseHeaders = responseResult.responseHeaders;
@@ -119,16 +121,17 @@ describe("vite-plugin-fake-server response schema", async () => {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 	};
-	const getResponseOptions = {
-		req,
-		URL,
-		fakeModuleList: fakeData,
+	const simulateServerResponseOptions = {
 		match,
 		basename: "",
 		defaultTimeout: 0,
 		globalResponseHeaders: {},
 	};
-	const responseResult = await getResponse(getResponseOptions);
+	const responseResult = await simulateServerResponse(
+		req,
+		Array.isArray(fakeData) ? fakeData : [fakeData],
+		simulateServerResponseOptions,
+	);
 
 	if (responseResult) {
 		it("http response headers", ({ expect }) => {

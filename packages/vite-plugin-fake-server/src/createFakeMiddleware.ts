@@ -1,13 +1,12 @@
 import type { Server } from "node:http";
 import type { Http2SecureServer } from "node:http2";
-import { URL } from "node:url";
 
 import { match } from "path-to-regexp";
 import colors from "picocolors";
 import type { Connect } from "vite";
 
 import { FakeFileLoader } from "./FakeFileLoader";
-import { getResponse, tryToJSON } from "./getResponse.mjs";
+import { simulateServerResponse, tryToJSON } from "./shared/simulateServerResponse.mjs";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
 import { getRequestData, isFunction } from "./utils";
@@ -31,10 +30,7 @@ export async function createFakeMiddleware(
 	}
 	const { basename, timeout: defaultTimeout, headers: globalResponseHeaders, logger } = options;
 	const middleware: Connect.NextHandleFunction = async (req, res, next) => {
-		const responseResult = await getResponse({
-			URL,
-			req,
-			fakeModuleList: fakeLoader.fakeData,
+		const responseResult = await simulateServerResponse(req, fakeLoader.fakeData, {
 			match,
 			basename,
 			defaultTimeout,
