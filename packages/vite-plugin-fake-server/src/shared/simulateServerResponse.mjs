@@ -33,7 +33,7 @@ export function tryToJSON(str) {
  * @param {object} req - The request object.
  * @param {Array} fakeModuleList - The list of fake modules.
  * @param {object} config - The configuration object.
- * @returns {Promise<object>} - A Promise that resolves with the server response.
+ * @returns {import('./types').SimulateServerResponseType} - A Promise that resolves with the server response.
  */
 export async function simulateServerResponse(req = {}, fakeModuleList = [], config = {}) {
 	const {
@@ -46,6 +46,7 @@ export async function simulateServerResponse(req = {}, fakeModuleList = [], conf
 	/**
 	 * Join two paths into a complete path
 	 */
+
 	// eslint-disable-next-line unicorn/consistent-function-scoping
 	function joinPathname(a, b) {
 		const aPathname = new URL(a, "http://localhost:5173/").pathname;

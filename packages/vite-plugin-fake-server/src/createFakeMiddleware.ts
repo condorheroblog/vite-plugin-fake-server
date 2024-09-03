@@ -6,7 +6,7 @@ import colors from "picocolors";
 import type { Connect } from "vite";
 
 import { FakeFileLoader } from "./FakeFileLoader";
-import { simulateServerResponse, tryToJSON } from "./shared/simulateServerResponse.mjs";
+import { simulateServerResponse, tryToJSON } from "./shared";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
 import { getRequestData, isFunction } from "./utils";

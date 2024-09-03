@@ -3,6 +3,48 @@ import { describe, expect, it } from "vitest";
 
 import { defineFakeRoute, simulateServerResponse } from "../src";
 
+describe("vite-plugin-fake-server URL Simulation", () => {
+	it("disable URL Encoding Test", async ({ expect }) => {
+		const responseResult = await simulateServerResponse(
+			{ url: "/prefix-root/api/你好", method: "POST" },
+			[
+				{
+					url: "/api/你好",
+					method: "POST",
+				},
+			],
+			{
+				match,
+				basename: "prefix-root",
+				defaultTimeout: 0,
+				globalResponseHeaders: {},
+			},
+		);
+
+		expect(!!responseResult).toBe(true);
+	});
+
+	it("enable URL Encoding Test", async ({ expect }) => {
+		const responseResult = await simulateServerResponse(
+			{ url: "/prefix-root/api/%E4%BD%A0%E5%A5%BD", method: "POST" },
+			[
+				{
+					url: "/api/你好",
+					method: "POST",
+				},
+			],
+			{
+				match,
+				basename: "prefix-root",
+				defaultTimeout: 0,
+				globalResponseHeaders: {},
+			},
+		);
+
+		expect(!!responseResult).toBe(true);
+	});
+});
+
 describe("vite-plugin-fake-server options", () => {
 	it("vite-plugin-fake-server basename", async ({ expect }) => {
 		const responseResult = await simulateServerResponse(
@@ -176,7 +218,16 @@ describe("vite-plugin-fake-server response schema", async () => {
 
 		it("get serialize url in response", async ({ expect }) => {
 			const { response, url, query, params } = responseResult;
-			const fakeResponse = await Promise.resolve(response({ url, body: "x", query, params, headers: req.headers }));
+			const fakeResponse = await Promise.resolve(
+				response?.({
+					url,
+					// @ts-expect-error body
+					body: "x",
+					query,
+					params,
+					headers: req.headers,
+				}, {}, {}),
+			);
 			expect(fakeResponse).toMatchInlineSnapshot(`
 				{
 				  "body": "x",

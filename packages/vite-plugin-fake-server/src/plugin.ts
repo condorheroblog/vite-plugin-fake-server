@@ -8,7 +8,7 @@ import pkg from "../package.json";
 
 import { generateFakeServer } from "./build";
 import { createFakeMiddleware } from "./createFakeMiddleware";
-import { simulateServerResponse, sleep, tryToJSON } from "./shared/simulateServerResponse.mjs";
+import { simulateServerResponse, sleep, tryToJSON } from "./shared";
 import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";

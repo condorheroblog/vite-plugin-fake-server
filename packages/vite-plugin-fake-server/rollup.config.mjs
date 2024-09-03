@@ -7,6 +7,7 @@ import esbuild from "rollup-plugin-esbuild";
 import { nodeExternals } from "rollup-plugin-node-externals";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
+const external = [...Object.keys(pkg.devDependencies)];
 
 const banner = `/**
  * Name: ${pkg.name}
@@ -22,6 +23,7 @@ const banner = `/**
 const rollupConfig = [
 	{
 		input: "./src/index.ts",
+		external,
 		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
@@ -38,12 +40,14 @@ const rollupConfig = [
 	},
 	{
 		input: "./src/index.ts",
+		external,
 		plugins: [json(), dts(), nodeExternals()],
 		output: [{ file: "./dist/index.d.cts" }, { file: "./dist/index.d.mts" }],
 	},
 
 	{
 		input: "./src/client/index.ts",
+		external,
 		plugins: [json(), esbuild(), nodeExternals()],
 		output: [
 			{
@@ -61,6 +65,7 @@ const rollupConfig = [
 
 	{
 		input: "./src/client/index.ts",
+		external,
 		plugins: [json(), dts(), nodeExternals()],
 		output: [{ file: "./dist/client.d.cts" }, { file: "./dist/client.d.mts" }],
 	},
