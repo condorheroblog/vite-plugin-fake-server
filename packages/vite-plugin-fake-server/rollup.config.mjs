@@ -6,6 +6,7 @@ import { dts } from "rollup-plugin-dts";
 import esbuild from "rollup-plugin-esbuild";
 import { nodeExternals } from "rollup-plugin-node-externals";
 
+/** @type {import("./package.json")} */
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 const external = [...Object.keys(pkg.devDependencies)];
 
