@@ -10,6 +10,10 @@ export async function buildPackage(packageName: string) {
 		// Do not use a configuration file
 		configFile: false,
 		build: {
+			commonjsOptions: {
+				// Vite6 changes the default behavior of strictRequires from "auto" to "true".
+				strictRequires: "auto",
+			},
 			// Do not output files
 			write: false,
 			lib: {

@@ -1,11 +1,10 @@
 import type { HtmlTagDescriptor, Plugin, ResolvedConfig, WatchOptions } from "vite";
+
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
+
 import type { VitePluginFakeServerOptions } from "./types";
-
 import { STATUS_CODES } from "node:http";
-
 import { isAbsolute, join, relative } from "node:path";
-
 import process from "node:process";
 import pkg from "../package.json";
 import { generateFakeServer } from "./build";
@@ -153,7 +152,8 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 				scriptTagList.push({
 					...scriptTagOptions,
 					children: `const fakeModuleList = window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList;
-					const { match } = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
+					const pathToRegexp = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
+					const match = pathToRegexp.match ?? pathToRegexp.default.match;
 					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(async function(req, callback) {
 						${sleep.toString()}
 						${tryToJSON.toString()}

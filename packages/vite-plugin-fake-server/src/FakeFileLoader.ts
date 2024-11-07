@@ -1,5 +1,5 @@
 import type { DependenciesType } from "bundle-import";
-import type { FSWatcher } from "node:fs";
+import type { FSWatcher } from "chokidar";
 import type { FakeRoute } from "./node";
 
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
