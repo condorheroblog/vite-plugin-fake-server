@@ -1,5 +1,5 @@
-import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "./constants";
 import type { FakerSchemaServerOptions } from "./types";
+import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "./constants";
 
 export function resolveOptions(options: FakerSchemaServerOptions = {}) {
 	const include = options.include ?? [INFIX_NAME];

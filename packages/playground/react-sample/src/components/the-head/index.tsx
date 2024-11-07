@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
-
 import { version } from "#/package.json";
+
 import { SwitchAppearance } from "#src/components";
+import { useNavigate } from "react-router-dom";
 
 export function TheHead() {
 	const navigate = useNavigate();

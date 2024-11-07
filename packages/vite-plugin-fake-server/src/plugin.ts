@@ -1,18 +1,18 @@
-import process from "node:process";
-import { isAbsolute, join, relative } from "node:path";
-import { STATUS_CODES } from "node:http";
-
 import type { HtmlTagDescriptor, Plugin, ResolvedConfig, WatchOptions } from "vite";
-
-import pkg from "../package.json";
-
-import { generateFakeServer } from "./build";
-import { createFakeMiddleware } from "./createFakeMiddleware";
-import { simulateServerResponse, sleep, tryToJSON } from "./shared";
-import { getFakeFilePath } from "./node";
-import { resolvePluginOptions } from "./resolvePluginOptions";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
+
+import { STATUS_CODES } from "node:http";
+
+import { isAbsolute, join, relative } from "node:path";
+
+import process from "node:process";
+import pkg from "../package.json";
+import { generateFakeServer } from "./build";
+import { createFakeMiddleware } from "./createFakeMiddleware";
+import { getFakeFilePath } from "./node";
+import { resolvePluginOptions } from "./resolvePluginOptions";
+import { simulateServerResponse, sleep, tryToJSON } from "./shared";
 import { buildPackage, convertPathToPosix, createLogger } from "./utils";
 import { xhook } from "./xhook/index.mjs";
 

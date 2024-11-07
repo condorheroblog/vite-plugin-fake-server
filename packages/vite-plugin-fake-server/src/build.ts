@@ -1,16 +1,16 @@
-/* eslint-disable no-console */
-import process from "node:process";
+import type { ResolvedConfig } from "vite";
+import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
+import type { ServerBuildOptions } from "./types";
 import { existsSync } from "node:fs";
+
 import { copyFile, mkdir, readdir, stat, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 
+/* eslint-disable no-console */
+import process from "node:process";
+
 import pc from "picocolors";
-import type { ResolvedConfig } from "vite";
-
 import { name, version } from "../package.json";
-
-import type { ServerBuildOptions } from "./types";
-import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import { FAKE_FILE_EXTENSIONS } from "./node";
 
 export const PORT = 8888;

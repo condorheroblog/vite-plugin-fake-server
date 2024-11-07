@@ -1,5 +1,5 @@
-import type { IncomingMessage } from "node:http";
 import type { Buffer } from "node:buffer";
+import type { IncomingMessage } from "node:http";
 
 export function getRequestData(req: IncomingMessage): Promise<string> {
 	return new Promise((resolve, reject) => {

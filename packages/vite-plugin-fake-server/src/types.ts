@@ -2,7 +2,7 @@ import type { OutgoingHttpHeaders } from "node:http";
 
 import type { FakerSchemaServerOptions } from "./node";
 
-export type { FakeRoute, IncomingMessage, ServerResponse, HttpMethodType } from "./node";
+export type { FakeRoute, HttpMethodType, IncomingMessage, ServerResponse } from "./node";
 
 export interface ServerBuildOptions {
 	/**

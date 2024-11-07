@@ -1,12 +1,12 @@
+import type { ResolveOptionsType } from "./resolveOptions";
 import { existsSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
+
 import process from "node:process";
 
 import fg from "fast-glob";
 
 import { convertPathToPosix } from "../utils";
-
-import type { ResolveOptionsType } from "./resolveOptions";
 
 export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()) {
 	const { include, exclude, extensions, infixName } = options;

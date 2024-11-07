@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import type { BUTTON_LIST } from "#src/components";
 
 import { REQUEST_TYPE, TheLoading } from "#src/components";
-import type { BUTTON_LIST } from "#src/components";
+import { useEffect, useState } from "react";
 
 function getType(value: unknown) {
 	return Object.prototype.toString.call(value).slice(8, -1);

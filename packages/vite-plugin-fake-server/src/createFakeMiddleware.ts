@@ -1,14 +1,14 @@
 import type { Server } from "node:http";
 import type { Http2SecureServer } from "node:http2";
 
-import { match } from "path-to-regexp";
-import colors from "picocolors";
 import type { Connect } from "vite";
-
-import { FakeFileLoader } from "./FakeFileLoader";
-import { simulateServerResponse, tryToJSON } from "./shared";
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
+
+import { match } from "path-to-regexp";
+import colors from "picocolors";
+import { FakeFileLoader } from "./FakeFileLoader";
+import { simulateServerResponse, tryToJSON } from "./shared";
 import { getRequestData, isFunction } from "./utils";
 
 export interface CreateFakeMiddlewareOptions extends ResolvePluginOptionsType {

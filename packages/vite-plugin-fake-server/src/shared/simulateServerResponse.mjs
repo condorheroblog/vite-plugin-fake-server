@@ -47,7 +47,6 @@ export async function simulateServerResponse(req = {}, fakeModuleList = [], conf
 	 * Join two paths into a complete path
 	 */
 
-	// eslint-disable-next-line unicorn/consistent-function-scoping
 	function joinPathname(a, b) {
 		const aPathname = new URL(a, "http://localhost:5173/").pathname;
 		const bPathname = new URL(b, "http://localhost:5173/").pathname;

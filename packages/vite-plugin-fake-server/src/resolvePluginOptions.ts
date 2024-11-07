@@ -1,9 +1,9 @@
+import type { VitePluginFakeServerOptions } from "./types";
 import { existsSync } from "node:fs";
-import process from "node:process";
 import { join } from "node:path";
 
+import process from "node:process";
 import { resolveOptions as fakerResolveOptions } from "./node";
-import type { VitePluginFakeServerOptions } from "./types";
 
 export function resolvePluginOptions(options: VitePluginFakeServerOptions = {}, cwd = process.cwd()) {
 	const fakerOptions = fakerResolveOptions({ ...options, include: [options.include || "fake"] });

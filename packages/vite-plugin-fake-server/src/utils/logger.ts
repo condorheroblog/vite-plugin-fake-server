@@ -1,12 +1,12 @@
+import type { RollupError } from "rollup";
+import process from "node:process";
+
 /* eslint-disable no-console */
 /**
  * @see https://github.com/vitejs/vite/blob/main/packages/vite/src/node/logger.ts
  */
 import readline from "node:readline";
-import process from "node:process";
-
 import colors from "picocolors";
-import type { RollupError } from "rollup";
 
 import { name } from "../../package.json";
 

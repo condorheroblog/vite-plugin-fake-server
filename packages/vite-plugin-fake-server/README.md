@@ -48,10 +48,10 @@ export default defineConfig({
 You can create a new file in the **`fake`** folder in the directory where the Vite configuration file is located, such as `user.fake.ts`:
 
 ```ts
+import { faker } from "@faker-js/faker";
 // fake/user.fake.ts
 import Mock from "mockjs";
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
-import { faker } from "@faker-js/faker";
 
 export default defineFakeRoute([
 	{

@@ -1,6 +1,6 @@
-import { defineFakeRoute } from "vite-plugin-fake-server/client";
-
 import response from "@/response";
+
+import { defineFakeRoute } from "vite-plugin-fake-server/client";
 
 export default defineFakeRoute([
 	{

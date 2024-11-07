@@ -55,14 +55,14 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"bundle-import": "^0.0.1",
-		"chokidar": "^3.6.0",
+		"bundle-import": "^0.0.2",
+		"chokidar": "^4.0.1",
 		"fast-glob": "^3.3.2",
-		"path-to-regexp": "^8.0.0",
-		"picocolors": "^1.0.1"
+		"path-to-regexp": "^8.2.0",
+		"picocolors": "^1.1.1"
 	},
 	"devDependencies": {
-		"vite": "^5.4.2"
+		"vite": "^5.4.10"
 	},
 	"publishConfig": {
 		"access": "public",

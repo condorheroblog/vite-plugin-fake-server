@@ -1,8 +1,8 @@
-import { useCallback, useSyncExternalStore } from "react";
-
-import { useSupported } from "../useSupported";
-import { defaultWindow } from "../_configurable";
 import type { ConfigurableWindow } from "../_configurable";
+
+import { useCallback, useSyncExternalStore } from "react";
+import { defaultWindow } from "../_configurable";
+import { useSupported } from "../useSupported";
 
 function getMediaSnapshot(query: string) {
 	return window.matchMedia(query).matches;

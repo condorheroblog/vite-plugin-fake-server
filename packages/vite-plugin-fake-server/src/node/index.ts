@@ -1,5 +1,5 @@
-export * from "./resolveOptions";
+export * from "./constants";
 export * from "./getFakeFilePath";
 export * from "./parallelLoader";
-export * from "./constants";
+export * from "./resolveOptions";
 export * from "./types";
