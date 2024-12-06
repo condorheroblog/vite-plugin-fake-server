@@ -1,18 +1,19 @@
 import type { HtmlTagDescriptor, Plugin, ResolvedConfig, WatchOptions } from "vite";
-
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
-
 import type { VitePluginFakeServerOptions } from "./types";
+
 import { STATUS_CODES } from "node:http";
-import { isAbsolute, join, relative } from "node:path";
+import { isAbsolute, join } from "node:path";
 import process from "node:process";
+import { normalizePath } from "vite";
+
 import pkg from "../package.json";
 import { generateFakeServer } from "./build";
 import { createFakeMiddleware } from "./createFakeMiddleware";
 import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
 import { simulateServerResponse, sleep, tryToJSON } from "./shared";
-import { buildPackage, convertPathToPosix, createLogger } from "./utils";
+import { buildPackage, createLogger } from "./utils";
 import { xhook } from "./xhook/index.mjs";
 
 export async function vitePluginFakeServer(options: VitePluginFakeServerOptions = {}): Promise<Plugin> {
@@ -99,7 +100,7 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 
 				const fakeFilePath = getFakeFilePath(
 					{
-						include: opts.include.length ? [opts.include] : [],
+						include: opts.include,
 						exclude: opts.exclude,
 						extensions: opts.extensions,
 						infixName: opts.infixName,
@@ -108,9 +109,7 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 				);
 
 				// import.meta.glob must use posix style paths
-				const relativeFakeFilePath = fakeFilePath.map(filePath =>
-					convertPathToPosix(`/${relative(config.root, filePath)}`),
-				);
+				const relativeFakeFilePath = fakeFilePath.map(filePath => `/${filePath}`);
 
 				// import.meta.glob imports the CommonJS module, which has the default object by default
 				const fakeTemplate = `
@@ -292,7 +291,10 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 	};
 }
 
-export function resolveIgnored(rootDir: string, include: string, watchOptions?: WatchOptions | null) {
+export function resolveIgnored(rootDir: string, include: string[], watchOptions?: WatchOptions | null) {
 	const { ignored = [] } = watchOptions ?? {};
-	return [convertPathToPosix(join(rootDir, include, "**")), ...(Array.isArray(ignored) ? ignored : [ignored])];
+	return [
+		...include.map(includePath => normalizePath(join(rootDir, includePath, "**"))),
+		...(Array.isArray(ignored) ? ignored : [ignored]),
+	];
 }

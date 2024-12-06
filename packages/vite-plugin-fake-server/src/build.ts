@@ -39,7 +39,9 @@ export async function generateFakeServer(options: ResolvePluginOptionsType, conf
 	}
 
 	// copy fake directory
-	await copyFakeFiles(join(cwd, options.include), join(outputDir, options.include));
+	options.include.forEach(async (includePath) => {
+		await copyFakeFiles(join(cwd, includePath), join(outputDir, includePath));
+	});
 	for (const { filename, source } of outputList) {
 		await writeFile(filename, source, "utf-8");
 	}

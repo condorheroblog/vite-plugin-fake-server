@@ -1,17 +1,17 @@
 import type { DependenciesType } from "bundle-import";
 import type { FSWatcher } from "chokidar";
 import type { FakeRoute } from "./node";
-
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { Logger } from "./utils";
+
 import EventEmitter from "node:events";
-import { join, relative } from "node:path";
 
 import { bundleImport } from "bundle-import";
 import chokidar from "chokidar";
 import colors from "picocolors";
-import { getFakeFilePath, parallelLoader } from "./node";
-import { convertPathToPosix } from "./utils";
+import { glob } from "tinyglobby";
+
+import { getFakeFilePath, getWatchPaths, parallelLoader } from "./node";
 
 export interface FakeFileLoaderOptions extends ResolvePluginOptionsType {
 	loggerOutput: Logger
@@ -41,13 +41,15 @@ export class FakeFileLoader extends EventEmitter {
 
 		// console.time("loader");
 		const { include, exclude, extensions, infixName, root } = this.options;
-		// Note: return absolute path
-		const fakeFilePathArr = getFakeFilePath({ exclude, include: [include], extensions, infixName }, root);
+		// Note: return relative path but no `./` @example `fake/index.js`
+		const fakeFilePathArr = getFakeFilePath({ exclude, include, extensions, infixName }, root);
 
-		// 5.402s => 1.309s in packages/react-sample
-		// this.updateFakeData(await getFakeModule(fakeFilePathArr, this.options.loggerOutput));
+		/**
+		 * 5.402s => 1.309s in packages/react-sample by fast-glob
+		 * now 297.896ms in packages/react-sample by tinyglobby
+		 */
 
-		const fakeFilePathFunc = fakeFilePathArr.map(absFile => () => this.loadFakeData(relative(root, absFile)));
+		const fakeFilePathFunc = fakeFilePathArr.map(relativeFilePath => () => this.loadFakeData(relativeFilePath));
 		// TODO: Try to Web Worker
 		await parallelLoader(fakeFilePathFunc, 10);
 		this.updateFakeData();
@@ -57,15 +59,11 @@ export class FakeFileLoader extends EventEmitter {
 	private async watchFakeFile() {
 		const { include, watch, root, exclude, loggerOutput, extensions, infixName, logger } = this.options;
 		if (include && include.length && watch) {
-			let watchPath;
-			if (infixName && infixName.length > 0) {
-				watchPath = `/**/*.${infixName}.{${extensions.join(",")}}`;
-			}
-			else {
-				watchPath = `/**/*.{${extensions.join(",")}}`;
-			}
-			const watchDir = convertPathToPosix(join(include, watchPath));
-			const watcher = chokidar.watch(watchDir, {
+			const watchDir = getWatchPaths({ extensions, infixName, include });
+			const filePaths = await glob(watchDir, {
+				cwd: root,
+			});
+			const watcher = chokidar.watch(filePaths, {
 				cwd: root,
 				ignoreInitial: true,
 				ignored: exclude,

@@ -11,8 +11,17 @@ export interface IncomingMessage extends HttpIncomingMessage {
 export type { ServerResponse };
 
 export interface FakerSchemaServerOptions {
-	include?: string[]
-	exclude?: string[]
+	/**
+	 * @description Set the folder where the fake `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files is stored.
+	 * @default fake
+	 */
+	include?: string | string[]
+
+	/**
+	 * @description Exclude files in the `include` directory.
+	 * @default []
+	 */
+	exclude?: string | string[]
 	/**
 	 * @description Set the fake files extensions.
 	 * @default ["ts", "js", "mjs", "cjs", "cts", "mts"]

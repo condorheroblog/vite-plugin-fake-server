@@ -1,57 +1,22 @@
 import type { ResolveOptionsType } from "./resolveOptions";
-import { existsSync, statSync } from "node:fs";
-import { extname, join } from "node:path";
 
 import process from "node:process";
+import { globSync } from "tinyglobby";
 
-import fg from "fast-glob";
+import { getWatchPaths } from "./getWatchPaths";
 
-import { convertPathToPosix } from "../utils";
-
-export function getFakeFilePath(options: ResolveOptionsType, cwd = process.cwd()) {
+/**
+ * 生成 fake 文件路径列表。
+ */
+export function getFakeFilePath(options: ResolveOptionsType, root = process.cwd()) {
 	const { include, exclude, extensions, infixName } = options;
 	if (!Array.isArray(include) || include.length === 0) {
 		return [];
 	}
 
-	const fastGlobIgnore = exclude.map(filepath => convertPathToPosix(join(cwd, filepath)));
-	const posixStyleCurrentWorkingDirectory = convertPathToPosix(cwd);
-
-	const fastGlobOptions = {
-		posixStyleCurrentWorkingDirectory,
-		ignore: fastGlobIgnore,
-	};
-
-	const fakeFilePath = include.reduce<string[]>((acc, filePath) => {
-		const absFilePath = join(cwd, filePath);
-		if (existsSync(absFilePath)) {
-			// file
-			const fileExtname = extname(absFilePath).slice(1);
-			const fileStatus = statSync(absFilePath);
-			if (!fileStatus.isDirectory() && fileExtname) {
-				if (extensions.includes(fileExtname)) {
-					const fakeFiles = fg.sync(convertPathToPosix(absFilePath), fastGlobOptions);
-					return [...acc, ...fakeFiles];
-				}
-				return acc;
-			}
-
-			// folder
-			const dir = join(absFilePath, "/");
-			const fakeFolderFiles = fg.sync(
-				extensions.map((ext) => {
-					if (infixName && infixName.length > 0) {
-						return convertPathToPosix(`${dir}**/*.${infixName}.${ext}`);
-					}
-					return convertPathToPosix(`${dir}**/*.${ext}`);
-				}),
-				fastGlobOptions,
-			);
-
-			return [...acc, ...fakeFolderFiles];
-		}
-		return acc;
-	}, []);
-
-	return fakeFilePath;
+	const watchDir = getWatchPaths({ infixName, extensions, include });
+	return globSync(watchDir, {
+		ignore: exclude,
+		cwd: root,
+	});
 }

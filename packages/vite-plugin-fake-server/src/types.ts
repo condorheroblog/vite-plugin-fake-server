@@ -18,18 +18,7 @@ export interface ServerBuildOptions {
 	outDir?: string
 }
 
-export interface VitePluginFakeServerOptions extends Omit<FakerSchemaServerOptions, "include"> {
-	/**
-	 * @description Set the folder where the fake `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files is stored.
-	 * @default fake
-	 */
-	include?: string
-
-	/**
-	 * @description Exclude files in the `include` directory.
-	 * @default []
-	 */
-	exclude?: string[]
+export interface VitePluginFakeServerOptions extends FakerSchemaServerOptions {
 
 	/**
 	 * @description Set up the service simulator in the production environment.

@@ -1,5 +1,3 @@
-import { relative } from "node:path";
-
 import { describe, it } from "vitest";
 
 import { FAKE_FILE_EXTENSIONS, getFakeFilePath } from "../src";
@@ -14,7 +12,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map(filePath => relative(__dirname, filePath));
+		);
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
@@ -38,7 +36,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map(filePath => relative(__dirname, filePath));
+		);
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[
@@ -58,7 +56,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map(filePath => relative(__dirname, filePath));
+		);
 
 		expect(fakeFilePath1).toMatchInlineSnapshot(`
 			[
@@ -81,7 +79,7 @@ describe(`${getFakeFilePath.name}`, () => {
 				infixName: "fake",
 			},
 			__dirname,
-		).map(filePath => relative(__dirname, filePath));
+		);
 
 		expect(fakeFilePath).toMatchInlineSnapshot(`
 			[

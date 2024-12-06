@@ -118,14 +118,14 @@ export function defineFakeRoute(config: FakeRoute | FakeRoute[]) {
 
 ##### include
 
-Type: `string`\
+Type: `string | string[]`\
 Default: `"fake"`
 
 Set the folder where the fake `xxx.fake.{ts,js,mjs,cjs,cts,mts}` files is stored.
 
 ##### exclude
 
-Type: `string[]`\
+Type: `string | string[]`\
 Default: `[]`
 
 Exclude files in the `include` directory.

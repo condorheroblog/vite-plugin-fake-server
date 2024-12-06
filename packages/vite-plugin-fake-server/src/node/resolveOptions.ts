@@ -2,10 +2,13 @@ import type { FakerSchemaServerOptions } from "./types";
 import { FAKE_FILE_EXTENSIONS, INFIX_NAME } from "./constants";
 
 export function resolveOptions(options: FakerSchemaServerOptions = {}) {
-	const include = options.include ?? [INFIX_NAME];
-	if (!Array.isArray(include) || include.length === 0) {
+	options.include ??= [INFIX_NAME];
+	const include = Array.isArray(options.include) ? options.include : [options.include];
+	if (include.length === 0) {
 		throw new Error("Invalid include option");
 	}
+	options.exclude ??= [];
+	const exclude = Array.isArray(options.exclude) ? options.exclude : [options.exclude];
 
 	let infixName: false | string;
 
@@ -31,7 +34,7 @@ export function resolveOptions(options: FakerSchemaServerOptions = {}) {
 
 	return {
 		include,
-		exclude: options.exclude || [],
+		exclude,
 		infixName,
 		extensions: options.extensions || FAKE_FILE_EXTENSIONS,
 	} as const;

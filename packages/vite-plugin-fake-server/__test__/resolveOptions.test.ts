@@ -28,6 +28,48 @@ describe(resolveOptions.name, () => {
 		expect(options.exclude).toEqual([]);
 	});
 
+	it(`${resolveOptions.name} options - include is string`, ({ expect }) => {
+		const options = resolveOptions({ include: "mock" });
+		expect(options.include).toEqual(["mock"]);
+	});
+
+	it(`${resolveOptions.name} options - include is array string`, ({ expect }) => {
+		const options = resolveOptions({ include: ["mock"] });
+		expect(options.include).toEqual(["mock"]);
+	});
+
+	it(`${resolveOptions.name} options - include is undefined`, ({ expect }) => {
+		const options = resolveOptions({ include: undefined });
+		expect(options.include).toEqual(["fake"]);
+	});
+
+	it(`${resolveOptions.name} options - get include default value`, ({ expect }) => {
+		const options = resolveOptions();
+		expect(options.include).toEqual(["fake"]);
+	});
+
+	it(`${resolveOptions.name} options - exclude is string`, ({ expect }) => {
+		const options = resolveOptions({ exclude: "fake" });
+		expect(options.exclude).toEqual(["fake"]);
+	});
+
+	it(`${resolveOptions.name} options - exclude is array string`, ({ expect }) => {
+		const options = resolveOptions({ exclude: ["fake"] });
+		expect(options.exclude).toEqual(["fake"]);
+	});
+
+	it(`${resolveOptions.name} options - exclude is undefined`, ({ expect }) => {
+		const options = resolveOptions({ exclude: undefined });
+		expect(options.exclude).toEqual([]);
+		expect(options.exclude.length).toBe(0);
+	});
+
+	it(`${resolveOptions.name} options - get exclude default value`, ({ expect }) => {
+		const options = resolveOptions();
+		expect(options.exclude).toEqual([]);
+		expect(options.exclude.length).toBe(0);
+	});
+
 	it(`${resolveOptions.name} options - infixName is true`, ({ expect }) => {
 		const options = resolveOptions({ infixName: true });
 		expect(options.infixName).toBe(INFIX_NAME);
