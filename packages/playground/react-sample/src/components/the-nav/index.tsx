@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 
 export const REQUEST_TYPE = ["XHR", "Fetch"];
 export const OPTIONS = [

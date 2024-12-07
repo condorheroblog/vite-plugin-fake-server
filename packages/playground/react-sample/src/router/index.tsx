@@ -1,5 +1,5 @@
 // import { lazy } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router";
 
 import { NotFound } from "../components/";
 import App from "../views/App.tsx";

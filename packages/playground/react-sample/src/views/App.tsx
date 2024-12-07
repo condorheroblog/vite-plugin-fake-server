@@ -1,6 +1,6 @@
 import { BUTTON_LIST, TheCard, TheHead, TheNav } from "#src/components";
 
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 function App() {
 	const location = useLocation();

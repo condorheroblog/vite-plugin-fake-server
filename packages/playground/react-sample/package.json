@@ -13,22 +13,22 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"react-router-dom": "^6.28.0"
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"react-router": "^7.0.2"
 	},
 	"devDependencies": {
-		"@faker-js/faker": "^9.2.0",
+		"@faker-js/faker": "^9.3.0",
 		"@types/mockjs": "^1.0.10",
-		"@types/react": "^18.3.12",
-		"@types/react-dom": "^18.3.1",
-		"@vitejs/plugin-react": "^4.3.3",
+		"@types/react": "^19.0.1",
+		"@types/react-dom": "^19.0.1",
+		"@vitejs/plugin-react": "^4.3.4",
 		"autoprefixer": "^10.4.20",
 		"mockjs": "^ 1.1.0",
-		"postcss": "^8.4.47",
-		"tailwindcss": "^3.4.14",
-		"typescript": "^5.6.3",
-		"vite": "^5.4.10",
+		"postcss": "^8.4.49",
+		"tailwindcss": "^3.4.16",
+		"typescript": "^5.7.2",
+		"vite": "^6.0.3",
 		"vite-plugin-fake-server": "workspace:^"
 	}
 }
