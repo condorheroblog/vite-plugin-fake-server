@@ -1,7 +1,7 @@
 {
 	"name": "vite-plugin-fake-server",
 	"type": "module",
-	"version": "2.1.4-beta.1",
+	"version": "2.1.4",
 	"description": "A fake server plugin for Vite.",
 	"author": "Condor Hero",
 	"license": "MIT",
