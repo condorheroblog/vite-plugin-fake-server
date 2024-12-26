@@ -472,6 +472,8 @@ export function xhook() {
 			let k, modk;
 			for (k of ["type", "timeout", "withCredentials"]) {
 				modk = k === "type" ? "responseType" : k;
+				//The new code belongs to vite-plugin-fake-server
+				if (modk === "responseType" && !facade._responseTypeChanged) continue;
 				if (modk in facade) {
 					request[k] = facade[modk];
 				}
@@ -610,8 +612,20 @@ export function xhook() {
 		facade.responseXML = null;
 		facade.readyState = 0;
 		facade.statusText = "";
-		//The new code belongs to vite-plugin-fake-server
-		facade.responseType = "";
+		facade._responseTypeChanged = false;
+		// The new code belongs to vite-plugin-fake-server
+		/*====================== START ======================*/
+		let innerResponseType = "";
+		Object.defineProperty(facade, "responseType", {
+			get: () => innerResponseType,
+			set: (newValue) => {
+				facade._responseTypeChanged = true;
+				innerResponseType = newValue;
+			},
+			enumerable: true,
+			configurable: true
+		});
+		/*====================== END ======================*/
 
 		return facade;
 	};

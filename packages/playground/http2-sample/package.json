@@ -17,6 +17,6 @@
 		"typescript": "^5.7.2",
 		"vite": "^6.0.3",
 		"vite-plugin-fake-server": "workspace:^",
-		"vue-tsc": "^2.1.10"
+		"vue-tsc": "^2.2.0"
 	}
 }
