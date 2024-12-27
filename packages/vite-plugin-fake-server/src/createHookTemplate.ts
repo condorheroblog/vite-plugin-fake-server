@@ -1,7 +1,7 @@
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 
 import { STATUS_CODES } from "node:http";
-import { createSimulateResponse, sleep, syncSleep, tryToJSON } from "./shared";
+import { createSimulateResponse, sleep, sleepSync, tryToJSON } from "./shared";
 
 export function createHookTemplate(isSync = false, opts: Partial<ResolvePluginOptionsType> = {}) {
 	const commonInit = `
@@ -165,10 +165,10 @@ export function createHookTemplate(isSync = false, opts: Partial<ResolvePluginOp
 
 	const templateSync = `function(req) {
 		${commonInit}
-		${syncSleep.toString()}
+		${sleepSync.toString()}
 
 		${createSimulateResponse.toString()};
-		const simulateServerResponseSync = createSimulateResponse(syncSleep);
+		const simulateServerResponseSync = createSimulateResponse(sleepSync);
 
 		const responseResult = simulateServerResponseSync(req, fakeModuleList, ${getConfig});
 		if (responseResult) {

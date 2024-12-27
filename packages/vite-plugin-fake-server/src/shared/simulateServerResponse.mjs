@@ -12,7 +12,7 @@ export function sleep(time) {
 	});
 }
 
-export function syncSleep(ms) {
+export function sleepSync(ms) {
 	if (ms <= 0) {
 		return;
 	}
@@ -92,9 +92,6 @@ export function createSimulateResponse(sleepFn) {
 					headers: responseHeaders = {},
 				} = matchRequest;
 
-				// timeout
-				const delayPromise = timeout ? sleepFn(timeout) : Promise.resolve();
-
 				const joinedUrl = joinPathname(basename, url);
 				const urlMatch = match(joinedUrl, { encode: encodeURI });
 
@@ -135,6 +132,8 @@ export function createSimulateResponse(sleepFn) {
 					params,
 					responseHeaders: new Headers({ ...globalResponseHeaders, ...responseHeaders }),
 				};
+				// timeout
+				const delayPromise = timeout ? sleepFn(timeout) : false;
 				return delayPromise && delayPromise?.then ? delayPromise.then(() => result) : result;
 			}
 		}
@@ -143,4 +142,4 @@ export function createSimulateResponse(sleepFn) {
 
 export const simulateServerResponse = createSimulateResponse(sleep);
 
-export const simulateServerResponseSync = createSimulateResponse(syncSleep);
+export const simulateServerResponseSync = createSimulateResponse(sleepSync);
