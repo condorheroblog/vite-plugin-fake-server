@@ -547,6 +547,11 @@ export function xhook() {
 				};
 
 				const hook = beforeHooks.shift();
+				/**
+				 * The new code belongs to vite-plugin-fake-server
+				 *
+				 * Original code:
+				```
 				//async or sync?
 				if (hook.length === 1) {
 					done(hook(request));
@@ -557,8 +562,27 @@ export function xhook() {
 					//skip async hook on sync requests
 					done();
 				}
+				```
+				* The new code belongs to vite-plugin-fake-server: Start
+				*/
+				//async
+				if(request.async) {
+					if (hook.length === 1) {
+						done();
+					} else if (hook.length === 2) {
+						hook(request, done);
+					}
+				//sync
+				} else {
+					if (hook.length === 1) {
+						done(hook(request));
+					} else if (hook.length === 2) {
+						done();
+					}
+				}
 				return;
 			};
+			// The new code belongs to vite-plugin-fake-server: End
 			//kick off
 			process();
 		};
@@ -804,7 +828,9 @@ export function xhook() {
 				}
 				const hook = beforeHooks.shift();
 				if (hook.length === 1) {
-					return done(hook(options));
+					// return done(hook(options));
+					//The new code belongs to vite-plugin-fake-server
+					return done();
 				} else if (hook.length === 2) {
 					return hook(options, done);
 				}

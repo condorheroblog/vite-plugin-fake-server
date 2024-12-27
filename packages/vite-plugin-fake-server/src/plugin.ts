@@ -2,7 +2,6 @@ import type { HtmlTagDescriptor, Plugin, ResolvedConfig, WatchOptions } from "vi
 import type { ResolvePluginOptionsType } from "./resolvePluginOptions";
 import type { VitePluginFakeServerOptions } from "./types";
 
-import { STATUS_CODES } from "node:http";
 import { isAbsolute, join } from "node:path";
 import process from "node:process";
 import { normalizePath } from "vite";
@@ -10,9 +9,9 @@ import { normalizePath } from "vite";
 import pkg from "../package.json";
 import { generateFakeServer } from "./build";
 import { createFakeMiddleware } from "./createFakeMiddleware";
+import { createHookTemplate } from "./createHookTemplate";
 import { getFakeFilePath } from "./node";
 import { resolvePluginOptions } from "./resolvePluginOptions";
-import { simulateServerResponse, sleep, tryToJSON } from "./shared";
 import { buildPackage, createLogger } from "./utils";
 import { xhook } from "./xhook/index.mjs";
 
@@ -153,127 +152,10 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 					children: `const fakeModuleList = window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList;
 					const pathToRegexp = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
 					const match = pathToRegexp.match ?? pathToRegexp.default.match;
-					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(async function(req, callback) {
-						${sleep.toString()}
-						${tryToJSON.toString()}
-						${simulateServerResponse.toString()}
-						const STATUS_CODES = ${JSON.stringify(STATUS_CODES, null, 2)};
-
-						function headersToObject(headers) {
-							const headersObject = {};
-							for (const [name, value] of headers.entries()) {
-								headersObject[name] = value;
-							}
-							return headersObject;
-						}
-
-						const responseResult = await simulateServerResponse(req, fakeModuleList, {
-							match,
-							basename: ${JSON.stringify(opts.basename)},
-							defaultTimeout: ${JSON.stringify(opts.timeout)},
-							globalResponseHeaders: ${JSON.stringify(opts.headers, null, 2)}
-						});
-						if (responseResult) {
-							const {
-								response,
-								statusCode,
-								statusText: responseStatusText = STATUS_CODES[statusCode],
-								url,
-								query,
-								params,
-								responseHeaders,
-							} = responseResult ?? {};
-							const statusText = ${JSON.stringify(opts.http2)} ? "" : responseStatusText;
-							const responseIsFunction = typeof response === "function";
-							const requestHeaders = {};
-							for (const key in req.headers) {
-								requestHeaders[key.toLowerCase()] = req.headers[key];
-							}
-							const fakeResponse = !responseIsFunction || await Promise.resolve(
-								response({ url, body: tryToJSON(req.body), rawBody: req.body, query, params, headers: requestHeaders })
-							);
-							if(req.isFetch) {
-								if (typeof fakeResponse === "string") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "text/plain");
-									}
-									callback(new Response(
-										responseIsFunction ? fakeResponse : null,
-										{
-											statusText,
-											status: statusCode,
-											headers: headersToObject(responseHeaders),
-										}
-									));
-								} else {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "application/json");
-									}
-									callback(new Response(
-										responseIsFunction ? JSON.stringify(fakeResponse, null, 2) : null,
-										{
-											statusText,
-											status: statusCode,
-											headers: headersToObject(responseHeaders),
-										}
-									));
-								}
-							} else {
-								const dataResponse = responseIsFunction ? { data: fakeResponse } : {};
-								if(!req.type || req.type.toLowerCase() === "text") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "text/plain");
-									}
-									callback({
-										statusText,
-										status: statusCode,
-										text: fakeResponse,
-										...dataResponse,
-										headers: headersToObject(responseHeaders),
-									});
-								} else if (req.type.toLowerCase() === "json") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "application/json");
-									}
-									callback({
-										statusText,
-										status: statusCode,
-										...dataResponse,
-										headers: headersToObject(responseHeaders),
-									});
-								} else if (req.type.toLowerCase() === "document") {
-									if (!responseHeaders.get("Content-Type")) {
-										responseHeaders.set("Content-Type", "application/xml");
-									}
-									const parser = new DOMParser();
-									const xmlDoc = parser.parseFromString(fakeResponse,"application/xml");
-									callback({
-										statusText,
-										status: statusCode,
-										xml: xmlDoc,
-										data: xmlDoc,
-										headers: headersToObject(responseHeaders),
-									});
-								} else {
-									// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
-									// "arraybuffer" | "blob"
-									callback({
-										statusText,
-										status: statusCode,
-										...dataResponse,
-										headers: headersToObject(responseHeaders),
-									});
-								}
-							}
-							if (${JSON.stringify(opts.logger)}){
-								const requestMethod = req.method ? req.method.toUpperCase() : "GET";
-								console.log("%c request invoke" + " %c" + requestMethod + " " + req.url, "color: green", "color: blue");
-							}
-						} else {
-							// next external URL
-							callback();
-						}
-					});`,
+					// sync
+					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(${createHookTemplate(false, opts)});
+					// async
+					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(${createHookTemplate(true, opts)});`,
 				});
 
 				return scriptTagList;

@@ -12,7 +12,7 @@ function App() {
 	return (
 		<>
 			<TheHead />
-			<section className="max-md:px-4 px-10">
+			<section className="px-10 max-md:px-4">
 				<TheNav />
 				<main className="space-y-14">
 					{option

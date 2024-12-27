@@ -165,4 +165,8 @@ export default defineFakeRoute([
 			res.end(body);
 		},
 	},
+	{
+		url: "/response-is-any",
+		response: "The response can not be a function." as any,
+	},
 ]);

@@ -1,7 +1,9 @@
+import type { Option } from "./type";
+
 import { useLocation, useNavigate } from "react-router";
 
 export const REQUEST_TYPE = ["XHR", "Fetch"];
-export const OPTIONS = [
+export const OPTIONS: Option[] = [
 	{
 		label: "Response In Mock",
 		value: "response-in-mock",
@@ -121,6 +123,28 @@ export const OPTIONS = [
 		method: "POST",
 		body: { name: "CondorHero", age: 18 },
 	},
+
+	/* Only For XHR */
+	{
+		label: "Sync Request",
+		value: "sync-request",
+		method: "GET",
+		onlyXHR: true,
+		sync: true,
+	},
+	{
+		label: "Sync External URL",
+		value: "https://my-json-server.typicode.com/typicode/demo/comments",
+		method: "GET",
+		onlyXHR: true,
+		sync: true,
+	},
+
+	{
+		label: "Response Is Any",
+		value: "response-is-any",
+		method: "GET",
+	},
 	{
 		label: "Custom Response Header",
 		value: "custom-response-header",
@@ -139,7 +163,15 @@ export const OPTIONS = [
 	},
 ];
 
-export const BUTTON_LIST = REQUEST_TYPE.flatMap(typeItem => OPTIONS.map(item => ({ ...item, type: typeItem })));
+export const BUTTON_LIST = REQUEST_TYPE.flatMap(
+	typeItem => OPTIONS.map(
+		(item) => {
+			return (typeItem === "Fetch" && item.onlyXHR)
+				? undefined
+				: { ...item, type: typeItem };
+		},
+	),
+).filter(Boolean) as Option[];
 
 export function TheNav() {
 	const navigate = useNavigate();
@@ -175,17 +207,23 @@ export function TheNav() {
 	}
 
 	return (
-		<nav className="md:mt-5 md:mb-18 mt-4 mb-10 flex gap-10 flex-col">
+		<nav className="flex flex-col gap-10 mt-4 mb-10 md:mt-5 md:mb-18">
 			{REQUEST_TYPE.map((requestItem, requestIndex) => {
+				const buttons = OPTIONS.map((item) => {
+					if (requestItem === "Fetch" && item.onlyXHR) {
+						return null;
+					}
+					return item;
+				}).filter(Boolean) as Option[];
 				return (
 					<div key={requestItem} className="flex gap-4 max-md:gap-3">
-						<div className="opacity-80 text-sm">{requestItem}</div>
+						<div className="text-sm opacity-80">{requestItem}</div>
 						<div
 							className={
 								`flex max-md:gap-2 gap-4 flex-wrap${REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : ""}`
 							}
 						>
-							{OPTIONS.map(({ value, label, disabled }) => {
+							{buttons.map(({ value, label, disabled }) => {
 								return (
 									<div className="relative" key={`${requestItem}-${value}`}>
 										<button

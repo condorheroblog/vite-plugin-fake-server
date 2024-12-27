@@ -71,7 +71,7 @@ export async function createFakeMiddleware(
 					}
 				}
 				else {
-					res.end();
+					res.end(JSON.stringify(response, null, 2));
 				}
 			}
 

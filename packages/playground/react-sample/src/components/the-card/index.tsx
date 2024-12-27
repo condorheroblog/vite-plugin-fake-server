@@ -1,9 +1,12 @@
-import type { BUTTON_LIST } from "#src/components";
+import type { Option } from "#src/components/the-nav/type";
 
 import { REQUEST_TYPE, TheLoading } from "#src/components";
 import { useEffect, useState } from "react";
 
 function getType(value: unknown) {
+	if (value === undefined) {
+		return "";
+	}
 	return Object.prototype.toString.call(value).slice(8, -1);
 }
 
@@ -15,7 +18,8 @@ export function TheCard({
 	responseType,
 	body,
 	headers,
-}: (typeof BUTTON_LIST)[number]) {
+	sync,
+}: Option) {
 	const [responseOrigin, setResponseOrigin] = useState<{ [key: string]: any }>({});
 	const [responseData, setResponseData] = useState<any>();
 	const [loading, setLoading] = useState(false);
@@ -32,33 +36,77 @@ export function TheCard({
 			: `${baseURL}${value}`.replace(":id", Math.random().toString());
 
 		if (type === REQUEST_TYPE[0]) {
-			setLoading(true);
-			const xhr = new XMLHttpRequest();
+			if (!sync) {
+				setLoading(true);
+				const xhr = new XMLHttpRequest();
 
-			if (responseType === "xml") {
-				xhr.responseType = "document";
-				// Force the response to be parsed as XML
-				xhr.overrideMimeType("application/xml");
-			}
-			else {
-				xhr.responseType = "json";
-			}
-
-			if (method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD") {
-				xhr.open(method, `${requestURL}?${queryParams}`, true);
-				xhr.setRequestHeader("Content-Type", "application/json");
-				for (const key in headers) {
-					xhr.setRequestHeader(key.toString(), headers[key as keyof typeof headers]);
+				if (responseType === "xml") {
+					xhr.responseType = "document";
+					// Force the response to be parsed as XML
+					xhr.overrideMimeType("application/xml");
 				}
-				xhr.send();
+				else {
+					xhr.responseType = "json";
+				}
+
+				if (method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD") {
+					xhr.open(method, `${requestURL}?${queryParams}`, true);
+					xhr.setRequestHeader("Content-Type", "application/json");
+					for (const key in headers) {
+						xhr.setRequestHeader(key.toString(), headers[key as keyof typeof headers]);
+					}
+					xhr.send();
+				}
+				else {
+					xhr.open(method, requestURL, true);
+					xhr.setRequestHeader("Content-Type", "application/json");
+					xhr.send(JSON.stringify(body));
+				}
+
+				xhr.addEventListener("load", () => {
+					const showHeader = xhr.getResponseHeader("show-header");
+					const accessControlAllowOrigin = xhr.getResponseHeader("access-control-allow-origin");
+					setResponseOrigin({
+						status: xhr.status,
+						statusText: xhr.statusText,
+						url: xhr.responseURL,
+						headers: new Headers({
+							"show-header": showHeader || "",
+							"access-control-allow-origin": accessControlAllowOrigin || "",
+						}),
+					});
+					setResponseData(xhr.response);
+
+					if (responseType === "xml") {
+						const xmlContainer = document.getElementById("xmlContainer");
+						const xmlDoc = xhr.responseXML!;
+						const xmlRoot = xmlDoc.querySelector("#xml-root");
+						xmlContainer!.appendChild(xmlRoot!);
+					}
+				});
+
+				xhr.addEventListener("loadend", () => {
+					setLoading(false);
+				});
 			}
 			else {
-				xhr.open(method, requestURL, true);
-				xhr.setRequestHeader("Content-Type", "application/json");
-				xhr.send(JSON.stringify(body));
-			}
-
-			xhr.addEventListener("load", () => {
+				setLoading(true);
+				const xhr = new XMLHttpRequest();
+				// Note: It's a sync request
+				const isAsync = false;
+				if (method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD") {
+					xhr.open(method, `${requestURL}?${queryParams}`, isAsync);
+					xhr.setRequestHeader("Content-Type", "application/json");
+					for (const key in headers) {
+						xhr.setRequestHeader(key.toString(), headers[key as keyof typeof headers]);
+					}
+					xhr.send();
+				}
+				else {
+					xhr.open(method, requestURL, isAsync);
+					xhr.setRequestHeader("Content-Type", "application/json");
+					xhr.send(JSON.stringify(body));
+				}
 				const showHeader = xhr.getResponseHeader("show-header");
 				const accessControlAllowOrigin = xhr.getResponseHeader("access-control-allow-origin");
 				setResponseOrigin({
@@ -71,18 +119,8 @@ export function TheCard({
 					}),
 				});
 				setResponseData(xhr.response);
-
-				if (responseType === "xml") {
-					const xmlContainer = document.getElementById("xmlContainer");
-					const xmlDoc = xhr.responseXML!;
-					const xmlRoot = xmlDoc.querySelector("#xml-root");
-					xmlContainer!.appendChild(xmlRoot!);
-				}
-			});
-
-			xhr.addEventListener("loadend", () => {
 				setLoading(false);
-			});
+			}
 		}
 		else if (type === REQUEST_TYPE[1]) {
 			setLoading(true);
