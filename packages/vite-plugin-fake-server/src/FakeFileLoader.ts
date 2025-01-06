@@ -71,43 +71,7 @@ export class FakeFileLoader extends EventEmitter {
 			});
 			this.watcher = watcher;
 
-			watcher.on("add", async (relativeFilePath) => {
-				if (logger) {
-					loggerOutput.info(colors.green(`fake file add ${colors.dim(relativeFilePath)}`), {
-						timestamp: true,
-						clear: true,
-					});
-				}
-
-				await this.loadFakeData(relativeFilePath);
-				this.updateFakeData();
-			});
-
-			watcher.on("change", async (relativeFilePath) => {
-				if (logger) {
-					loggerOutput.info(colors.green(`fake file change ${colors.dim(relativeFilePath)}`), {
-						timestamp: true,
-						clear: true,
-					});
-				}
-
-				await this.loadFakeData(relativeFilePath);
-				this.updateFakeData();
-			});
-
-			watcher.on("unlink", async (relativeFilePath) => {
-				if (logger) {
-					loggerOutput.info(colors.green(`fake file unlink ${colors.dim(relativeFilePath)}`), {
-						timestamp: true,
-						clear: true,
-					});
-				}
-
-				this.#moduleCache.delete(normalizePath(relativeFilePath));
-				this.updateFakeData();
-			});
-
-			const handleFileEvent = async (eventType: "add" | "change" | "unlink", relativeFilePath: string, logger: boolean, context: FakeFileLoader) => {
+			const handleFileEvent = async (eventType: "add" | "change" | "unlink", relativeFilePath: string, logger: boolean) => {
 				// 将 Windows 路径格式转换为 Unix 路径格式
 				const unixPath = normalizePath(relativeFilePath);
 
@@ -120,24 +84,24 @@ export class FakeFileLoader extends EventEmitter {
 
 				// 根据事件类型调用不同的处理逻辑
 				if (eventType === "unlink") {
-					context.#moduleCache.delete(normalizePath(unixPath));
+					this.#moduleCache.delete(normalizePath(unixPath));
 				}
 				else {
-					await context.loadFakeData(unixPath);
+					await this.loadFakeData(unixPath);
 				}
-				context.updateFakeData();
+				this.updateFakeData();
 			};
 
 			watcher.on("add", async (relativeFilePath) => {
-				await handleFileEvent("add", relativeFilePath, logger, this);
+				await handleFileEvent("add", relativeFilePath, logger);
 			});
 
 			watcher.on("change", async (relativeFilePath) => {
-				await handleFileEvent("change", relativeFilePath, logger, this);
+				await handleFileEvent("change", relativeFilePath, logger);
 			});
 
 			watcher.on("unlink", async (relativeFilePath) => {
-				await handleFileEvent("unlink", relativeFilePath, logger, this);
+				await handleFileEvent("unlink", relativeFilePath, logger);
 			});
 		}
 	}
