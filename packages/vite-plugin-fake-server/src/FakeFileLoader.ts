@@ -10,6 +10,7 @@ import { bundleImport } from "bundle-import";
 import chokidar from "chokidar";
 import colors from "picocolors";
 import { glob } from "tinyglobby";
+import { normalizePath } from "vite";
 
 import { getFakeFilePath, getWatchPaths, parallelLoader } from "./node";
 
@@ -102,8 +103,41 @@ export class FakeFileLoader extends EventEmitter {
 					});
 				}
 
-				this.#moduleCache.delete(relativeFilePath);
+				this.#moduleCache.delete(normalizePath(relativeFilePath));
 				this.updateFakeData();
+			});
+
+			const handleFileEvent = async (eventType: "add" | "change" | "unlink", relativeFilePath: string, logger: boolean, context: FakeFileLoader) => {
+				// 将 Windows 路径格式转换为 Unix 路径格式
+				const unixPath = normalizePath(relativeFilePath);
+
+				if (logger) {
+					loggerOutput.info(colors.green(`fake file ${eventType} ${colors.dim(unixPath)}`), {
+						timestamp: true,
+						clear: true,
+					});
+				}
+
+				// 根据事件类型调用不同的处理逻辑
+				if (eventType === "unlink") {
+					context.#moduleCache.delete(normalizePath(unixPath));
+				}
+				else {
+					await context.loadFakeData(unixPath);
+				}
+				context.updateFakeData();
+			};
+
+			watcher.on("add", async (relativeFilePath) => {
+				await handleFileEvent("add", relativeFilePath, logger, this);
+			});
+
+			watcher.on("change", async (relativeFilePath) => {
+				await handleFileEvent("change", relativeFilePath, logger, this);
+			});
+
+			watcher.on("unlink", async (relativeFilePath) => {
+				await handleFileEvent("unlink", relativeFilePath, logger, this);
 			});
 		}
 	}
