@@ -117,8 +117,9 @@ export class FakeFileLoader extends EventEmitter {
 			this.watcherDeps = watcherDeps;
 
 			watcherDeps.on("change", (relativeFilePath) => {
-				if (this.#fakeFileDeps.has(relativeFilePath)) {
-					const fakeFiles = this.#fakeFileDeps.get(relativeFilePath);
+				const unixPath = normalizePath(relativeFilePath);
+				if (this.#fakeFileDeps.has(unixPath)) {
+					const fakeFiles = this.#fakeFileDeps.get(unixPath);
 					if (fakeFiles) {
 						fakeFiles.forEach(async (filePath) => {
 							await this.loadFakeData(filePath);
@@ -129,8 +130,9 @@ export class FakeFileLoader extends EventEmitter {
 			});
 
 			watcherDeps.on("unlink", async (relativeFilePath) => {
-				if (this.#fakeFileDeps.has(relativeFilePath)) {
-					this.#fakeFileDeps.delete(relativeFilePath);
+				const unixPath = normalizePath(relativeFilePath);
+				if (this.#fakeFileDeps.has(unixPath)) {
+					this.#fakeFileDeps.delete(unixPath);
 				}
 			});
 
