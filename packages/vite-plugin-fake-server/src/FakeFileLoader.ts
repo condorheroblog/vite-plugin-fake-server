@@ -10,6 +10,7 @@ import { bundleImport } from "bundle-import";
 import chokidar from "chokidar";
 import colors from "picocolors";
 import { glob } from "tinyglobby";
+import { normalizePath } from "vite";
 
 import { getFakeFilePath, getWatchPaths, parallelLoader } from "./node";
 
@@ -70,40 +71,37 @@ export class FakeFileLoader extends EventEmitter {
 			});
 			this.watcher = watcher;
 
-			watcher.on("add", async (relativeFilePath) => {
+			const handleFileEvent = async (eventType: "add" | "change" | "unlink", relativeFilePath: string, logger: boolean) => {
+				// 将 Windows 路径格式转换为 Unix 路径格式
+				const unixPath = normalizePath(relativeFilePath);
+
 				if (logger) {
-					loggerOutput.info(colors.green(`fake file add ${colors.dim(relativeFilePath)}`), {
+					loggerOutput.info(colors.green(`fake file ${eventType} ${colors.dim(unixPath)}`), {
 						timestamp: true,
 						clear: true,
 					});
 				}
 
-				await this.loadFakeData(relativeFilePath);
+				// 根据事件类型调用不同的处理逻辑
+				if (eventType === "unlink") {
+					this.#moduleCache.delete(normalizePath(unixPath));
+				}
+				else {
+					await this.loadFakeData(unixPath);
+				}
 				this.updateFakeData();
+			};
+
+			watcher.on("add", async (relativeFilePath) => {
+				await handleFileEvent("add", relativeFilePath, logger);
 			});
 
 			watcher.on("change", async (relativeFilePath) => {
-				if (logger) {
-					loggerOutput.info(colors.green(`fake file change ${colors.dim(relativeFilePath)}`), {
-						timestamp: true,
-						clear: true,
-					});
-				}
-
-				await this.loadFakeData(relativeFilePath);
-				this.updateFakeData();
+				await handleFileEvent("change", relativeFilePath, logger);
 			});
 
 			watcher.on("unlink", async (relativeFilePath) => {
-				if (logger) {
-					loggerOutput.info(colors.green(`fake file unlink ${colors.dim(relativeFilePath)}`), {
-						timestamp: true,
-						clear: true,
-					});
-				}
-
-				this.#moduleCache.delete(relativeFilePath);
-				this.updateFakeData();
+				await handleFileEvent("unlink", relativeFilePath, logger);
 			});
 		}
 	}
@@ -119,8 +117,9 @@ export class FakeFileLoader extends EventEmitter {
 			this.watcherDeps = watcherDeps;
 
 			watcherDeps.on("change", (relativeFilePath) => {
-				if (this.#fakeFileDeps.has(relativeFilePath)) {
-					const fakeFiles = this.#fakeFileDeps.get(relativeFilePath);
+				const unixPath = normalizePath(relativeFilePath);
+				if (this.#fakeFileDeps.has(unixPath)) {
+					const fakeFiles = this.#fakeFileDeps.get(unixPath);
 					if (fakeFiles) {
 						fakeFiles.forEach(async (filePath) => {
 							await this.loadFakeData(filePath);
@@ -131,8 +130,9 @@ export class FakeFileLoader extends EventEmitter {
 			});
 
 			watcherDeps.on("unlink", async (relativeFilePath) => {
-				if (this.#fakeFileDeps.has(relativeFilePath)) {
-					this.#fakeFileDeps.delete(relativeFilePath);
+				const unixPath = normalizePath(relativeFilePath);
+				if (this.#fakeFileDeps.has(unixPath)) {
+					this.#fakeFileDeps.delete(unixPath);
 				}
 			});
 
