@@ -1,7 +1,7 @@
 {
 	"name": "react-sample",
 	"type": "module",
-	"version": "2.1.5",
+	"version": "2.2.0",
 	"private": true,
 	"imports": {
 		"#*": "./*"
