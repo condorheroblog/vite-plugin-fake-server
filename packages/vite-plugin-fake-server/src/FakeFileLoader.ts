@@ -9,10 +9,9 @@ import EventEmitter from "node:events";
 import { bundleImport } from "bundle-import";
 import chokidar from "chokidar";
 import colors from "picocolors";
-import { glob } from "tinyglobby";
 import { normalizePath } from "vite";
 
-import { getFakeFilePath, getWatchPaths, parallelLoader } from "./node";
+import { getFakeFilePath, parallelLoader } from "./node";
 
 export interface FakeFileLoaderOptions extends ResolvePluginOptionsType {
 	loggerOutput: Logger
@@ -60,14 +59,17 @@ export class FakeFileLoader extends EventEmitter {
 	private async watchFakeFile() {
 		const { include, watch, root, exclude, loggerOutput, extensions, infixName, logger } = this.options;
 		if (include && include.length && watch) {
-			const watchDir = getWatchPaths({ extensions, infixName, include });
-			const filePaths = await glob(watchDir, {
-				cwd: root,
-			});
-			const watcher = chokidar.watch(filePaths, {
+			const watcher = chokidar.watch(include, {
 				cwd: root,
 				ignoreInitial: true,
-				ignored: exclude,
+				ignored: [
+					...exclude,
+					(path, stats) => Boolean(stats?.isFile()) && !extensions.some((extItem) => {
+						if (infixName && infixName.length > 0)
+							return path.endsWith(`.${infixName}.${extItem}`);
+						return path.endsWith(`.${extItem}`);
+					}),
+				],
 			});
 			this.watcher = watcher;
 
