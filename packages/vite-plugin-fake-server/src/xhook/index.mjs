@@ -839,8 +839,13 @@ export function xhook() {
 				__awaiter(this, void 0, void 0, function* () {
 					const { url, isFetch, acceptedRequest } = options,
 						restInit = __rest(options, ["url", "isFetch", "acceptedRequest"]);
-					if (input instanceof Request && restInit.body instanceof ReadableStream) {
-						restInit.body = yield new Response(restInit.body).text();
+					/**
+					 * @version 2.2.1
+					 * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/body#browser_compatibility
+					 * request.body is not supported in Firefox.
+					*/
+					if (input instanceof Request && input.text) {
+						restInit.body = yield input.text();
 					}
 					return Native(url, restInit)
 						.then((response) => processAfter(response))
