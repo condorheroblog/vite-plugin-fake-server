@@ -1,3 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* @see https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
+@custom-variant dark (&:where(.dark, .dark *));
+/* @see https://tailwindcss.com/docs/theme#defining-animation-keyframes */
+@theme {
+	@keyframes loading-dash {
+		0% {
+			stroke-dasharray: 1,200;
+			stroke-dashoffset: 0;
+		}
+
+		50% {
+			stroke-dasharray: 90,150;
+			stroke-dashoffset: -40px;
+		}
+
+		100% {
+			stroke-dasharray: 90,150;
+			stroke-dashoffset: -120px;
+		}
+	}
+
+	@keyframes loading {
+		50% {
+			transform: rotate(180deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+}

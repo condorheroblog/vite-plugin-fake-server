@@ -179,7 +179,7 @@ export function TheNav() {
 
 	function activeButton(type: string, path: string) {
 		const buttonClass = [
-			"border",
+			"border border-gray-200 dark:border-gray-600",
 			"rounded",
 			"md:text-sm",
 			"text-xs",
@@ -187,17 +187,16 @@ export function TheNav() {
 			"px-1",
 			"py-1",
 			"opacity-80",
-			"text-gray-600",
-			"dark:text-slate-400",
+			"text-gray-600 dark:text-slate-400",
 			"cursor-pointer",
-			"hover:bg-gray-100",
+			"hover:bg-gray-100 dark:hover:bg-gray-700",
 			"disabled:cursor-not-allowed",
-			"disabled:text-gray-300",
-			"disabled:bg-gray-100",
+			"disabled:text-gray-300 dark:disabled:text-gray-600",
+			"disabled:bg-gray-100 dark:disabled:bg-gray-700",
 		];
 		const params = new URLSearchParams(location.hash.slice(1));
 		if (params.get("type") === type && params.get("path") === path) {
-			return [...buttonClass, "!text-black", "bg-gray-200", "opacity-100"].join(" ");
+			return [...buttonClass, "!text-black", "bg-gray-200 dark:bg-gray-300", "opacity-100"].join(" ");
 		}
 		return buttonClass.join(" ");
 	}
@@ -220,7 +219,7 @@ export function TheNav() {
 						<div className="text-sm opacity-80">{requestItem}</div>
 						<div
 							className={
-								`flex max-md:gap-2 gap-4 flex-wrap${REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b" : ""}`
+								`flex max-md:gap-2 gap-4 flex-wrap ${REQUEST_TYPE.length - 1 !== requestIndex ? " pb-5 border-b border-gray-200 dark:border-gray-600" : ""}`
 							}
 						>
 							{buttons.map(({ value, label, disabled }) => {
@@ -235,8 +234,8 @@ export function TheNav() {
 											{label}
 										</button>
 										<sup
-											className={`absolute right-1 -top-2 text-xs italic font-bold text-yellow-900 px-1 dark:bg-transparent dark:opacity-100 dark:text-emerald-500${
-												disabled ? " opacity-20" : " opacity-80"
+											className={`absolute right-1 -top-2 text-xs italic font-bold text-yellow-900 px-1 dark:bg-transparent dark:opacity-100 dark:text-emerald-500 ${
+												disabled ? "opacity-20" : "opacity-80"
 											}`}
 										>
 											{requestItem}

@@ -129,7 +129,16 @@ export function TheCard({
 				payloadFetch = fetch(`${requestURL}?${queryParams}`, { method, headers });
 			}
 			else {
-				payloadFetch = fetch(requestURL, { method, body: JSON.stringify(body), headers });
+				const request = new Request("https://api.sampleapis.com/coffee/hot", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ foo: true }),
+				});
+
+				fetch(request);
+				payloadFetch = fetch(new Request(requestURL, { method, body: JSON.stringify(body), headers }));
 			}
 
 			payloadFetch
@@ -168,20 +177,20 @@ export function TheCard({
 
 	return (
 		<TheLoading loading={loading}>
-			<div className="relative font-mono border border-t-0 rounded">
+			<div className="relative font-mono rounded border border-t-0 border-gray-200 dark:border-gray-600">
 				<div className="absolute right-2 p-2  text-right text-3xl opacity-[.15] italic dark:opacity-50">
 					#
 					{type}
 				</div>
 				<div
-					className="whitespace-nowrap -translate-y-1/2 flex items-center before:border-t before:rounded before:relative before:translate-y-1/2 before:h-1 before:w-[calc(0.05_*_100%)] after:block after:relative after:border-t after:rounded after:translate-y-1/2 after:h-1 after:w-[calc(100%_-_0.05_*_100%)]"
+					className="whitespace-nowrap -translate-y-1/2 flex items-center before:border-t before:border-gray-200 dark:before:border-gray-600 before:rounded before:relative before:translate-y-1/2 before:h-1 before:w-[calc(0.05*100%)] after:block after:relative after:border-t after:border-gray-200 dark:after:border-gray-600 after:rounded after:translate-y-1/2 after:h-1 after:w-[calc(100%-0.05*100%)]"
 					role="separator"
 				>
 					<span className="flex gap-2 px-4">
 						<span className="opacity-80">{label}</span>
 						<button
 							className={
-								`block w-5 cursor-pointer text-blue-800 opacity-80 hover:scale-125 transition-transform dark:text-blue-200${
+								`block w-5 cursor-pointer text-blue-800 opacity-80 hover:scale-125 transition-transform dark:text-blue-200 ${
 									loading ? " animate-[loading_1.5s_linear_infinite]" : ""}`
 							}
 							title="Refresh"
@@ -198,7 +207,7 @@ export function TheCard({
 				</div>
 				<div className="p-6 space-y-2 text-sm">
 					<li>
-						<span className="inline-block pr-1 opacity-50 w-36">Request URL:</span>
+						<span className="inline-block pr-1 w-36 opacity-50">Request URL:</span>
 						<a className="text-blue-400 underline hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-600">
 							{responseOrigin.url}
 						</a>
@@ -215,7 +224,7 @@ export function TheCard({
 					</li>
 
 					<li className="opacity-80">
-						<span className="inline-block pr-1 font-bold w-36">Response Type:</span>
+						<span className="inline-block pr-1 w-36 font-bold">Response Type:</span>
 						{getType(responseData)}
 					</li>
 					{responseOrigin?.headers?.get("show-header")
@@ -228,13 +237,13 @@ export function TheCard({
 						: null}
 
 					<li className="opacity-80">
-						<span className="inline-block pr-1 font-bold w-36">Response Body:</span>
+						<span className="inline-block pr-1 w-36 font-bold">Response Body:</span>
 						{responseType
 							? (
-								<div id="xmlContainer" className="pl-4 ml-4 overflow-auto border-l md:ml-36"></div>
+								<div id="xmlContainer" className="overflow-auto pl-4 ml-4 border-l border-gray-200 dark:border-gray-600 md:ml-36"></div>
 							)
 							: (
-								<pre className="pl-4 ml-4 overflow-auto border-l md:ml-36">{JSON.stringify(responseData, null, 2)}</pre>
+								<pre className="overflow-auto pl-4 ml-4 border-l border-gray-200 dark:border-gray-600 md:ml-36">{JSON.stringify(responseData, null, 2)}</pre>
 							)}
 					</li>
 				</div>

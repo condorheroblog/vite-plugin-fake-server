@@ -6,14 +6,16 @@ import { useNavigate } from "react-router";
 export function TheHead() {
 	const navigate = useNavigate();
 	return (
-		<header className="flex justify-between py-4 pl-10 max-md:pl-3">
+		<header className="sticky top-0 z-10 bg-white dark:bg-slate-900 flex justify-between py-4 pl-10 max-md:pl-3">
 			<h1 className="max-md:text-lg text-3xl font-extraligh opacity-80">
 				<sup className="max-md:hidden">
-					<img src="https://img.shields.io/badge/-:green?logo=github" alt="GitHub" className="inline pr-2" />
+					<a href="https://github.com/condorheroblog/vite-plugin-fake-server" target="_blank">
+						<img src="https://img.shields.io/badge/-:green?logo=github" alt="GitHub" className="inline pr-2" />
+					</a>
 				</sup>
-				<a href="https://github.com/condorheroblog/vite-plugin-fake-server" target="_blank">
+				<span onClick={() => navigate("/")} className="cursor-pointer">
 					Vite Plugin Fake Server Examples
-				</a>
+				</span>
 				<sup className="opacity-50">
 					v
 					{version}

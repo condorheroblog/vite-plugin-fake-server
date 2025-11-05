@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		// Associate tailwind.css file as tailwindcss type
+		"tailwind.css": "tailwindcss"
+	}
+}
