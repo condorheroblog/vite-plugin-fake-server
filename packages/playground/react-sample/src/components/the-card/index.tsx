@@ -129,15 +129,6 @@ export function TheCard({
 				payloadFetch = fetch(`${requestURL}?${queryParams}`, { method, headers });
 			}
 			else {
-				const request = new Request("https://api.sampleapis.com/coffee/hot", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ foo: true }),
-				});
-
-				fetch(request);
 				payloadFetch = fetch(new Request(requestURL, { method, body: JSON.stringify(body), headers }));
 			}
 
