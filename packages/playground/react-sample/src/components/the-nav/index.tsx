@@ -59,6 +59,17 @@ export const OPTIONS: Option[] = [
 		value: "https://my-json-server.typicode.com/typicode/demo/posts",
 		method: "GET",
 	},
+	/**
+	 * @see https://github.com/jpillora/xhook/issues/183
+	 * 测试 Firfox 浏览器使用 Fetch + new Request 发送 POST 请求是否携带 payload
+	 */
+	{
+		type: "Fetch",
+		label: "External URL By Post",
+		value: "https://api.sampleapis.com/coffee/hot",
+		method: "POST",
+		body: { foo: "检查 Firfox 浏览器使用 Fetch + new Request 发送 POST 请求是否携带 payload" },
+	},
 	{
 		label: "Response XML",
 		value: "response-xml",

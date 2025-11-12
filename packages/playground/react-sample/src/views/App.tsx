@@ -1,6 +1,5 @@
 import { BUTTON_LIST, TheCard, TheHead, TheNav } from "#src/components";
 
-import { useEffect } from "react";
 import { useLocation } from "react-router";
 
 function App() {
@@ -9,22 +8,6 @@ function App() {
 		const params = new URLSearchParams(location.hash.slice(1));
 		return params.get("type") === type && params.get("path") === value;
 	});
-
-	useEffect(() => {
-		/**
-		 * @see https://github.com/jpillora/xhook/issues/183
-		 * 测试外部请求在 Firefox 中是否会携带 payload
-		 */
-		const request = new Request("https://api.sampleapis.com/coffee/hot", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ foo: "浏览器检查是否会携带 payload" }),
-		});
-
-		fetch(request);
-	}, [location.hash]);
 
 	return (
 		<>

@@ -772,7 +772,7 @@ export function xhook() {
 	 * if fetch(hacked by Xhook) accept a Request as a first parameter, it will be destrcuted to a plain object.
 	 * Finally the whole network request was convert to fectch(Request.url, other options)
 	 */
-	const Xhook = function (input, init = { headers: {} }) {
+	const Xhook = async function (input, init = { headers: {} }) {
 		let options = Object.assign(Object.assign({}, init), { isFetch: true });
 		if (input instanceof Request) {
 			const requestObj = copyToObjFromRequest(input);
@@ -786,6 +786,16 @@ export function xhook() {
 				//The new code belongs to vite-plugin-fake-server
 				isFetch: true,
 			});
+			// The new code belongs to vite-plugin-fake-server
+			/*====================== START ======================*/
+			try {
+				// clone() throws a TypeError if the request body has already been used.
+				const clonedInput = input.clone();
+				if(clonedInput.text) {
+					options.body = await clonedInput.text();
+				}
+			} catch (e) { }
+			/*====================== END ======================*/
 		} else {
 			options.url = input;
 		}

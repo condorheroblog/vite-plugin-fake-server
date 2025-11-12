@@ -125,7 +125,7 @@ export function TheCard({
 		else if (type === REQUEST_TYPE[1]) {
 			setLoading(true);
 			let payloadFetch;
-			if ((method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD") && body) {
+			if ((method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD")) {
 				payloadFetch = fetch(`${requestURL}?${queryParams}`, { method, headers });
 			}
 			else {
