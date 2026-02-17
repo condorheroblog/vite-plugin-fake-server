@@ -57,12 +57,13 @@
 	"dependencies": {
 		"bundle-import": "^0.0.2",
 		"chokidar": "^4.0.3",
+		"esbuild": "^0.25.0",
 		"path-to-regexp": "^8.3.0",
 		"picocolors": "^1.1.1",
 		"tinyglobby": "^0.2.15"
 	},
 	"devDependencies": {
-		"vite": "^7.1.12"
+		"vite": "^7.1.12 || ^8.0.0-0"
 	},
 	"publishConfig": {
 		"access": "public",
