@@ -1,4 +1,3 @@
-import type { RollupError } from "rollup";
 import process from "node:process";
 
 /* eslint-disable no-console */
@@ -18,7 +17,7 @@ export interface Logger {
 	warnOnce: (msg: string, options?: LogOptions) => void
 	error: (msg: string, options?: LogErrorOptions) => void
 	clearScreen: (type: LogType) => void
-	hasErrorLogged: (error: Error | RollupError) => boolean
+	hasErrorLogged: (error: Error) => boolean
 	hasWarned: boolean
 }
 
@@ -28,7 +27,7 @@ export interface LogOptions {
 }
 
 export interface LogErrorOptions extends LogOptions {
-	error?: Error | RollupError | null
+	error?: Error | null
 }
 
 export const LogLevels: Record<LogLevel, number> = {
@@ -66,7 +65,7 @@ export function createLogger(level: LogLevel = "info", options: LoggerOptions = 
 		minute: "numeric",
 		second: "numeric",
 	});
-	const loggedErrors = new WeakSet<Error | RollupError>();
+	const loggedErrors = new WeakSet<Error>();
 	const { prefix = `[${name}]`, allowClearScreen = true } = options;
 	const thresh = LogLevels[level];
 	const canClearScreen = allowClearScreen && process.stdout.isTTY && !process.env.CI;

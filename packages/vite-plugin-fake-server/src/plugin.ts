@@ -151,7 +151,10 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 					...scriptTagOptions,
 					children: `const fakeModuleList = window.__VITE__PLUGIN__FAKE__SERVER__.fakeModuleList;
 					const pathToRegexp = window.__VITE__PLUGIN__FAKE__SERVER__.pathToRegexp;
-					const match = pathToRegexp.match ?? pathToRegexp.default.match;
+					if (!pathToRegexp) {
+						console.warn("[vite-plugin-fake-server]: path-to-regexp is not correctly packaged as IIFE format");
+					}
+					const match = pathToRegexp?.match ?? pathToRegexp?.default?.match;
 					// sync
 					window.__VITE__PLUGIN__FAKE__SERVER__.xhook.before(${createHookTemplate(false, opts)});
 					// async
