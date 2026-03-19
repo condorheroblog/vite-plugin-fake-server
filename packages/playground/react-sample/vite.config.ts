@@ -18,10 +18,16 @@ export default defineConfig({
 		tailwindcss(),
 	],
 	build: {
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
-				manualChunks: {
-					faker: ["@faker-js/faker"],
+				advancedChunks: {
+					groups:
+						[
+							{
+								name: "faker",
+								test: "@faker-js/faker",
+							},
+						],
 				},
 			},
 		},
