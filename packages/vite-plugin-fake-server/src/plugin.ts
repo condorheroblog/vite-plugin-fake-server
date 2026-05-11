@@ -32,7 +32,7 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 			return {
 				server: {
 					watch: {
-						ignored: resolveIgnored(absoluteRoot, opts.include, unresolvedConfig?.server?.watch),
+						ignored: resolveIgnored(absoluteRoot, opts.include, opts.exclude, unresolvedConfig?.server?.watch),
 					},
 				},
 			};
@@ -176,10 +176,19 @@ export async function vitePluginFakeServer(options: VitePluginFakeServerOptions 
 	};
 }
 
-export function resolveIgnored(rootDir: string, include: string[], watchOptions?: WatchOptions | null) {
-	const { ignored = [] } = watchOptions ?? {};
+export function resolveIgnored(
+	rootDir: string,
+	include: string[],
+	excludeOrWatchOptions: string[] | WatchOptions | null = [],
+	watchOptions?: WatchOptions | null,
+): WatchOptions["ignored"] {
+	const isUsingExcludeSignature = Array.isArray(excludeOrWatchOptions);
+	const resolvedExclude = isUsingExcludeSignature ? excludeOrWatchOptions : [];
+	const resolvedWatchOptions = isUsingExcludeSignature ? watchOptions : excludeOrWatchOptions;
+	const { ignored = [] } = resolvedWatchOptions ?? {};
 	return [
 		...include.map(includePath => normalizePath(join(rootDir, includePath, "**"))),
+		...resolvedExclude.map(excludePath => `!${normalizePath(isAbsolute(excludePath) ? excludePath : join(rootDir, excludePath))}`),
 		...(Array.isArray(ignored) ? ignored : [ignored]),
 	];
 }
